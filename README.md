@@ -13,7 +13,7 @@
 Darkcord is a [Node.js](https://nodejs.org) module to easily interact with
 [Discord API](https://discord.com/developers/docs/intro).
 
-## Instalation
+## Installation
 **Node.js 16.9.0 or newer is required to installation.**
 
 ```sh-session
