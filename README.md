@@ -1,7 +1,7 @@
 <div align="center">
 	<br />
     	<p>
-		<img src="https://cdn.discordapp.com/attachments/846411409293967450/864228830053662730/110_Sem_Titulo_20210712163602.png" width="546" alt="darkcord" />
+		<img src="https://media.discordapp.net/attachments/903700220259487767/1068110112687935518/darkcord.png" width="546" alt="darkcord" />
 	</p>
     <br />
     	<p>
@@ -121,7 +121,7 @@ const client = new Client("token", {
     plugins: [voicePlugin]
 })
 
-client.lava.on("ready", () => console.log("Lavalink is Ready"))
+client.voice.lavalink.on("ready", () => console.log("Lavalink is Ready"))
 
 client.on("playerStart", (player) => {
     client.cache.channels.get(player.textId).createMessage({
