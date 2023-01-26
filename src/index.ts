@@ -31,21 +31,24 @@ export * from "@resources/Bitfield";
 export * from "@resources/Webhook";
 export * from "@resources/User";
 export * from "@resources/Team";
-export * from "@resources/VoiceState"
-export * from "@resources/Integration"
+export * from "@resources/VoiceState";
+export * from "@resources/Integration";
 
 // Utils
 export * from "@utils/Constants";
 export * from "@utils/index";
 export * from "@utils/Zlib";
-export * from "@utils/PluginManager"
+export * from "@utils/PluginManager";
 
 // Rest
-export * from "./rest/AsyncBucket"
-export * from "./rest/AsyncQueue"
-export * from "./rest/Rest"
-export * from "./rest/RequestHandler"
-export * from "./rest/SequentialBucket"
+export * from "./rest/AsyncBucket";
+export * from "./rest/AsyncQueue";
+export * from "./rest/Rest";
+export * from "./rest/RequestHandler";
+export * from "./rest/SequentialBucket";
 
 // Discord API Types
-export * as API from "discord-api-types/v10"
+export * as API from "discord-api-types/v10";
+
+// Typings
+export * from "@typings/index";

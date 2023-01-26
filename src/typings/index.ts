@@ -15,7 +15,6 @@ import { User } from "@resources/User";
 import { VoiceState } from "@resources/VoiceState";
 import { Partials } from "@utils/Constants";
 import {
-  APIAuditLog,
   APIAuditLogChange,
   APIAuditLogEntry,
   APIChannel,
@@ -31,17 +30,18 @@ import {
   GatewayGuildMembersChunkDispatchData,
   GatewayIntentBits,
   GatewayReceivePayload,
+  GatewaySendPayload,
   MessageFlags,
   RESTPostAPIChannelMessageJSONBody,
   UserAvatarFormat,
 } from "discord-api-types/v10";
+import http from "node:http"
 import { Blob, Buffer } from "node:buffer";
 import { IncomingMessage, ServerResponse } from "node:http";
 
-import { BaseClient, Client, InteractionClient } from "client/Client";
+import { Client, InteractionClient } from "client/Client";
 
 import { Integration } from "../resources/Integration";
-import EventEmitter from "node:events";
 
 export interface RateLimitEvent {
   global: boolean;
@@ -108,7 +108,7 @@ export interface InteractionClientOptions extends BaseClientOptions {
     token?: string;
   };
   cache?: {
-    adapter?: CacheAdapter;
+    adapter?: CacheAdapter<any>;
     guilds?: CacheOption;
     channels?: CacheOption;
     roles?: CacheOption;
@@ -131,7 +131,7 @@ export interface ClientOptions extends BaseClientOptions {
     disabledEvents: (keyof ClientEvents)[];
   };
   cache?: {
-    adapter?: CacheAdapter;
+    adapter?: CacheAdapter<any>;
     guilds?: CacheOption;
     users?: CacheOption;
     channels?: CacheOption;
@@ -247,7 +247,7 @@ export interface ClientEvents {
   messageCreate: [message: Message];
   messageUpdate: [old: Message, updated: Message];
   messageDelete: [message: Message];
-  messageDeleteBulk: [messagesDeleted: Map<Message>];
+  messageDeleteBulk: [messagesDeleted: Map<string, Message>];
   messageReactionAdd: [reaction: Reaction | APIReaction, user: User | APIUser];
   messageReactionRemove: [
     reaction: Reaction | APIReaction,
@@ -267,7 +267,7 @@ export interface ClientEvents {
   interactionCreate: [interaction: Interaction];
 
   // Guild
-  guildMembersChunk: [data: GuildMembersChunkEventData];
+  guildMembersChunk: [data: GuildMembersChunkData];
   guildMembersChunked: [guild: Guild, chunkCount: number];
   guildCreate: [guild: Guild];
   guildUpdate: [old: Guild, updated: Guild];
@@ -299,7 +299,7 @@ export interface ClientEvents {
   threadMemberUpdate: [member: ThreadMember];
   threadMembersUpdate: [added: ThreadMember[], removed: string[]];
   threadDelete: [thread: ThreadChannel];
-  threadListSync: [threads: Cache<TheadChannel>, guild: Guild];
+  threadListSync: [threads: Cache<ThreadChannel>, guild: Guild];
 
   // Stage
   stageInstanceCreate: [instance: APIStageInstance];
@@ -340,16 +340,6 @@ export interface ClientEvents {
 }
 
 export type ValueOf<I> = I[keyof I];
-
-// Only used to implements interfaces
-export interface TypedEvents<E> {
-  on<T extends keyof E>(event: T, listener: (...args: E[T]) => any): this;
-  on(event: string, listener: (...args: any[]) => any): this;
-  once<T extends keyof E>(event: T, listener: (...args: E[T]) => any): this;
-  once(event: string, listener: (...args: any[]) => any): this;
-  emit<T extends keyof E>(event: T, ...args: E[T]): boolean;
-  emit(event: string, ...args: any[]): boolean;
-}
 
 export interface BaseCacheSweeper<T> {
   lifetime?: number;
