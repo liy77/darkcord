@@ -1,0 +1,27 @@
+{
+  "name": "darkcord",
+  "version": "0.2.0",
+  "scripts": {
+    "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist"
+  },
+  "dependencies": {
+    "discord-api-types": "^0.37.25",
+    "ts-mixer": "^6.0.2",
+    "undici": "^5.14.0",
+    "ws": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/ws": "^8.5.4",
+    "tsconfig-paths": "^4.1.2",
+    "tscpaths": "^0.0.9",
+    "typescript": "^4.9.4"
+  },
+  "optionalDependencies": {
+    "erlpack": "^0.1.4",
+    "shoukaku": "^3.3.1",
+    "kazagumo": "^2.3.2",
+    "tweetnacl": "^1.0.3",
+    "zlib-sync": "^0.1.7"
+  }
+}
