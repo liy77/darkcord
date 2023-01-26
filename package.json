@@ -2,8 +2,9 @@
   "name": "darkcord",
   "version": "0.2.0",
   "scripts": {
-    "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist"
+    "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist && tscpaths -p tsconfig.json -s ./src -o ./typing"
   },
+  "main": "./dist/index",
   "dependencies": {
     "discord-api-types": "^0.37.25",
     "ts-mixer": "^6.0.2",

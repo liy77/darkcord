@@ -1,5 +1,5 @@
 import { camelCase } from "@utils/index";
-import { ClientEvents } from "typings/index";
+import { ClientEvents } from "@typings/index";
 
 import { ChannelCreate } from "./events/channelCreate";
 import { ChannelDelete } from "./events/channelDelete";

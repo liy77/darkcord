@@ -3,7 +3,7 @@ import {
   APIApplicationInstallParams,
   ApplicationFlags,
 } from "discord-api-types/v10";
-import { DataWithClient } from "typings/index";
+import { DataWithClient } from "@typings/index";
 import { Team } from "./Team";
 import { User } from "./User";
 

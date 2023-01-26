@@ -228,7 +228,7 @@ export interface VoiceServer {
 
 export interface ClientEvents {
   // Gateway
-  packet: [payload: GatewayReceivePayload];
+  packet: [payload: GatewayReceivePayload | GatewaySendPayload];
   ready: [];
   shardConnect: [id: string];
   reconnecting: [];
