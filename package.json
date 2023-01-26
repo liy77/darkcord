@@ -4,7 +4,8 @@
   "scripts": {
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist && tscpaths -p tsconfig.json -s ./src -o ./typing"
   },
-  "main": "./dist/index",
+  "main": "./dist/index.js",
+  "typings": "./typing",
   "dependencies": {
     "discord-api-types": "^0.37.25",
     "ts-mixer": "^6.0.2",
