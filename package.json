@@ -1,9 +1,9 @@
 {
   "name": "darkcord",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "scripts": {
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist && tscpaths -p tsconfig.json -s ./src -o ./typing",
-    "prepublish": "c  && publish"
+    "prepublish": "yarn c"
   },
   "main": "./dist/index.js",
   "typings": "./typing",
