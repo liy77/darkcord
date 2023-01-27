@@ -40,9 +40,9 @@ export class RoleCache extends Cache<Role | APIRole> {
     return role;
   }
 
-  add(role: APIRole | Role, replace = true, guild?: Guild) {
+  add(role: APIRole | Role, replace = true) {
     return super._add(
-      role instanceof Role ? role : { ...role, guildId: guild.id },
+      role,
       replace,
       role.id
     );
@@ -106,7 +106,7 @@ export class GuildRoleCache extends RoleCache {
   }
 
   add(role: APIRole | Role, replace = true) {
-    return super.add(role, replace, this.guild);
+    return super.add(role, replace);
   }
 
   fetch(id: string) {
