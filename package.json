@@ -6,6 +6,10 @@
     "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
     "prepublish": "yarn c && yarn copy_wasm"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JustAWaifuHunter/darkcord.git"
+  },
   "main": "./dist/index.js",
   "typings": "./typing",
   "dependencies": {
@@ -25,5 +29,25 @@
     "erlpack": "^0.1.4",
     "tweetnacl": "^1.0.3",
     "zlib-sync": "^0.1.7"
-  }
+  },
+  "keywords": [
+    "discord",
+    "ws",
+    "websocket",
+    "gateway",
+    "eris",
+    "discord.js",
+    "typescript",
+    "ts",
+    "javascript",
+    "js",
+    "http",
+    "interactions",
+    "zlib",
+    "erlpack",
+    "tweetnacl",
+    "api",
+    "wrapper",
+    "undici"
+  ]
 }
