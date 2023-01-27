@@ -1,5 +1,6 @@
 import { GatewayGuildRoleUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class GuildRoleUpdate extends Event {
     run(data: GatewayGuildRoleUpdateDispatchData) {

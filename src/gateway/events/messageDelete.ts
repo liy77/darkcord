@@ -1,6 +1,7 @@
 import { TextBasedChannel, ThreadChannel } from "@resources/Channel";
 import { GatewayMessageDeleteDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class MessageDelete extends Event {
   run(data: GatewayMessageDeleteDispatchData) {

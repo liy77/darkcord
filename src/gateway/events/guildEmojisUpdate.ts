@@ -1,5 +1,6 @@
 import { GatewayGuildEmojisUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class GuildEmojisUpdate extends Event {
   run(data: GatewayGuildEmojisUpdateDispatchData) {

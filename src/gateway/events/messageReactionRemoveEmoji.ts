@@ -1,6 +1,7 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { GatewayMessageReactionRemoveEmojiDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class MessageReactionRemoveEmoji extends Event {
   run(data: GatewayMessageReactionRemoveEmojiDispatchData) {

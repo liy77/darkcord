@@ -1,5 +1,6 @@
 import { GatewayGuildScheduledEventDeleteDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class GuildScheduledEventDelete extends Event {
   run(data: GatewayGuildScheduledEventDeleteDispatchData) {

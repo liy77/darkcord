@@ -2,6 +2,7 @@ import { Channel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
 import { GatewayChannelUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class ChannelUpdate extends Event {
   run(data: GatewayChannelUpdateDispatchData) {

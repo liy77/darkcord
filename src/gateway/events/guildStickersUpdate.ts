@@ -1,5 +1,6 @@
 import { GatewayGuildStickersUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class GuildStickersUpdate extends Event {
   run(data: GatewayGuildStickersUpdateDispatchData) {

@@ -3,7 +3,8 @@ import { GatewayVoiceStateUpdateDispatchData } from "discord-api-types/v10";
 import { Member } from "@resources/Member";
 import { StageChannel, VoiceChannel } from "@resources/Channel";
 import { Event } from "./Event";
-import { isEqual } from "../../utils/index";
+import { isEqual } from "@utils/index";
+import { structuredClone } from "@utils/index";
 
 export class VoiceStateUpdate extends Event {
   run(data: GatewayVoiceStateUpdateDispatchData) {

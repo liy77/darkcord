@@ -1,6 +1,6 @@
-import { User } from "@resources/User";
 import { GatewayUserUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { structuredClone } from "@utils/index";
 
 export class UserUpdate extends Event {
   run(data: GatewayUserUpdateDispatchData) {

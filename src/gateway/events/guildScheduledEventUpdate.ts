@@ -1,6 +1,7 @@
 import { GatewayGuildScheduledEventUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { ScheduledEvent } from "@resources/Guild";
+import { structuredClone } from "@utils/index";
 
 export class GuildScheduledEventUpdate extends Event {
   run(data: GatewayGuildScheduledEventUpdateDispatchData) {
