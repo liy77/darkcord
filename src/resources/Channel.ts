@@ -44,6 +44,7 @@ import { User } from "./User";
 import { GuildChannelCache } from "@cache/ChannelCache";
 import { MemberCache } from "../cache/MemberCache";
 import { Emoji } from "./Emoji";
+import { channelMention } from "@utils/Constants";
 
 export class ChannelFlags extends BitField<CFlags, typeof CFlags> {
   constructor(flags: CFlags) {
@@ -101,6 +102,10 @@ export class Channel extends Base {
       },
       reason
     );
+  }
+
+  toString() {
+    return channelMention(this.id);
   }
 
   static from(data: DataWithClient<APIChannel>, guild?: Guild) {

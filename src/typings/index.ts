@@ -35,7 +35,7 @@ import {
   RESTPostAPIChannelMessageJSONBody,
   UserAvatarFormat,
 } from "discord-api-types/v10";
-import http from "node:http"
+import http from "node:http";
 import { Blob, Buffer } from "node:buffer";
 import { IncomingMessage, ServerResponse } from "node:http";
 
@@ -391,3 +391,5 @@ export interface Typing {
   guildId?: string;
   userId: string;
 }
+
+export type MessageTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";

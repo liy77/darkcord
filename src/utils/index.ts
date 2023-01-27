@@ -6,7 +6,9 @@ import {
 } from "../typings";
 import { FormData, fetch } from "undici";
 import { Blob } from "node:buffer";
-import { APIInteractionResponse } from "discord-api-types/v10";
+import {
+  APIInteractionResponse,
+} from "discord-api-types/v10";
 import { readFileSync } from "node:fs";
 
 export function parseResponse(res: Response) {
@@ -252,7 +254,7 @@ export function isEqual<_1 extends any, _2 extends any>(
   const equalArray = (t: any) => (value: any, index: number) =>
     isEqual(value, t[index]);
 
-  if ((o1 as any) === (o2 as any)) {
+  if (o1 as any === o2 as any) {
     return true;
   }
 
@@ -295,5 +297,5 @@ export function isEqual<_1 extends any, _2 extends any>(
 }
 
 export function structuredClone<T>(o: T): T {
-  return Object.assign({}, o);
+  return Object.assign({}, o)
 }

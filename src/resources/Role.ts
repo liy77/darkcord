@@ -4,6 +4,7 @@ import { APIRole, APIRoleTags, RESTPatchAPIGuildRoleJSONBody } from "discord-api
 import { Base } from "./Base";
 import { Guild } from "./Guild";
 import { Permissions } from "./Permission";
+import { roleMention } from "@utils/Constants";
 
 export class Role extends Base {
   /**
@@ -62,5 +63,9 @@ export class Role extends Base {
     reason?: string
   ) {
     return this.guild.editRole(this.id, options, reason);
+  }
+
+  toString() {
+    return roleMention(this.id)
   }
 }

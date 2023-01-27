@@ -7,13 +7,13 @@ import {
   ImageFormat,
   LocaleString,
   RouteBases,
-  UserAvatarFormat,
   UserFlags,
   UserPremiumType,
 } from "discord-api-types/v10";
 import { DataWithClient, DisplayUserAvatarOptions } from "@typings/index";
 import { Base } from "./Base";
 import { DMChannel } from "./Channel";
+import { userMention } from "@utils/Constants";
 
 export class User extends Base {
   /**
@@ -176,5 +176,9 @@ export class User extends Base {
 
     await this._client.rest.deleteChannel(this.dm.id);
     this._client.cache.channels.delete(this.dm.id);
+  }
+
+  toString() {
+    return userMention(this.id)
   }
 }
