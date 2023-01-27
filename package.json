@@ -3,7 +3,8 @@
   "version": "0.2.3",
   "scripts": {
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist && tscpaths -p tsconfig.json -s ./src -o ./typing",
-    "prepublish": "yarn c"
+    "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
+    "prepublish": "yarn c && yarn copy_wasm"
   },
   "main": "./dist/index.js",
   "typings": "./typing",
