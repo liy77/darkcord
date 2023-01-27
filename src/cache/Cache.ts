@@ -64,10 +64,12 @@ export class Cache<T = any> {
 
   get extender(): new () => Cache<T> {
     return (
-      this.constructor as unknown as {
-        [Symbol.species]: typeof Cache;
-      }
-    )[Symbol.species];
+      (
+        this.constructor as unknown as {
+          [Symbol.species]: typeof Cache;
+        }
+      )?.[Symbol.species] ?? Cache
+    );
   }
 
   filter(filter: (value: T, key: string) => boolean) {
