@@ -132,12 +132,14 @@ export class Message extends Base {
     this.guild = guild ?? null;
     this.reactions = new Cache();
 
-    for (const reaction of data.reactions) {
-      this.reactions._add(
-        this._client.cache._partial(Partials.Reaction)
-          ? reaction
-          : new Reaction({ ...reaction, client: this._client })
-      );
+    if (Array.isArray(data.reactions)) {
+      for (const reaction of data.reactions) {
+        this.reactions._add(
+          this._client.cache._partial(Partials.Reaction)
+            ? reaction
+            : new Reaction({ ...reaction, client: this._client })
+        );
+      }
     }
   }
 
