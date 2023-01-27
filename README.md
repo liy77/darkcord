@@ -28,9 +28,10 @@ pnpm add darkcord
 ```js
 import {
     Client,
-    GatewayIntentBits,
+    API,
 } from "darkcord"
 
+const GatewayIntentBits = API.GatewayIntentBits
 const ClientIntents = GatewayIntentBits.Guilds | GatewayIntentBits.GuildMessage | GatewayIntentBits.MessageContent
 
 const client = new Client("token", {
