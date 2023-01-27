@@ -343,7 +343,7 @@ export class Guild extends BaseGuild {
   /**
    * Guild invites
    */
-  invites: Map<string, Invite>
+  invites: Map<string, Invite>;
   constructor(data: DataWithClient<APIGuild | APIGuildWithShard>) {
     super(data);
 
@@ -394,18 +394,24 @@ export class Guild extends BaseGuild {
   }
 
   _resolve() {
-    for (const role of this.partial.roles) {
-      this.roles.add(role);
-      this._client.cache.roles.add(role);
+    if (Array.isArray(this.partial.roles)) {
+      for (const role of this.partial.roles) {
+        this.roles.add(role);
+        this._client.cache.roles.add(role);
+      }
     }
 
-    for (const emoji of this.partial.emojis) {
-      this.emojis.add(emoji);
-      this._client.cache.emojis.add(emoji);
+    if (Array.isArray(this.partial.emojis)) {
+      for (const emoji of this.partial.emojis) {
+        this.emojis.add(emoji);
+        this._client.cache.emojis.add(emoji);
+      }
     }
 
-    for (const sticker of this.partial.stickers) {
-      this.stickers.add(sticker);
+    if (Array.isArray(this.partial.stickers)) {
+      for (const sticker of this.partial.stickers) {
+        this.stickers.add(sticker);
+      }
     }
   }
 
