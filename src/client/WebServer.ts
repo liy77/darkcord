@@ -1,21 +1,8 @@
-import {
-  MessagePostData,
-  RawWebServerResponse,
-  WebServerEvents,
-  WebServerOptions,
-} from "@typings/index";
-import {
-  APICommandAutocompleteInteractionResponseCallbackData,
-  APIInteraction,
-  APIInteractionResponseCallbackData,
-  InteractionResponseType,
-  InteractionType,
-  RESTPostAPIInteractionCallbackJSONBody,
-} from "discord-api-types/v10";
+import { MessagePostData, RawWebServerResponse, WebServerEvents, WebServerOptions } from "@typings/index";
+import { APICommandAutocompleteInteractionResponseCallbackData, APIInteraction, APIInteractionResponseCallbackData, InteractionResponseType, InteractionType } from "discord-api-types/v10";
 import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import http from "node:http";
-import { FormData } from "undici";
 
 import { MakeError } from "../utils/index";
 import { InteractionClient } from "./Client";

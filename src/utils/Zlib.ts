@@ -5,7 +5,7 @@ export class Zlib {
   _wasm: any;
   constructor() {
     this._wasm = createWebAssemblyModule(
-      path.join(__dirname, "..", "zlib.wasm")
+      path.join(__dirname, "zlib.wasm")
     );
   }
 
