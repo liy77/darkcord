@@ -89,7 +89,7 @@ export class BaseGuild extends Base {
   constructor(data: DataWithClient<APIPartialGuild>) {
     super(data, data.client);
 
-    this.name = data.name
+    this.name = data.name;
     this.banner = data.banner ?? null;
     this.icon = data.icon ?? null;
     this.features = data.features;
@@ -433,12 +433,19 @@ export class Guild extends BaseGuild {
    */
   createMemberBan(
     userId: string,
-    options: KeysToCamelCase<RESTPutAPIGuildBanJSONBody>,
+    options: KeysToCamelCase<RESTPutAPIGuildBanJSONBody> = {},
     reason?: string
   ) {
+    if (
+      !Number.isNaN(options.deleteMessageDays) &&
+      !options.deleteMessageSeconds
+    ) {
+      // Converting days to seconds
+      options.deleteMessageSeconds = options.deleteMessageDays * 86400;
+    }
+
     const opts: RESTPutAPIGuildBanJSONBody = {
-      delete_message_seconds: options.deleteMessageSeconds,
-      delete_message_days: options.deleteMessageSeconds,
+      delete_message_seconds: options.deleteMessageSeconds || 0,
     };
 
     return this._client.rest.createGuildBan(this.id, userId, opts, reason);

@@ -1,5 +1,18 @@
-import { DataWithClient, DisplayUserAvatarOptions, KeysToCamelCase } from "@typings/index";
-import { APIGuildMember, APIThreadMember, CDNRoutes, ImageFormat, RESTPatchAPIGuildMemberJSONBody, RESTPutAPIGuildBanJSONBody, RouteBases, ThreadMemberFlags } from "discord-api-types/v10";
+import {
+  DataWithClient,
+  DisplayUserAvatarOptions,
+  KeysToCamelCase,
+} from "@typings/index";
+import {
+  APIGuildMember,
+  APIThreadMember,
+  CDNRoutes,
+  ImageFormat,
+  RESTPatchAPIGuildMemberJSONBody,
+  RESTPutAPIGuildBanJSONBody,
+  RouteBases,
+  ThreadMemberFlags,
+} from "discord-api-types/v10";
 
 import { Base } from "./Base";
 import { BitField } from "./BitField";
@@ -121,7 +134,7 @@ export class Member extends Base {
     return this.guild.removeMemberRole(this.id, roleId, reason);
   }
 
-  ban(options: KeysToCamelCase<RESTPutAPIGuildBanJSONBody>, reason?: string) {
+  ban(options?: KeysToCamelCase<RESTPutAPIGuildBanJSONBody>, reason?: string) {
     return this.guild.createMemberBan(this.id, options, reason);
   }
 
