@@ -134,7 +134,7 @@ export class Message extends Base {
     this.stickerItems = data.sticker_items;
     this.channel = null;
     this.guild = guild ?? null;
-    this.guildId = guild.id;
+    this.guildId = guild?.id;
     this.reactions = new Cache();
 
     if (Array.isArray(data.reactions)) {
