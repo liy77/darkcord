@@ -9,6 +9,7 @@ import {
   KeysToCamelCase,
 } from "@typings/index";
 import {
+  APIAutoModerationRuleTriggerMetadata,
   APIGuild,
   APIGuildScheduledEvent,
   APIGuildScheduledEventEntityMetadata,
@@ -35,9 +36,11 @@ import {
   GuildVerificationLevel,
   ImageFormat,
   RESTGetAPIGuildBansQuery,
+  RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPICurrentGuildMemberJSONBody,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
+  RESTPostAPIAutoModerationRuleJSONBody,
   RESTPostAPIGuildPruneJSONBody,
   RESTPostAPIGuildRoleJSONBody,
   RESTPostAPIGuildScheduledEventJSONBody,
@@ -624,6 +627,76 @@ export class Guild extends BaseGuild {
         privacy_level: options.privacyLevel,
       },
       reason
+    );
+  }
+
+  createAutoModerationRule(
+    options: Omit<
+      KeysToCamelCase<RESTPostAPIAutoModerationRuleJSONBody>,
+      "triggerMetadata"
+    > & {
+      triggerMetadata?: KeysToCamelCase<APIAutoModerationRuleTriggerMetadata>;
+    },
+    reason?: string
+  ) {
+    return this._client.rest.createGuildAutoModerationRule(
+      this.id,
+      {
+        actions: options.actions,
+        enabled: options.enabled,
+        event_type: options.eventType,
+        exempt_channels: options.exemptChannels,
+        exempt_roles: options.exemptRoles,
+        name: options.name,
+        trigger_type: options.triggerType,
+        trigger_metadata: options.triggerMetadata && {
+          allow_list: options.triggerMetadata.allowList,
+          keyword_filter: options.triggerMetadata.keywordFilter,
+          mention_total_limit: options.triggerMetadata.mentionTotalLimit,
+          presets: options.triggerMetadata.presets,
+          regex_patterns: options.triggerMetadata.regexPatterns,
+        },
+      },
+      reason
+    );
+  }
+
+  deleteAutoModerationRule(autoModerationRuleId: string, reason?: string) {
+    return this._client.rest.deleteGuildAutoModerationRule(
+      this.id,
+      autoModerationRuleId,
+      reason
+    );
+  }
+
+  editAutoModerationRule(
+    autoModerationRuleId: string,
+    options: Omit<
+      KeysToCamelCase<RESTPatchAPIAutoModerationRuleJSONBody>,
+      "triggerMetadata"
+    > & {
+      triggerMetadata?: KeysToCamelCase<APIAutoModerationRuleTriggerMetadata>;
+    },
+    reason?: string
+  ) {
+    return this._client.rest.modifyGuildModerationRule(
+      this.id,
+      autoModerationRuleId,
+      {
+        actions: options.actions,
+        enabled: options.enabled,
+        event_type: options.eventType,
+        exempt_channels: options.exemptChannels,
+        exempt_roles: options.exemptRoles,
+        name: options.name,
+        trigger_metadata: options.triggerMetadata && {
+          allow_list: options.triggerMetadata.allowList,
+          keyword_filter: options.triggerMetadata.keywordFilter,
+          mention_total_limit: options.triggerMetadata.mentionTotalLimit,
+          presets: options.triggerMetadata.presets,
+          regex_patterns: options.triggerMetadata.regexPatterns,
+        },
+      }
     );
   }
 

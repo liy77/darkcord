@@ -1,6 +1,7 @@
 import EventEmitter from "node:events";
 import {
   APIApplication,
+  APIAutoModerationRule,
   APIBan,
   APIChannel,
   APICommandAutocompleteInteractionResponseCallbackData,
@@ -27,11 +28,13 @@ import {
   InteractionResponseType,
   RESTGetAPIChannelMessagesQuery,
   RESTGetAPIGuildBansQuery,
+  RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPIChannelJSONBody,
   RESTPatchAPIChannelResult,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
   RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
+  RESTPostAPIAutoModerationRuleJSONBody,
   RESTPostAPIChannelMessagesThreadsJSONBody,
   RESTPostAPIChannelThreadsJSONBody,
   RESTPostAPIChannelWebhookJSONBody,
@@ -556,5 +559,39 @@ export class Rest extends EventEmitter {
         ? `?thread_id=${threadId}`
         : ""
     ) as Promise<void>;
+  }
+
+  createGuildAutoModerationRule(
+    guildId: string,
+    options: RESTPostAPIAutoModerationRuleJSONBody,
+    reason?: string
+  ) {
+    return this.post(Routes.guildAutoModerationRules(guildId), options, {
+      reason,
+    }) as Promise<APIAutoModerationRule>;
+  }
+
+  deleteGuildAutoModerationRule(
+    guildId: string,
+    autoModerationRuleId: string,
+    reason?: string
+  ) {
+    return this.delete(
+      Routes.guildAutoModerationRule(guildId, autoModerationRuleId),
+      { reason }
+    ) as Promise<void>;
+  }
+
+  modifyGuildModerationRule(
+    guildId: string,
+    autoModerationRuleId: string,
+    options: RESTPatchAPIAutoModerationRuleJSONBody,
+    reason?: string
+  ) {
+    return this.patch(
+      Routes.guildAutoModerationRule(guildId, autoModerationRuleId),
+      options,
+      { reason }
+    ) as Promise<APIAutoModerationRule>;
   }
 }
