@@ -72,6 +72,8 @@ export namespace Resolvable {
       } else {
         resolved = new Guild({ ...guildResolvable, client });
       }
+    } else {
+      resolved = guildResolvable;
     }
 
     if (Array.isArray(resolved.partial.roles)) {

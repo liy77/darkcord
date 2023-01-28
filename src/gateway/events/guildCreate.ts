@@ -19,6 +19,9 @@ export class GuildCreate extends Event {
       this.client.cache.channels.add(resolved);
     }
 
+    // Add guild to global cache
+    this.client.cache.guilds._add(guild)
+
     if (this.client.websocket.allReady()) {
       this.client.emit("guildCreate", guild);
     } else if (this.gatewayShard.status === GatewayStatus.WaitingGuilds) {
