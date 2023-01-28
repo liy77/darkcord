@@ -12,10 +12,8 @@ export class MessageDelete extends Event {
       if (channel instanceof ThreadChannel) channel.messageCount--;
 
       const message = structuredClone(channel.messages.get(data.id));
-
-      channel.messages.delete(data.id);
-
       this.client.emit("messageDelete", message);
+      channel.messages.delete(data.id);
     }
   }
 }

@@ -53,9 +53,9 @@ export namespace Resolvable {
       resolved.guild
     ) as TextBasedChannel;
 
-    channel.messages.add(resolved);
     resolved.channel = channel;
     resolved.isResolved = true;
+    channel.messages.add(resolved);
 
     return resolved;
   }

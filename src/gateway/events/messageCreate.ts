@@ -15,8 +15,6 @@ export class MessageCreate extends Event {
       guild
     );
 
-    Resolvable.resolveMessage(message, this.client);
-
-    this.client.emit("messageCreate", message);
+    this.client.emit("messageCreate", Resolvable.resolveMessage(message, this.client));
   }
 }

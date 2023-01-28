@@ -24,10 +24,10 @@ export class MessageUpdate extends Event {
       data.guild_id && this.getGuild(data.guild_id)
     );
 
-    Resolvable.resolveMessage(updated, this.client)
-
-    channel.messages.add(updated);
-
-    this.client.emit("messageUpdate", old, updated);
+    this.client.emit(
+      "messageUpdate",
+      old,
+      Resolvable.resolveMessage(updated, this.client)
+    );
   }
 }

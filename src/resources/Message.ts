@@ -117,10 +117,16 @@ export class Message extends Base {
     this.embeds = data.embeds;
     this.attachments = data.attachments;
     this.referencedMessage = data.referenced_message
-      ? new Message({
-          ...data.referenced_message,
-          client: this._client,
-        })
+      ? Resolvable.resolveMessage(
+          new Message(
+            {
+              ...data.referenced_message,
+              client: this._client,
+            },
+            this.guild
+          ),
+          this._client
+        )
       : null;
     this.webhookId = data.webhook_id;
     this.nonce = data.nonce;
@@ -159,7 +165,7 @@ export class Message extends Base {
     content.message_reference.message_id = this.id;
 
     if (!this.isResolved) {
-      Resolvable.resolveMessage(this, this._client);
+      throw new Error("Message not resolved")
     }
 
     return this.channel.createMessage(content);
@@ -187,7 +193,7 @@ export class Message extends Base {
 
   delete(reason?: string) {
     if (!this.isResolved) {
-      Resolvable.resolveMessage(this, this._client);
+      throw new Error("Message not resolved")
     }
 
     return this.channel.deleteMessage(this.id, reason);

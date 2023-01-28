@@ -45,6 +45,7 @@ import { GuildChannelCache } from "@cache/ChannelCache";
 import { MemberCache } from "../cache/MemberCache";
 import { Emoji } from "./Emoji";
 import { channelMention } from "@utils/Constants";
+import { Resolvable } from "@utils/Resolvable";
 
 export class ChannelFlags extends BitField<CFlags, typeof CFlags> {
   constructor(flags: CFlags) {
@@ -169,10 +170,13 @@ export class TextBasedChannel extends Channel {
   async createMessage(content: MessagePostData) {
     const message = await this._client.rest.createMessage(this.id, content);
 
-    return new Message({
-      client: this._client,
-      ...message,
-    });
+    return Resolvable.resolveMessage(
+      new Message({
+        client: this._client,
+        ...message,
+      }),
+      this._client
+    );
   }
 
   deleteMessage(id: string, reason?: string) {
@@ -289,6 +293,23 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
 
     this.topic = data.topic;
     this.rateLimitPerUser = data.rate_limit_per_user;
+    this.messages = new ChannelMessageCache(
+      this._client.options.cache?.messageCacheLimitPerChannel,
+      this._client.cache,
+      this
+    );
+  }
+
+  async createMessage(content: MessagePostData) {
+    const message = await this._client.rest.createMessage(this.id, content);
+
+    return Resolvable.resolveMessage(
+      new Message({
+        client: this._client,
+        ...message,
+      }, this.guild),
+      this._client
+    );
   }
 }
 
@@ -529,6 +550,11 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
     super(data, guild);
 
     this.videoQualityMode = data.video_quality_mode;
+    this.messages = new ChannelMessageCache(
+      this._client.options.cache?.messageCacheLimitPerChannel,
+      this._client.cache,
+      this
+    );
   }
 }
 

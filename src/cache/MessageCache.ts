@@ -2,11 +2,12 @@ import {
   APIMessage,
   RESTGetAPIChannelMessagesQuery,
 } from "discord-api-types/v10";
-import { TextBasedChannel } from "@resources/Channel";
+import { GuildTextChannel, TextBasedChannel } from "@resources/Channel";
 import { Message } from "@resources/Message";
 import { BaseCacheOptions } from "@typings/index";
 import { Cache } from "./Cache";
 import { CacheManager } from "./CacheManager";
+import { Resolvable } from "@utils/Resolvable";
 
 export class ChannelMessageCache extends Cache<Message> {
   constructor(
@@ -20,24 +21,28 @@ export class ChannelMessageCache extends Cache<Message> {
   get(id: string) {
     let message = super.get(id) as unknown as APIMessage | Message;
 
-    if (!message) return null
+    if (!message) return null;
 
     if (!(message instanceof Message)) {
-      message = new Message({
-        ...message,
-        client: this.manager.client,
-      });
+      const guild =
+        "guild" in this.channel
+          ? (this.channel as GuildTextChannel).guild
+          : undefined;
+
+      message = new Message(
+        {
+          ...message,
+          client: this.manager.client,
+        },
+        guild
+      );
     }
 
-    return message;
+    return Resolvable.resolveMessage(message, this.manager.client);
   }
 
   add(message: Message | APIMessage, replace = true) {
-    return super._add(
-      message instanceof Message ? message.partial : message,
-      replace,
-      message.id
-    );
+    return super._add(message, replace, message.id);
   }
 
   fetch(id: string): Promise<Message>;
@@ -51,11 +56,12 @@ export class ChannelMessageCache extends Cache<Message> {
         options
       );
 
-      return this.add(
+      return Resolvable.resolveMessage(
         new Message({
           ...message,
           client: this.manager.client,
-        })
+        }),
+        this.manager.client
       );
     }
 
@@ -66,11 +72,12 @@ export class ChannelMessageCache extends Cache<Message> {
 
     return Promise.all(
       messageArr.map((message_1) =>
-        this.add(
+        Resolvable.resolveMessage(
           new Message({
             ...message_1,
             client: this.manager.client,
-          })
+          }),
+          this.manager.client
         )
       )
     );

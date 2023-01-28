@@ -82,9 +82,14 @@ export class BaseGuild extends Base {
    * The vanity url code for the guild
    */
   vanityUrlCode: string | null;
+  /**
+   * Guild name (2-100 characters, excluding trailing and leading whitespace)
+   */
+  name: string;
   constructor(data: DataWithClient<APIPartialGuild>) {
     super(data, data.client);
 
+    this.name = data.name
     this.banner = data.banner ?? null;
     this.icon = data.icon ?? null;
     this.features = data.features;
@@ -303,10 +308,6 @@ export class Guild extends BaseGuild {
    * The type of Student Hub the guild is
    */
   hubType: GuildHubType | null;
-  /**
-   * Guild name (2-100 characters, excluding trailing and leading whitespace)
-   */
-  name: string;
   declare partial: DataWithClient<APIGuild>;
   /**
    * Members of guild
