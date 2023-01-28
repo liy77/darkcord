@@ -17,6 +17,7 @@ import { Rest } from "../rest/Rest";
 import { WebServer } from "./WebServer";
 import { WebSocket } from "./WebSocket";
 import { PluginManager } from "@utils/PluginManager";
+import { ClientApplication } from "../resources/Application";
 
 export declare interface BaseClient<E extends Record<string, any>> {
   on<T extends keyof E>(event: T, listener: (...args: E[T]) => any): this;
@@ -30,6 +31,7 @@ export declare interface BaseClient<E extends Record<string, any>> {
 export class BaseClient<E> extends EventEmitter {
   rest: Rest;
   options: BaseClientOptions;
+  application!: ClientApplication;
 
   constructor(options?: BaseClientOptions) {
     super();
@@ -88,7 +90,16 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
     this.webserver = new WebServer(this, options.webserver);
     this.cache = new CacheManager(this);
 
-    this.webserver.on("listen", () => this.emit("connect"));
+    this.webserver.on("listen", async () => {
+      const rawApplication = await this.rest.getCurrentApplication();
+      this.application = new ClientApplication({
+        ...rawApplication,
+        client: this,
+      });
+
+      this.emit("connect");
+    });
+
     this.webserver.on("interactionDataReceived", (body, res) => {
       this.emit(
         "interactionCreate",
@@ -173,6 +184,10 @@ export class Client extends BaseClient<ClientEvents> {
 
     this.cache = new CacheManager(this);
     this.websocket = new WebSocket(this);
+
+    // This is set in ready
+    this.user = null;
+    this.application = null;
   }
 
   async connect() {
