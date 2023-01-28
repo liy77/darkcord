@@ -36,14 +36,17 @@ import {
   GuildVerificationLevel,
   ImageFormat,
   RESTGetAPIGuildBansQuery,
+  RESTPatchAPIApplicationCommandJSONBody,
   RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPICurrentGuildMemberJSONBody,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
+  RESTPostAPIApplicationCommandsJSONBody,
   RESTPostAPIAutoModerationRuleJSONBody,
   RESTPostAPIGuildPruneJSONBody,
   RESTPostAPIGuildRoleJSONBody,
   RESTPostAPIGuildScheduledEventJSONBody,
+  RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIGuildBanJSONBody,
   RouteBases,
 } from "discord-api-types/v10";
@@ -724,6 +727,34 @@ export class Guild extends BaseGuild {
     }
 
     return new Permissions(perms);
+  }
+
+  createApplicationCommand(options: RESTPostAPIApplicationCommandsJSONBody) {
+    return this._client.application.createGuildCommand(this.id, options);
+  }
+
+  editApplicationCommand(
+    commandId: string,
+    options: RESTPatchAPIApplicationCommandJSONBody
+  ) {
+    return this._client.application.editGuildCommand(
+      this.id,
+      commandId,
+      options
+    );
+  }
+
+  deleteApplicationCommand(commandId: string) {
+    return this._client.application.deleteGuildCommand(this.id, commandId);
+  }
+
+  bulkOverwriteApplicationCommands(
+    commands: RESTPutAPIApplicationCommandsJSONBody
+  ) {
+    return this._client.application.bulkOverwriteGuildCommands(
+      this.id,
+      commands
+    );
   }
 }
 

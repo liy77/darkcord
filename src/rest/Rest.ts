@@ -1,6 +1,7 @@
 import EventEmitter from "node:events";
 import {
   APIApplication,
+  APIApplicationCommand,
   APIAutoModerationRule,
   APIBan,
   APIChannel,
@@ -28,12 +29,14 @@ import {
   InteractionResponseType,
   RESTGetAPIChannelMessagesQuery,
   RESTGetAPIGuildBansQuery,
+  RESTPatchAPIApplicationCommandJSONBody,
   RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPIChannelJSONBody,
   RESTPatchAPIChannelResult,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
   RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
+  RESTPostAPIApplicationCommandsJSONBody,
   RESTPostAPIAutoModerationRuleJSONBody,
   RESTPostAPIChannelMessagesThreadsJSONBody,
   RESTPostAPIChannelThreadsJSONBody,
@@ -44,6 +47,7 @@ import {
   RESTPostAPIGuildRoleJSONBody,
   RESTPostAPIGuildScheduledEventJSONBody,
   RESTPostAPIStageInstanceJSONBody,
+  RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIGuildBanJSONBody,
   Routes,
 } from "discord-api-types/v10";
@@ -593,5 +597,86 @@ export class Rest extends EventEmitter {
       options,
       { reason }
     ) as Promise<APIAutoModerationRule>;
+  }
+
+  createApplicationCommand(
+    applicationId: string,
+    options: RESTPostAPIApplicationCommandsJSONBody
+  ) {
+    return this.post(
+      Routes.applicationCommands(applicationId),
+      options
+    ) as Promise<APIApplicationCommand>;
+  }
+
+  deleteApplicationCommand(applicationId: string, commandId: string) {
+    return this.delete(
+      Routes.applicationCommand(applicationId, commandId)
+    ) as Promise<void>;
+  }
+
+  editApplicationCommand(
+    applicationId: string,
+    commandId: string,
+    options: RESTPatchAPIApplicationCommandJSONBody
+  ) {
+    return this.patch(
+      Routes.applicationCommand(applicationId, commandId),
+      options
+    ) as Promise<APIApplication>;
+  }
+
+  bulkOverwriteApplicationCommands(
+    applicationId: string,
+    options: RESTPutAPIApplicationCommandsJSONBody
+  ) {
+    return this.put(
+      Routes.applicationCommands(applicationId),
+      options
+    ) as Promise<APIApplication[]>;
+  }
+
+  createGuildApplicationCommand(
+    applicationId: string,
+    guildId: string,
+    options: RESTPostAPIApplicationCommandsJSONBody
+  ) {
+    return this.post(
+      Routes.applicationGuildCommands(applicationId, guildId),
+      options
+    ) as Promise<APIApplicationCommand>;
+  }
+
+  deleteGuildApplicationCommand(
+    applicationId: string,
+    guildId: string,
+    commandId: string
+  ) {
+    return this.delete(
+      Routes.applicationGuildCommand(applicationId, guildId, commandId)
+    ) as Promise<void>;
+  }
+
+  editGuildApplicationCommand(
+    applicationId: string,
+    guildId: string,
+    commandId: string,
+    options: RESTPatchAPIApplicationCommandJSONBody
+  ) {
+    return this.patch(
+      Routes.applicationGuildCommand(applicationId, guildId, commandId),
+      options
+    ) as Promise<APIApplication>;
+  }
+
+  bulkOverwriteGuildApplicationCommands(
+    applicationId: string,
+    guildId: string,
+    options: RESTPutAPIApplicationCommandsJSONBody
+  ) {
+    return this.put(
+      Routes.applicationGuildCommands(applicationId, guildId),
+      options
+    ) as Promise<APIApplication[]>;
   }
 }

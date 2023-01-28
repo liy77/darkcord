@@ -2,12 +2,16 @@ import {
   APIApplication,
   APIApplicationInstallParams,
   ApplicationFlags,
+  RESTPatchAPIApplicationCommandJSONBody,
+  RESTPostAPIApplicationCommandsJSONBody,
+  RESTPutAPIApplicationCommandsJSONBody,
 } from "discord-api-types/v10";
 import { DataWithClient } from "@typings/index";
 import { Team } from "./Team";
 import { User } from "./User";
+import { Base } from "./Base";
 
-export class Application {
+export class Application extends Base {
   /**
    * the name of the app
    */
@@ -98,6 +102,8 @@ export class Application {
   roleConnectionsVerificationUrl?: string | undefined;
 
   constructor(data: DataWithClient<APIApplication>) {
+    super(data, data.client);
+
     this.name = data.name;
     this.icon = data.icon;
     this.description = data.description;
@@ -126,4 +132,73 @@ export class Application {
   }
 }
 
-export default Application;
+export class ClientApplication extends Application {
+  createCommand(options: RESTPostAPIApplicationCommandsJSONBody) {
+    return this._client.rest.createApplicationCommand(this.id, options);
+  }
+
+  createGuildCommand(
+    guildId: string,
+    options: RESTPostAPIApplicationCommandsJSONBody
+  ) {
+    return this._client.rest.createGuildApplicationCommand(
+      this.id,
+      guildId,
+      options
+    );
+  }
+
+  deleteCommand(commandId: string) {
+    return this._client.rest.deleteApplicationCommand(this.id, commandId);
+  }
+
+  deleteGuildCommand(guildId: string, commandId: string) {
+    return this._client.rest.deleteGuildApplicationCommand(
+      this.id,
+      guildId,
+      commandId
+    );
+  }
+
+  editCommand(
+    commandId: string,
+    options: RESTPatchAPIApplicationCommandJSONBody
+  ) {
+    return this._client.rest.editApplicationCommand(
+      this.id,
+      commandId,
+      options
+    );
+  }
+
+  editGuildCommand(
+    guildId: string,
+    commandId: string,
+    options: RESTPatchAPIApplicationCommandJSONBody
+  ) {
+    return this._client.rest.editGuildApplicationCommand(
+      this.id,
+      guildId,
+      commandId,
+      options
+    );
+  }
+
+  bulkOverwriteCommands(commands: RESTPutAPIApplicationCommandsJSONBody) {
+    return this._client.rest.bulkOverwriteApplicationCommands(
+      this.id,
+      commands
+    );
+  }
+
+  bulkOverwriteGuildCommands(
+    guildId: string,
+    commands: RESTPutAPIApplicationCommandsJSONBody
+  ) {
+    return this._client.rest.bulkOverwriteGuildApplicationCommands(
+      this.id,
+      guildId,
+      commands
+    );
+  }
+}
