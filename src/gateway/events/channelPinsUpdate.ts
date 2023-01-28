@@ -7,6 +7,7 @@ import {
   GatewayChannelPinsUpdateDispatchData,
 } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { isTextBasedChannel } from "@utils/index";
 
 export class ChannelPinsUpdate extends Event {
   run(data: GatewayChannelPinsUpdateDispatchData) {
@@ -16,14 +17,10 @@ export class ChannelPinsUpdate extends Event {
       guild = this.getGuild(data.guild_id);
     }
 
-    const channel = this.client.cache.channels.get(data.channel_id) as
-      | TextBasedChannel
-      | APITextBasedChannel<ChannelType>;
+    const channel = this.client.cache.channels.get(data.channel_id);
 
-    if (channel instanceof TextBasedChannel) {
+    if (isTextBasedChannel(channel)) {
       channel.lastPinTimestamp = data.last_pin_timestamp;
-    } else {
-      channel.last_pin_timestamp = data.last_pin_timestamp;
     }
 
     if (guild) {

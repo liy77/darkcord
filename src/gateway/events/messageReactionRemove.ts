@@ -3,6 +3,7 @@ import { Reaction } from "@resources/Emoji";
 import { Partials } from "@utils/Constants";
 import { GatewayMessageReactionRemoveDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { isTextBasedChannel } from "../../utils/index";
 
 export class MessageReactionRemove extends Event {
   run(data: GatewayMessageReactionRemoveDispatchData) {
@@ -23,7 +24,7 @@ export class MessageReactionRemove extends Event {
 
     const user = this.client.cache.users.get(data.user_id);
 
-    if (channel instanceof TextBasedChannel && reaction instanceof Reaction) {
+    if (isTextBasedChannel(channel) && reaction instanceof Reaction) {
       reaction.users.add(user);
     }
 

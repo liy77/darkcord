@@ -1,6 +1,7 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { Reaction } from "@resources/Emoji";
 import { Partials } from "@utils/Constants";
+import { isTextBasedChannel } from "@utils/index";
 import { GatewayMessageReactionAddDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -23,7 +24,7 @@ export class MessageReactionAdd extends Event {
 
     const user = this.client.cache.users.get(data.user_id);
 
-    if (channel instanceof TextBasedChannel) {
+    if (isTextBasedChannel(channel)) {
       if (reaction instanceof Reaction) reaction.users.add(user);
 
       const message = channel.messages.get(data.message_id);

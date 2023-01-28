@@ -1,7 +1,7 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { GatewayMessageReactionRemoveAllDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
-import { structuredClone } from "@utils/index";
+import { isTextBasedChannel, structuredClone } from "@utils/index";
 
 export class MessageReactionRemoveAll extends Event {
   run(data: GatewayMessageReactionRemoveAllDispatchData) {
@@ -10,7 +10,7 @@ export class MessageReactionRemoveAll extends Event {
       this.getGuild(data.guild_id)
     );
 
-    if (channel instanceof TextBasedChannel) {
+    if (isTextBasedChannel(channel)) {
       const message = channel.messages.get(data.message_id);
 
       if (message) {

@@ -1,13 +1,13 @@
 import { TextBasedChannel, ThreadChannel } from "@resources/Channel";
 import { GatewayMessageDeleteBulkDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
-import { structuredClone } from "@utils/index";
+import { isTextBasedChannel, structuredClone } from "@utils/index";
 
 export class MessageDeleteBulk extends Event {
   run(data: GatewayMessageDeleteBulkDispatchData) {
     const channel = this.client.cache.channels.get(data.channel_id);
 
-    if (channel instanceof TextBasedChannel) {
+    if (isTextBasedChannel(channel)) {
       const messages = new Map();
 
       for (const id of data.ids) {
