@@ -155,6 +155,12 @@ export class Message extends Base {
   }
 
   async reply(content: MessagePostData) {
+    if (typeof content === "string") {
+      content = {
+        content,
+      };
+    }
+
     if (!content.message_reference) {
       content.message_reference = {
         message_id: this.id,
@@ -165,7 +171,7 @@ export class Message extends Base {
     content.message_reference.message_id = this.id;
 
     if (!this.isResolved) {
-      throw new Error("Message not resolved")
+      throw new Error("Message not resolved");
     }
 
     return this.channel.createMessage(content);
@@ -193,7 +199,7 @@ export class Message extends Base {
 
   delete(reason?: string) {
     if (!this.isResolved) {
-      throw new Error("Message not resolved")
+      throw new Error("Message not resolved");
     }
 
     return this.channel.deleteMessage(this.id, reason);
