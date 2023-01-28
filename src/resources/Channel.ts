@@ -46,6 +46,7 @@ import { MemberCache } from "../cache/MemberCache";
 import { Emoji } from "./Emoji";
 import { channelMention } from "@utils/Constants";
 import { Resolvable } from "@utils/Resolvable";
+import { transformMessagePostData } from "@utils/index";
 
 export class ChannelFlags extends BitField<CFlags, typeof CFlags> {
   constructor(flags: CFlags) {
@@ -168,7 +169,10 @@ export class TextBasedChannel extends Channel {
   }
 
   async createMessage(content: MessagePostData) {
-    const message = await this._client.rest.createMessage(this.id, content);
+    const message = await this._client.rest.createMessage(
+      this.id,
+      transformMessagePostData(content)
+    );
 
     return Resolvable.resolveMessage(
       new Message({
@@ -300,14 +304,21 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
     );
   }
 
+  // Override TextBasedChannel.createMessage for guild
   async createMessage(content: MessagePostData) {
-    const message = await this._client.rest.createMessage(this.id, content);
+    const message = await this._client.rest.createMessage(
+      this.id,
+      transformMessagePostData(content)
+    );
 
     return Resolvable.resolveMessage(
-      new Message({
-        client: this._client,
-        ...message,
-      }, this.guild),
+      new Message(
+        {
+          client: this._client,
+          ...message,
+        },
+        this.guild
+      ),
       this._client
     );
   }
@@ -554,6 +565,25 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
       this._client.options.cache?.messageCacheLimitPerChannel,
       this._client.cache,
       this
+    );
+  }
+
+  // Override TextBasedChannel.createMessage for guild
+  async createMessage(content: MessagePostData) {
+    const message = await this._client.rest.createMessage(
+      this.id,
+      transformMessagePostData(content)
+    );
+
+    return Resolvable.resolveMessage(
+      new Message(
+        {
+          client: this._client,
+          ...message,
+        },
+        this.guild
+      ),
+      this._client
     );
   }
 }

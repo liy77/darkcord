@@ -304,10 +304,32 @@ export function structuredClone<T>(o: T): T {
   return Object.assign({}, o);
 }
 
-export function isTextBasedChannel(c: Channel | APIChannel): c is TextBasedChannel {
+export function isTextBasedChannel(
+  c: Channel | APIChannel
+): c is TextBasedChannel {
   return (
     c instanceof TextBasedChannel ||
     c instanceof GuildTextChannel ||
     c instanceof VoiceChannel
   );
+}
+
+export function transformMessagePostData(
+  data: string | MessagePostData
+): MessagePostData {
+  if (typeof data === "string") {
+    return {
+      content: data,
+    };
+  }
+
+  if (!data.files && !data.embeds && !data.content) {
+    throw MakeError({
+      name: "InvalidMessagePostData",
+      message:
+        "Message post data must contain one of the following values: content, embeds, or files",
+    });
+  }
+
+  return data;
 }
