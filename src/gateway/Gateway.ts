@@ -255,7 +255,7 @@ export class GatewayShard extends EventEmitter {
   }
 
   #onPacket(data: GatewayReceivePayload | GatewaySendPayload) {
-    this.client.emit("packet", data)
+    this.client.emit("packet", data);
     switch (data.op) {
       case GatewayOpcodes.Hello: {
         this.heartbeatInterval = data.d.heartbeat_interval;
@@ -442,6 +442,8 @@ export class GatewayShard extends EventEmitter {
    * Send heartbeat to discord
    */
   sendHeartbeat() {
+    this.lastHeartbeatAck = Date.now();
+
     this.send(
       {
         op: GatewayOpcodes.Heartbeat,
@@ -449,8 +451,6 @@ export class GatewayShard extends EventEmitter {
       },
       true
     );
-
-    this.lastHeartbeatAck = Date.now();
   }
 
   ackHeartbeat() {
