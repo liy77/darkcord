@@ -39,6 +39,7 @@ export * from "@utils/Constants";
 export * from "@utils/index";
 export * from "@utils/Zlib";
 export * from "@utils/PluginManager";
+export * from "@utils/Resolvable";
 
 // Rest
 export * from "./rest/AsyncBucket";
