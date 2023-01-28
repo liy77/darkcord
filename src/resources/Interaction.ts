@@ -10,9 +10,7 @@ import {
   APIApplicationCommandInteractionDataBasicOption,
   APIApplicationCommandInteractionDataOption,
   APIApplicationCommandOptionChoice,
-  APIChatInputApplicationCommandInteraction,
   APIChatInputApplicationCommandInteractionData,
-  APIGuildMember,
   APIInteraction,
   APIInteractionDataResolved,
   APIInteractionDataResolvedGuildMember,
@@ -35,6 +33,8 @@ import { MakeError } from "@utils/index";
 import { WebServerInteractionResponse } from "@client/WebServer";
 import { Message } from "./Message";
 import { Member } from "./Member";
+import { Resolvable } from "@utils/Resolvable";
+import { GuildChannel } from "./Channel";
 
 export class Interaction extends Base {
   /**
@@ -78,7 +78,7 @@ export class Interaction extends Base {
         return new AutocompleteInteraction(data, res);
       }
       case InteractionType.ModalSubmit: {
-        return new ModalSubmitInteraction(data, res)
+        return new ModalSubmitInteraction(data, res);
       }
       default: {
         return new Interaction(data);
@@ -218,11 +218,20 @@ export class ReplyableInteraction extends Interaction {
       this.token,
       "@original"
     );
-    const message = new Message({ ...rawMessage, client: this._client });
+    const channel = this._client.cache.channels.get(rawMessage.channel_id);
+    const guildId =
+      channel instanceof GuildChannel
+        ? channel.guildId
+        : "guild_id" in channel
+        ? channel.guild_id
+        : undefined;
 
-    await message._resolve();
+    const message = new Message(
+      { ...rawMessage, client: this._client },
+      guildId ? Resolvable.resolveGuild(guildId, this._client) : undefined
+    );
 
-    return message;
+    return Resolvable.resolveMessage(message, this._client);
   }
 }
 

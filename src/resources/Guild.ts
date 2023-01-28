@@ -390,10 +390,6 @@ export class Guild extends BaseGuild {
     this.nsfwLevel = data.nsfw_level;
     this.premiumSubscriptionCount = data.premium_subscription_count ?? null;
 
-    this._resolve();
-  }
-
-  _resolve() {
     if (Array.isArray(this.partial.roles)) {
       for (const role of this.partial.roles) {
         this.roles.add(role);

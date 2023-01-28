@@ -6,6 +6,7 @@ import {
 } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Resolvable } from "@utils/Resolvable";
 
 export class MessageUpdate extends Event {
   async run(data: GatewayMessageUpdateDispatchData) {
@@ -23,7 +24,7 @@ export class MessageUpdate extends Event {
       data.guild_id && this.getGuild(data.guild_id)
     );
 
-    await updated._resolve()
+    Resolvable.resolveMessage(updated, this.client)
 
     channel.messages.add(updated);
 
