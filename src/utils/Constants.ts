@@ -44,3 +44,16 @@ export function roleMention(roleId: string): `<@&${string}>` {
 export function channelMention(channelId: string): `<#${string}>` {
   return `<#${channelId}>`;
 }
+
+export {
+  GatewayIntentBits,
+  PermissionFlagsBits,
+  ChannelFlags,
+  MessageFlags,
+  UserFlags,
+  ThreadMemberFlags,
+  GuildSystemChannelFlags,
+  ApplicationFlags,
+  ActivityFlags
+} from "discord-api-types/v10";
+
