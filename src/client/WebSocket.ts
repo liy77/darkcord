@@ -27,6 +27,7 @@ export class WebSocket {
     gatewayShard.on("reconnectRequired", () =>
       this.client.emit("shardReconnectRequired", id)
     );
+    gatewayShard.on("debug", (message) => this.client.emit("shardDebug", message))
 
     this.shards.set(id, gatewayShard);
 
