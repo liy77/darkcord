@@ -6,7 +6,11 @@ import {
 } from "../typings";
 import { FormData, fetch } from "undici";
 import { Blob } from "node:buffer";
-import { APIChannel, APIInteractionResponse } from "discord-api-types/v10";
+import {
+  APIChannel,
+  APIInteractionResponse,
+  Utils,
+} from "discord-api-types/v10";
 import { readFileSync } from "node:fs";
 import {
   Channel,
@@ -333,3 +337,38 @@ export function transformMessagePostData(
 
   return data;
 }
+
+const {
+  isApplicationCommandDMInteraction,
+  isChatInputApplicationCommandInteraction,
+  isApplicationCommandGuildInteraction,
+  isContextMenuApplicationCommandInteraction,
+  isDMInteraction,
+  isGuildInteraction,
+  isInteractionButton,
+  isLinkButton,
+  isMessageComponentButtonInteraction,
+  isMessageComponentDMInteraction,
+  isMessageComponentGuildInteraction,
+  isMessageComponentInteraction,
+  isMessageComponentSelectMenuInteraction,
+} = Utils;
+
+
+// Exporting utils of Discord API
+export {
+  isApplicationCommandDMInteraction,
+  isChatInputApplicationCommandInteraction,
+  isApplicationCommandGuildInteraction,
+  isContextMenuApplicationCommandInteraction,
+  isDMInteraction,
+  isGuildInteraction,
+  isInteractionButton,
+  isLinkButton,
+  isMessageComponentButtonInteraction,
+  isMessageComponentDMInteraction,
+  isMessageComponentGuildInteraction,
+  isMessageComponentInteraction,
+  isMessageComponentSelectMenuInteraction,
+};
+
