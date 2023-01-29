@@ -195,6 +195,8 @@ export class ReplyableInteraction extends Interaction {
         InteractionResponseType.ChannelMessageWithSource
       );
     }
+
+    this.acknowledged = true;
   }
 
   async editReply(messageId: string, data: MessagePostData) {
