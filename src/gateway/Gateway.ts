@@ -28,7 +28,12 @@ import { EventSource } from "./EventSource";
 import { WebSocketUtil } from "./WebSocketUtil";
 import { GatewayStatus } from "../utils/Constants";
 import crypto from "node:crypto";
-import { setTimeout, setInterval, clearTimeout } from "node:timers";
+import {
+  setTimeout,
+  setInterval,
+  clearTimeout,
+  clearInterval,
+} from "node:timers";
 
 let zlib: typeof ZlibSync | Zlib;
 
@@ -136,6 +141,7 @@ export class GatewayShard extends EventEmitter {
   queueTotal: number;
   queueRemaining: number;
   queueTimer: NodeJS.Timeout;
+  connectedAt: number;
 
   constructor(public client: Client, options?: GatewayShardOptions) {
     super();
@@ -243,7 +249,9 @@ export class GatewayShard extends EventEmitter {
   }
 
   #onOpen() {
-    this.debug("Connected to Discord Gateway");
+    this.debug(
+      `Connected to Discord Gateway in ${Date.now() - this.connectedAt}ms`
+    );
     this.emit("connect");
   }
 
@@ -624,6 +632,7 @@ export class GatewayShard extends EventEmitter {
       this.ws = new WebSocket(gatewayURL);
     }
 
+    this.connectedAt = Date.now();
     this.ws.binaryType = "arraybuffer";
     this.ws.onopen = this.#onOpen.bind(this);
     this.ws.onmessage = this.#onMessage.bind(this);
