@@ -201,7 +201,7 @@ export class ReplyableInteraction extends Interaction {
 
   async editReply(messageId: string, data: MessagePostData) {
     await this._client.rest.editWebhookMessage(
-      this.id,
+      this.applicationId,
       this.token,
       messageId,
       data
@@ -220,7 +220,7 @@ export class ReplyableInteraction extends Interaction {
       });
     }
 
-    return this._client.rest.executeWebhook(this.id, this.token, data);
+    return this._client.rest.executeWebhook(this.applicationId, this.token, data);
   }
 
   async getOriginalReply() {
@@ -232,7 +232,7 @@ export class ReplyableInteraction extends Interaction {
     }
 
     const rawMessage = await this._client.rest.getWebhookMessage(
-      this.id,
+      this.applicationId,
       this.token,
       "@original"
     );
