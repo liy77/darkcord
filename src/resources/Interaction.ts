@@ -29,12 +29,12 @@ import { Base } from "./Base";
 import { Guild } from "./Guild";
 import { Role } from "./Role";
 import { User } from "./User";
-import { MakeError } from "@utils/index";
 import { WebServerInteractionResponse } from "@client/WebServer";
 import { Message } from "./Message";
 import { Member } from "./Member";
 import { Resolvable } from "@utils/Resolvable";
 import { GuildChannel } from "./Channel";
+import { MakeError } from "@utils/index";
 
 export class Interaction extends Base {
   /**
@@ -84,6 +84,22 @@ export class Interaction extends Base {
         return new Interaction(data);
       }
     }
+  }
+
+  isCommand(): this is CommandInteraction {
+    return this instanceof CommandInteraction
+  }
+
+  isComponent(): this is ComponentInteraction {
+    return this instanceof ComponentInteraction
+  }
+
+  isAutoComplete(): this is AutocompleteInteraction {
+    return this instanceof AutocompleteInteraction;
+  }
+
+  isModalSubmit(): this is ModalSubmitInteraction {
+    return this instanceof ModalSubmitInteraction;
   }
 }
 
@@ -551,11 +567,21 @@ export class CommandInteraction extends ReplyableInteraction {
    * the guild object it was sent from
    */
   guild?: Guild | null;
+  /**
+   * The command data payload
+   */
   data:
     | ChatInputApplicationCommandInteractionData
     | UserApplicationCommandInteractionData
     | MessageApplicationCommandInteractionData;
-
+  /**
+   * Member of the invoked command
+   */
+  member: Member;
+  /**
+   * User of the invoked command
+   */
+  user: User | APIUser;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
     httpResponse?: WebServerInteractionResponse
@@ -565,6 +591,16 @@ export class CommandInteraction extends ReplyableInteraction {
     this.guildLocale = data.guild_locale;
     this.channelId = data.channel_id;
     this.guild = data.client.cache.guilds.get(data.guild_id);
+    this.member = null;
+    this.user = null;
+
+    if ("member" in data && this.guild) {
+      const member = new Member(data.member, this.guild);
+      this.member = this.guild.members.add(member);
+      this.user = this.member.user;
+    } else {
+      this.user = this._client.cache.users.add(data.user);
+    }
 
     if (data.data.type === ApplicationCommandType.ChatInput) {
       this.data = new ChatInputApplicationCommandInteractionData(
