@@ -30,7 +30,7 @@ export function parseResponse(res: Response) {
 }
 
 export function delay(time: number) {
-  return new Promise((resolve) => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time).unref());
 }
 
 export class DiscordAPIError extends Error {

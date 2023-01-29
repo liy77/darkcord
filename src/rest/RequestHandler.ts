@@ -122,7 +122,7 @@ export class RequestHandler {
       const controller = new AbortController();
       const timer = setTimeout(() => {
         controller.abort();
-      }, rest.requestTimeout);
+      }, rest.requestTimeout).unref();
 
       while (buckets.limited || bucket.limited) {
         const isGlobal = buckets.limited;

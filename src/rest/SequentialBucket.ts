@@ -51,7 +51,7 @@ export class SequentialBucket {
     const timer = setTimeout(async () => {
       this.timers.delete(timer);
       await fn();
-    }, ms);
+    }, ms).unref();
 
     this.timers.add(timer);
     return timer;
