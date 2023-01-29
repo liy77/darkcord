@@ -35,7 +35,7 @@ export * from "@resources/VoiceState";
 export * from "@resources/Integration";
 
 // Utils
-export * from "@utils/Constants";
+export * as Constants from "@utils/Constants";
 export * from "@utils/index";
 export * from "@utils/Zlib";
 export * from "@utils/PluginManager";
