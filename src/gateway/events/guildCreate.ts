@@ -20,7 +20,7 @@ export class GuildCreate extends Event {
     }
 
     // Add guild to global cache
-    this.client.cache.guilds._add(guild)
+    this.client.cache.guilds._add(guild);
 
     if (this.client.websocket.allReady()) {
       this.client.emit("guildCreate", guild);
@@ -29,12 +29,21 @@ export class GuildCreate extends Event {
       this.gatewayShard.pendingGuildsMap.delete(guild.id);
 
       if (this.gatewayShard.pendingGuilds === 0) {
+        this.gatewayShard.ready = true;
         this.fireClientReady();
       }
     }
   }
 
+  /**
+   * Emits "ready" event to client if all shards has ready
+   */
   fireClientReady() {
-    this.client.emit("ready");
+    // Checking if all shards has ready
+    if (this.client.websocket.allReady() && !this.client.isReady) {
+      this.client.isReady = true;
+      this.client.readyAt = Date.now();
+      this.client.emit("ready");
+    }
   }
 }

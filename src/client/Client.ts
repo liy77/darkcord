@@ -29,17 +29,31 @@ export declare interface BaseClient<E extends Record<string, any>> {
 }
 
 export class BaseClient<E> extends EventEmitter {
+  /** Client rest to make requests */
   rest: Rest;
+  /**
+   * Client options
+   */
   options: BaseClientOptions;
+  /**
+   * Application of this client
+   */
   application!: ClientApplication;
+  /**
+   * Client has ready
+   */
+  isReady: boolean;
+  /**
+   * Time that the bot was ready
+   */
+  readyAt: number;
 
   constructor(options?: BaseClientOptions) {
     super();
 
     options.partials ??= [];
-
+    this.isReady = false;
     this.options = options;
-
     this.rest = new Rest();
   }
 
@@ -91,11 +105,8 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
     this.cache = new CacheManager(this);
 
     this.webserver.on("listen", async () => {
-      const rawApplication = await this.rest.getCurrentApplication();
-      this.application = new ClientApplication({
-        ...rawApplication,
-        client: this,
-      });
+      this.readyAt = Date.now();
+      this.isReady = true;
 
       this.emit("connect");
     });
@@ -109,18 +120,45 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
   }
 
   async connect() {
+    const rawApplication = await this.rest.getCurrentApplication();
+    this.application = new ClientApplication({
+      ...rawApplication,
+      client: this,
+    });
+
     await this.webserver.listen();
   }
 }
 
 export class Client extends BaseClient<ClientEvents> {
+  /**
+   * Client token
+   */
   token: string;
   declare options: Required<ClientOptions>;
+  /**
+   * Client application id
+   */
   applicationId: string;
+  /**
+   * Client application flags
+   */
   applicationFlags: ApplicationFlags;
+  /**
+   * The client cache
+   */
   cache: CacheManager;
+  /**
+   * Client websocket manager for shards
+   */
   websocket: WebSocket;
+  /**
+   * Client user
+   */
   user!: User;
+  /**
+   * Plugin manager for library plugins
+   */
   pluginManager: PluginManager;
   constructor(token: string, options: ClientOptions) {
     super(options);
@@ -212,6 +250,7 @@ export class Client extends BaseClient<ClientEvents> {
         encoding: this.options.gateway?.encoding,
       });
 
+      // Handling shard
       await this.websocket.handleShard(shard);
     }
   }
