@@ -28,6 +28,7 @@ import { EventSource } from "./EventSource";
 import { WebSocketUtil } from "./WebSocketUtil";
 import { GatewayStatus } from "../utils/Constants";
 import crypto from "node:crypto";
+import { setTimeout, setInterval, clearTimeout } from "node:timers";
 
 let zlib: typeof ZlibSync | Zlib;
 
@@ -131,6 +132,10 @@ export class GatewayShard extends EventEmitter {
   queue: CallableFunction[];
   resumeURL?: string;
   closeSequenceId?: number;
+  helloTimeout: NodeJS.Timeout;
+  queueTotal: number;
+  queueRemaining: number;
+  queueTimer: NodeJS.Timeout;
 
   constructor(public client: Client, options?: GatewayShardOptions) {
     super();
@@ -151,12 +156,17 @@ export class GatewayShard extends EventEmitter {
         shardId: options.shardId ?? "0",
       })
     ) as Readonly<Required<GatewayShardOptions>>;
-
+    this.helloTimeout = null;
     this.shardId = this.options.shardId;
     this.pendingGuildsMap = new Map();
     this.events = new EventSource(this);
+
+    // RateLimit Queue
     this.queue = [];
     this.queueProcessing = false;
+    this.queueTotal = 120;
+    this.queueRemaining = 120;
+    this.queueTimer = null;
   }
 
   debug(message: string) {
@@ -265,7 +275,9 @@ export class GatewayShard extends EventEmitter {
 
         this.heartbeatSendInterval = setInterval(() => {
           this.ackHeartbeat();
-        }, this.heartbeatInterval);
+        }, this.heartbeatInterval).unref();
+
+        clearTimeout(this.helloTimeout);
 
         this.emit("hello");
 
@@ -313,7 +325,6 @@ export class GatewayShard extends EventEmitter {
 
           if (data.t === GatewayDispatchEvents.Resumed) {
             this.status = GatewayStatus.Ready;
-            this.heartbeatAck = true;
 
             this.debug(
               `Resumed session ${this.sessionId}. Replayed ${
@@ -416,26 +427,34 @@ export class GatewayShard extends EventEmitter {
     if (important) this.queue.unshift(sender);
     else this.queue.push(sender);
 
+    this.queueRemaining++;
+
     if (!this.queueProcessing) {
       this.processQueue();
     }
   }
 
-  async processQueue() {
+  processQueue() {
     if (this.queueProcessing || this.queue.length === 0) {
       return;
     }
 
+    if (this.queueRemaining === this.queueTotal) {
+      this.queueTimer = setTimeout(() => {
+        this.queueRemaining = this.queueTotal;
+      }, 60_000).unref();
+    }
+
     this.queueProcessing = true;
-    await this.queue[0]();
-    await delay(5_000);
+    this.queue.shift()();
+    this.queueRemaining--;
 
     if (this.queue.length === 0) {
       this.queueProcessing = false;
       return;
     }
 
-    await this.processQueue();
+    this.processQueue();
   }
 
   /**
@@ -482,8 +501,8 @@ export class GatewayShard extends EventEmitter {
         op: GatewayOpcodes.Resume,
         d: {
           token: this.client.token,
-          session_id: this.sessionId as string,
-          seq: this.sequenceId as number,
+          session_id: this.sessionId,
+          seq: this.closeSequenceId,
         },
       },
       true
@@ -599,7 +618,12 @@ export class GatewayShard extends EventEmitter {
       gatewayURL += "&compress=zlib-stream";
     }
 
-    this.ws = new WebSocket(gatewayURL);
+    if (this.resumeURL) {
+      this.ws = new WebSocket(this.resumeURL);
+    } else {
+      this.ws = new WebSocket(gatewayURL);
+    }
+
     this.ws.binaryType = "arraybuffer";
     this.ws.onopen = this.#onOpen.bind(this);
     this.ws.onmessage = this.#onMessage.bind(this);

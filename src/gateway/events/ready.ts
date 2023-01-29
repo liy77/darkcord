@@ -24,7 +24,15 @@ export class Ready extends Event {
     this.gatewayShard.uptime = new Date();
     this.gatewayShard.sessionId = data.session_id;
     this.gatewayShard.status = GatewayStatus.WaitingGuilds;
-    this.gatewayShard.resumeURL = data.resume_gateway_url;
+    this.gatewayShard.resumeURL = `${data.resume_gateway_url}?v=10&encoding=${this.gatewayShard.options.encoding}`;
+
+    if (this.gatewayShard.options.compress) {
+      this.gatewayShard.resumeURL += "&compress=lib-stream";
+    }
+
+    // Ready heartbeat
+    this.gatewayShard.heartbeatAck = true
+    this.gatewayShard.sendHeartbeat();
 
     if (!this.client.applicationId) {
       this.gatewayShard.client.applicationId = data.application.id;
