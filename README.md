@@ -28,10 +28,10 @@ pnpm add darkcord
 ```js
 import {
     Client,
-    API,
+    Constants,
 } from "darkcord"
 
-const GatewayIntentBits = API.GatewayIntentBits
+const GatewayIntentBits = Constants.GatewayIntentBits
 const ClientIntents = GatewayIntentBits.Guilds | GatewayIntentBits.GuildMessage | GatewayIntentBits.MessageContent
 
 const client = new Client("token", {
@@ -45,7 +45,7 @@ client.on("ready", () => {
 })
 
 client.on("interactionCreate", async interaction => {
-    if (interaction.type === 1) {
+    if (interaction.isCommand()) {
         await interaction.reply({ content: "Pong!" })
     }
 })
@@ -72,7 +72,7 @@ client.on("connect", () => {
 })
 
 client.on("interactionCreate", async interaction => {
-    if (interaction.type === 1) {
+    if (interaction.isCommand()) {
         await interaction.reply({ content: "Pong!" })
     }
 })
