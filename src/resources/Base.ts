@@ -6,8 +6,10 @@ export class Snowflake {
   }
 
   static getCreatedAt(id: string) {
-    return this.getEpoch(id) + 1420070400000;
+    return this.getEpoch(id) + Snowflake.Epoch;
   }
+
+  static Epoch = 1420070400000;
 }
 
 export class Base {
