@@ -145,11 +145,11 @@ export class Message extends Base {
 
     if (Array.isArray(data.reactions)) {
       for (const reaction of data.reactions) {
-        this.reactions._add(
-          this._client.cache._partial(Partials.Reaction)
-            ? reaction
-            : new Reaction({ ...reaction, client: this._client })
-        );
+        const resolved = this._client.cache._partial(Partials.Reaction)
+          ? reaction
+          : new Reaction({ ...reaction, client: this._client });
+
+        this.reactions._add(resolved, true, resolved.emoji.id ?? resolved.emoji.name);
       }
     }
   }
@@ -194,7 +194,11 @@ export class Message extends Base {
       reaction = new Reaction({ ...reaction, client: this._client });
     }
 
-    return this.reactions._add(reaction, true, reaction.emoji.id);
+    return this.reactions._add(
+      reaction,
+      true,
+      reaction.emoji.id ?? reaction.emoji.name
+    );
   }
 
   delete(reason?: string) {

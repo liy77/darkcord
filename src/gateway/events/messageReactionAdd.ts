@@ -6,7 +6,7 @@ import { GatewayMessageReactionAddDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
 export class MessageReactionAdd extends Event {
-  run(data: GatewayMessageReactionAddDispatchData) {
+  async run(data: GatewayMessageReactionAddDispatchData) {
     const raw = {
       count: 0,
       emoji: data.emoji,
@@ -22,16 +22,18 @@ export class MessageReactionAdd extends Event {
       this.getGuild(data.guild_id)
     );
 
-    const user = this.client.cache.users.get(data.user_id);
+    const user = await this.getUser(data.user_id)
 
     if (isTextBasedChannel(channel)) {
       if (reaction instanceof Reaction) reaction.users.add(user);
 
-      const message = channel.messages.get(data.message_id);
+      const message =
+        channel.messages.get(data.message_id) ||
+        (await channel.messages.fetch(data.message_id));
 
-      message.reactions._add(reaction, true, reaction.emoji.id);
+      message.reactions._add(reaction, true, reaction.emoji.id ?? reaction.emoji.name);
+
+      this.client.emit("messageReactionAdd", reaction, user, message);
     }
-
-    this.client.emit("messageReactionAdd", reaction, user);
   }
 }

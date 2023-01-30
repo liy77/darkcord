@@ -6,7 +6,7 @@ import { Event } from "./Event";
 import { isTextBasedChannel } from "../../utils/index";
 
 export class MessageReactionRemove extends Event {
-  run(data: GatewayMessageReactionRemoveDispatchData) {
+  async run(data: GatewayMessageReactionRemoveDispatchData) {
     const raw = {
       count: 0,
       emoji: data.emoji,
@@ -26,8 +26,12 @@ export class MessageReactionRemove extends Event {
 
     if (isTextBasedChannel(channel) && reaction instanceof Reaction) {
       reaction.users.add(user);
-    }
+      const message =
+        channel.messages.get(data.message_id) ||
+        (await channel.messages.fetch(data.message_id));
 
-    this.client.emit("messageReactionRemove", reaction, user);
+      message.reactions.delete(reaction.emoji.id);
+      this.client.emit("messageReactionRemove", reaction, user, message);
+    }
   }
 }

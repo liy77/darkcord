@@ -248,10 +248,11 @@ export interface ClientEvents {
   messageUpdate: [old: Message, updated: Message];
   messageDelete: [message: Message];
   messageDeleteBulk: [messagesDeleted: Map<string, Message>];
-  messageReactionAdd: [reaction: Reaction | APIReaction, user: User | APIUser];
+  messageReactionAdd: [reaction: Reaction | APIReaction, user: User | APIUser, message: Message];
   messageReactionRemove: [
     reaction: Reaction | APIReaction,
-    user: User | APIUser
+    user: User | APIUser,
+    message: Message
   ];
   messageReactionRemoveAll: [
     message: Message,
