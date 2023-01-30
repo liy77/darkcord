@@ -27,7 +27,7 @@ export * from "@resources/Guild";
 export * from "@resources/Permission";
 export * from "@resources/Sticker";
 export * from "@resources/Interaction";
-export * from "@resources/Bitfield";
+export * from "@resources/BitField";
 export * from "@resources/Webhook";
 export * from "@resources/User";
 export * from "@resources/Team";
