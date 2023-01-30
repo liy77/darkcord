@@ -10,6 +10,7 @@ import {
   APIApplicationCommandInteractionDataBasicOption,
   APIApplicationCommandInteractionDataOption,
   APIApplicationCommandOptionChoice,
+  APIChannel,
   APIChatInputApplicationCommandInteractionData,
   APIInteraction,
   APIInteractionDataResolved,
@@ -33,7 +34,7 @@ import { WebServerInteractionResponse } from "@client/WebServer";
 import { Message } from "./Message";
 import { Member } from "./Member";
 import { Resolvable } from "@utils/Resolvable";
-import { GuildChannel } from "./Channel";
+import { Channel, GuildChannel } from "./Channel";
 import { MakeError } from "@utils/index";
 
 export class Interaction extends Base {
@@ -87,11 +88,11 @@ export class Interaction extends Base {
   }
 
   isCommand(): this is CommandInteraction {
-    return this instanceof CommandInteraction
+    return this instanceof CommandInteraction;
   }
 
   isComponent(): this is ComponentInteraction {
-    return this instanceof ComponentInteraction
+    return this instanceof ComponentInteraction;
   }
 
   isAutoComplete(): this is AutocompleteInteraction {
@@ -220,7 +221,11 @@ export class ReplyableInteraction extends Interaction {
       });
     }
 
-    return this._client.rest.executeWebhook(this.applicationId, this.token, data);
+    return this._client.rest.executeWebhook(
+      this.applicationId,
+      this.token,
+      data
+    );
   }
 
   async getOriginalReply() {
@@ -254,11 +259,52 @@ export class ReplyableInteraction extends Interaction {
 }
 
 export class ComponentInteraction extends ReplyableInteraction {
+  /**
+   * The channel it was sent from
+   */
+  componentType: any;
+  /**
+   * The custom_id of the component
+   */
+  customId: string;
+  /**
+   * The channel id it was sent from
+   */
+  channelId: string;
+  /**
+   * The selected language of the invoking user
+   */
+  locale: string;
+  /**
+   * The guild's preferred locale, if invoked in a guild
+   */
+  guildLocale: string;
+  /**
+   * For components, the message they were attached to
+   */
+  message: Message;
+  /**
+   * The channel it was sent from
+   */
+  channel: Channel | APIChannel;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
     httpResponse?: WebServerInteractionResponse
   ) {
     super(data, httpResponse);
+    this.componentType = data.data.component_type;
+    this.customId = data.data.custom_id;
+    this.channelId = data.channel_id;
+    this.locale = data.locale;
+    this.guildLocale = data.guild_locale ?? null;
+    this.message = Resolvable.resolveMessage(
+      new Message({
+        ...data.message,
+        client: data.client,
+      }),
+      data.client
+    );
+    this.channel = data.client.cache.channels.get(data.channel_id);
   }
 
   async deferUpdate() {
@@ -303,11 +349,41 @@ export class ComponentInteraction extends ReplyableInteraction {
 }
 
 export class ModalSubmitInteraction extends ReplyableInteraction {
+  /**
+   * The selected language of the invoking user
+   */
+  locale: string;
+  /**
+   * The guild's preferred locale, if invoked in a guild
+   */
+  guildLocale: string;
+  /**
+   * For components, the message they were attached to
+   */
+  message: Message;
+  /**
+   * The channel id it was sent from
+   */
+  channelId: string;
+  /**
+   * The channel id it was sent from
+   */
+  channel: Channel | APIChannel;
   constructor(
     data: DataWithClient<APIModalSubmitInteraction>,
     httpResponse?: WebServerInteractionResponse
   ) {
     super(data, httpResponse);
+    this.locale = data.locale;
+    this.guildLocale = data.guild_locale ?? null;
+    this.message = data.message
+      ? Resolvable.resolveMessage(
+          new Message({ ...data.message, client: data.client }),
+          data.client
+        )
+      : null;
+    this.channelId = data.channel_id;
+    this.channel = data.client.cache.channels.get(this.channelId);
   }
 
   async deferUpdate() {
@@ -491,6 +567,9 @@ export class ChatInputApplicationCommandInteractionData extends Base {
    */
   guildId?: string;
 
+  /**
+   * The options of the invoked command
+   */
   options: CommandInteractionOptions | null;
   constructor(
     data: DataWithClient<APIChatInputApplicationCommandInteractionData>,
@@ -498,6 +577,8 @@ export class ChatInputApplicationCommandInteractionData extends Base {
   ) {
     super(data, guild?._client);
 
+    this.name = data.name;
+    this.type = data.type;
     this.options = data.options
       ? new CommandInteractionOptions(
           data.options,
@@ -506,6 +587,7 @@ export class ChatInputApplicationCommandInteractionData extends Base {
           guild
         )
       : null;
+    data.resolved;
   }
 }
 
@@ -562,11 +644,11 @@ export class CommandInteraction extends ReplyableInteraction {
    */
   guildLocale?: string;
   /**
-   * the channel it was sent from
+   * The channel id it was sent from
    */
   channelId: string;
   /**
-   * the guild object it was sent from
+   * The guild object it was sent from
    */
   guild?: Guild | null;
   /**
@@ -588,6 +670,18 @@ export class CommandInteraction extends ReplyableInteraction {
    * The name of the invoked command
    */
   commandName: string;
+  /**
+   * The selected language of the invoking user
+   */
+  locale: string;
+  /**
+   * For components, the message they were attached to
+   */
+  message: Message;
+  /**
+   * The channel it was sent from
+   */
+  channel: Channel | APIChannel;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
     httpResponse?: WebServerInteractionResponse
@@ -596,10 +690,18 @@ export class CommandInteraction extends ReplyableInteraction {
     this.guildId = data.guild_id;
     this.guildLocale = data.guild_locale;
     this.channelId = data.channel_id;
+    this.channel = data.client.cache.channels.get(data.channel_id);
     this.guild = data.client.cache.guilds.get(data.guild_id);
     this.member = null;
     this.user = null;
-    this.commandName = data.data.name
+    this.commandName = data.data.name;
+    this.locale = data.locale;
+    this.message = data.message
+      ? Resolvable.resolveMessage(
+          new Message({ ...data.message, client: data.client }),
+          data.client
+        )
+      : null;
 
     if ("member" in data && this.guild) {
       const member = new Member(data.member, this.guild);
