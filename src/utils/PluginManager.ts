@@ -28,23 +28,28 @@ export type AnyResource =
   | typeof AuditLog
   | typeof Application;
 
+export interface ResourceObject {
+  baseFile: string;
+  exports: AnyResource;
+}
+
 export class PluginManager {
-  resources: AnyResource[];
+  resources: ResourceObject[];
   constructor(public client: Client) {
     this.resources = [
-      AnyChannel,
-      AnyGuild,
-      AnyInteraction,
-      Invite,
-      EmojiOrReaction,
-      Webhook,
-      Integration,
-      AnyMember,
-      Message,
-      BitField,
-      Base,
-      AuditLog,
-      Application,
+      { baseFile: "Channel", exports: AnyChannel },
+      { baseFile: "Guild", exports: AnyGuild },
+      { baseFile: "Interaction", exports: AnyInteraction },
+      { baseFile: "Invite", exports: Invite },
+      { baseFile: "Emoji", exports: EmojiOrReaction },
+      { baseFile: "Webhook", exports: Webhook },
+      { baseFile: "Integration", exports: Integration },
+      { baseFile: "Member", exports: AnyMember },
+      { baseFile: "Message", exports: Message },
+      { baseFile: "BitField", exports: BitField },
+      { baseFile: "Base", exports: Base },
+      { baseFile: "AuditLog", exports: AuditLog },
+      { baseFile: "Application", exports: Application },
     ];
   }
 
@@ -56,13 +61,53 @@ export class PluginManager {
     this.client.emit(event, ...args);
   }
 
+  getResourcePack(resourceName: string): ResourceObject {
+    return this.resources[resourceName];
+  }
+
+  getResourceInPack<T = any>(resourceName: string): T {
+    const pack = this.resources.find((resource) =>
+      Object.keys(resource.exports).includes(resourceName)
+    );
+
+    return pack && pack.exports[resourceName];
+  }
+
   overrideResource<T>(resourceName: string, replacer: (x: T) => any) {
     const resource = this.resources.find((resource) =>
-      Object.keys(resource).includes(resourceName)
+      Object.keys(resource.exports).includes(resourceName)
     );
 
     if (resource) {
-      resource[resourceName] = replacer(resource[resourceName]);
+      const modified = replacer(resource.exports[resourceName]);
+      const toBeModified = require(`../resources/${resource.baseFile}`)[
+        resourceName
+      ];
+
+      for (const prop of Object.getOwnPropertyNames(modified.prototype)) {
+        Object.defineProperty(
+          toBeModified.prototype,
+          prop,
+          Object.getOwnPropertyDescriptor(modified.prototype, prop)
+        );
+      }
+
+      // Static methods
+      for (const prop of Object.getOwnPropertyNames(modified).filter(
+        (prop) => !["prototype"].includes(prop)
+      )) {
+        Object.defineProperty(
+          toBeModified,
+          prop,
+          Object.getOwnPropertyDescriptor(modified, prop)
+        );
+      }
+    }
+  }
+
+  overrideResources<T>(resources: string[], replacer: (x: T) => any) {
+    for (const resource of resources) {
+      this.overrideResource(resource, replacer)
     }
   }
 }
