@@ -584,6 +584,10 @@ export class CommandInteraction extends ReplyableInteraction {
    * User of the invoked command
    */
   user: User | APIUser;
+  /**
+   * The name of the invoked command
+   */
+  commandName: string;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
     httpResponse?: WebServerInteractionResponse
@@ -595,6 +599,7 @@ export class CommandInteraction extends ReplyableInteraction {
     this.guild = data.client.cache.guilds.get(data.guild_id);
     this.member = null;
     this.user = null;
+    this.commandName = data.data.name
 
     if ("member" in data && this.guild) {
       const member = new Member(data.member, this.guild);
