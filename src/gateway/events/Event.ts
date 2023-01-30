@@ -16,4 +16,8 @@ export abstract class Event {
   getGuild(id: string) {
     return this.client.cache.guilds.get(id);
   }
+
+  getUser(id: string) {
+    return this.client.cache.users.get(id) || this.client.cache.users.fetch(id)
+  }
 }
