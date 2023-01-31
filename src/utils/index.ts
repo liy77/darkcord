@@ -305,7 +305,8 @@ export function isEqual<_1 extends any, _2 extends any>(
 }
 
 export function structuredClone<T>(o: T): T {
-  return Object.assign({}, o);
+  if (!o) return null;
+  return Object.assign(Object.create(o as unknown as object), o);
 }
 
 export function isTextBasedChannel(
@@ -354,7 +355,6 @@ const {
   isMessageComponentSelectMenuInteraction,
 } = Utils;
 
-
 // Exporting utils of Discord API
 export {
   isApplicationCommandDMInteraction,
@@ -371,4 +371,3 @@ export {
   isMessageComponentInteraction,
   isMessageComponentSelectMenuInteraction,
 };
-

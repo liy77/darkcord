@@ -24,7 +24,7 @@ export class RoleCache extends Cache<Role | APIRole> {
       !this.manager._partial(Partials.Role) &&
       !(role instanceof Role)
     ) {
-      if (!(role.guildId && !guild))
+      if (!role.guildId && !guild)
         throw MakeError({
           name: "MissingProperty",
           message: "guild not provided",

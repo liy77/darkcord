@@ -3,6 +3,7 @@ import { Guild } from "@resources/Guild";
 import { GatewayStatus } from "@utils/Constants";
 import { GatewayGuildCreateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
+import { Member } from "@resources/Member";
 
 export class GuildCreate extends Event {
   async run(data: GatewayGuildCreateDispatchData) {
@@ -17,6 +18,11 @@ export class GuildCreate extends Event {
 
       guild.channels.add(resolved);
       this.client.cache.channels.add(resolved);
+    }
+
+    for (const member of data.members) {
+      const resolved = new Member(member, guild);
+      guild.members.add(resolved, true)
     }
 
     // Add guild to global cache

@@ -703,7 +703,15 @@ export class Guild extends BaseGuild {
     );
   }
 
-  permissionsOf(userId: string) {
+  permissionsOf(userId: string | Member) {
+    let member: Member
+
+
+    if (userId instanceof Member) {
+      member = userId
+      userId = member.id
+    }
+
     if (userId === this.ownerId) return new Permissions(Permissions.All);
 
     const raw = this.roles.get(this.id).permissions;
@@ -712,7 +720,7 @@ export class Guild extends BaseGuild {
     if (perms & Permissions.Flags.Administrator)
       return new Permissions(Permissions.All);
 
-    const member = this.members.get(userId);
+    if (!member) member = this.members.get(userId);
 
     for (const roleId of member.roles) {
       const role = this.roles.get(roleId);

@@ -89,7 +89,7 @@ export class Member extends Base {
     this.pending = Boolean(data.pending);
     this.roles = data.roles;
     this.mute = data.mute;
-    this.permissions = this.guild.permissionsOf(this.id);
+    this.permissions = this.guild.permissionsOf(this);
   }
 
   /**
