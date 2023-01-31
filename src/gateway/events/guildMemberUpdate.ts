@@ -13,7 +13,6 @@ export class GuildMemberUpdate extends Event {
     if (!guild) return;
 
     const oldMember = structuredClone(guild.members.get(data.user.id));
-    console.log(oldMember)
     const updatedData = oldMember
       ? (Object.assign(oldMember.partial, data) as APIGuildMember)
       : { ...data, deaf: null, mute: null };
