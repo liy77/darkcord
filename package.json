@@ -1,6 +1,6 @@
 {
   "name": "darkcord",
-  "version": "0.2.5-dev-3",
+  "version": "0.2.5-dev-3.1",
   "scripts": {
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist && tscpaths -p tsconfig.json -s ./src -o ./typing",
     "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
