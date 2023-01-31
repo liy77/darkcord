@@ -1,0 +1,50 @@
+---
+import { MarkdownLayoutProps } from 'astro';
+import SidebarLayout from '../components/SidebarLayout.astro';
+import '../styles/main.css';
+
+type Props = MarkdownLayoutProps<{}>;
+const props = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta content="light dark" name="color-scheme" />
+		<meta content="darkcord" name="apple-mobile-web-app-title" />
+		<meta content="darkcord" name="application-name" />
+		<meta content="#151718" name="msapplication-TileColor" />
+		<meta content="darkcord" property="og:site_name" />
+		<meta content="website" property="og:type" />
+		<meta content="darkcord guide" property="og:title" />
+		<meta content="summary_large_image" name="twitter:card" />
+
+		<title>Darkcord Guide</title>
+		<meta content="minimum-scale=1, initial-scale=1, width=device-width" name="viewport" />
+		<meta content="#151718" name="theme-color" />
+	</head>
+	<body class="bg-white dark:bg-[#151718]">
+		<script is:inline>
+			function setTheme(prefersDarkMode, persistedColorPreference) {
+				if (persistedColorPreference === 'dark' || (prefersDarkMode && persistedColorPreference !== 'light')) {
+					document.documentElement.classList.toggle('dark', true);
+				} else {
+					document.documentElement.classList.toggle('dark', false);
+				}
+			}
+			(() => {
+				const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+				const persistedColorPreference = localStorage.getItem('theme') || 'auto';
+				setTheme(prefersDarkMode, persistedColorPreference);
+				const listener =
+					window.matchMedia &&
+					window
+						.matchMedia('(prefers-color-scheme: dark)')
+						.addEventListener('change', (ev) => setTheme(ev.matches, persistedColorPreference));
+			})();
+		</script>
+
+		<SidebarLayout {...props}>
+			<slot />
+		</SidebarLayout>
+	</body>
+</html>

@@ -1,4 +1,18 @@
+import image from '@astrojs/image';
+import mdx from '@astrojs/mdx';
+import prefetch from '@astrojs/prefetch';
+import react from '@astrojs/react';
+import unocss from '@unocss/astro';
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+	integrations: [
+		react(),
+		mdx(),
+		prefetch({
+			throttle: 3,
+		}),
+		unocss(),
+		image(),
+	],
+});

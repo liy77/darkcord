@@ -1,16 +1,52 @@
 {
-  "name": "@example/minimal",
-  "type": "module",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^2.0.2"
-  }
+	"name": "@darkcord/guide",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"lint": "prettier --check . && eslint src --ext .mjs,.js,.cjs,.ts,.tsx,.astro --format=pretty",
+		"format": "prettier --write . && eslint src --ext .mjs,.js,.cjs,.ts,.tsx,.astro --fix --format=pretty",
+		"fmt": "yarn format"
+	},
+	"type": "module",
+	"contributors": [
+		"Nicolas Ribeiro <business@niskii.dev>"
+	],
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JustAWaifuHunter/darkcord.git"
+	},
+	"bugs": {
+		"url": "https://github.com/JustAWaifuHunter/darkcord/issues"
+	},
+	"dependencies": {
+		"astro": "^2.0.4",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0"
+	},
+	"devDependencies": {
+		"@astrojs/image": "^0.13.1",
+		"@astrojs/mdx": "^0.15.2",
+		"@astrojs/prefetch": "^0.1.2",
+		"@astrojs/react": "^2.0.2",
+		"@types/react": "^18.0.21",
+		"@types/react-dom": "^18.0.6",
+		"@unocss/astro": "^0.49.1",
+		"@unocss/cli": "^0.49.1",
+		"@unocss/reset": "^0.49.1",
+		"eslint": "^8.33.0",
+		"eslint-config-neon": "^0.1.40",
+		"eslint-formatter-pretty": "^4.1.0",
+		"prettier": "^2.8.3",
+		"prettier-plugin-astro": "^0.8.0",
+		"prettier-plugin-tailwindcss": "^0.2.2",
+		"unocss": "^0.49.1"
+	},
+	"engines": {
+		"node": ">=16.9.0"
+	}
 }
