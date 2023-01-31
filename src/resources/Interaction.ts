@@ -440,20 +440,18 @@ export class CommandInteractionOptions {
   ) {
     this.#resolved = resolved;
 
-    if (options[0]?.type === ApplicationCommandOptionType.SubcommandGroup) {
+    if (options[0]?.type === ApplicationCommandOptionType.Subcommand) {
       this.subCommand = options[0].name;
       options = options[0].options ?? [];
     }
 
-    if (options[0]?.type === ApplicationCommandOptionType.Subcommand) {
+    if (options[0]?.type === ApplicationCommandOptionType.SubcommandGroup) {
       this.subCommandGroup = options[0].name;
-      this.#options = options[0].options ?? [];
+      options = options[0].options ?? [];
     }
 
-    if (!this.#options) {
-      this.#options =
-        options as APIApplicationCommandInteractionDataBasicOption[];
-    }
+    this.#options =
+      options as APIApplicationCommandInteractionDataBasicOption[];
   }
 
   get(name: string) {
