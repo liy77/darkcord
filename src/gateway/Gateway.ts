@@ -34,6 +34,7 @@ import {
   clearTimeout,
   clearInterval,
 } from "node:timers";
+import { MissingIntentsError } from "@utils/Errors";
 
 let zlib: typeof ZlibSync | Zlib;
 
@@ -142,6 +143,7 @@ export class GatewayShard extends EventEmitter {
   queueRemaining: number;
   queueTimer: NodeJS.Timeout;
   connectedAt: number;
+  intents: GatewayIntentBits;
 
   constructor(public client: Client, options?: GatewayShardOptions) {
     super();
@@ -166,6 +168,7 @@ export class GatewayShard extends EventEmitter {
     this.shardId = this.options.shardId;
     this.pendingGuildsMap = new Map();
     this.events = new EventSource(this);
+    this.intents = this.client.options.gateway.intents as GatewayIntentBits;
 
     // RateLimit Queue
     this.queue = [];
@@ -531,7 +534,7 @@ export class GatewayShard extends EventEmitter {
         op: GatewayOpcodes.Identify,
         d: {
           token: this.client.token,
-          intents: this.client.options.gateway.intents as GatewayIntentBits,
+          intents: this.intents,
           properties: {
             browser: customProps?.browser ?? "Darkcord",
             os: process.platform,
@@ -563,6 +566,23 @@ export class GatewayShard extends EventEmitter {
     }
 
     const nonce = options.nonce ?? crypto.randomUUID();
+
+    let missingIntents = []
+    if (!(options.userIds || options.query) && !(this.intents & GatewayIntentBits.GuildMembers)) {
+      missingIntents.push("GuildMembers")
+    }
+
+    if (options.presences && !(this.intents & GatewayIntentBits.GuildPresences)) {
+      missingIntents.push("GuildPresences")
+    }
+
+    if (missingIntents.length > 0) {
+      throw MissingIntentsError(...missingIntents);
+    }
+
+    if (options.userIds?.length > 100) {
+      throw new Error("Cannot request more than 100 users")
+    }
 
     this.send({
       op: GatewayOpcodes.RequestGuildMembers,
