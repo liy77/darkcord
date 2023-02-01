@@ -16,22 +16,24 @@ export class EmojiCache extends Cache<Emoji | APIEmoji> {
   }
 
   get(id: string) {
-    let emoji = super.get(id);
+    return this.#resolve(super.get(id))
+  }
 
+  #resolve(emoji: APIEmoji | Emoji, addInCache = false) {
     if (
       emoji &&
       !this.manager._partial(Partials.Emoji) &&
       !(emoji instanceof Emoji)
     ) {
       emoji = new Emoji(emoji);
-      this.add(emoji);
+      if (addInCache) this.add(emoji);
     }
 
-    return emoji;
+    return emoji
   }
 
   add(emoji: Emoji | APIEmoji, replace = true) {
-    return super._add(emoji, replace, emoji.id);
+    return super._add(this.#resolve(emoji), replace, emoji.id);
   }
 
   /**

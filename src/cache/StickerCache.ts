@@ -16,8 +16,14 @@ export class StickerCache extends Cache<Sticker | APISticker> {
   }
 
   get(id: string) {
-    let sticker = super.get(id);
+    return this.#resolve(super.get(id), true);
+  }
 
+  add(sticker: Sticker | APISticker, replace = true) {
+    return super._add(this.#resolve(sticker), replace, sticker.id);
+  }
+
+  #resolve(sticker: Sticker | APISticker, addInCache = false) {
     if (
       !this.manager._partial(Partials.Sticker) &&
       !(sticker instanceof Sticker)
@@ -26,17 +32,11 @@ export class StickerCache extends Cache<Sticker | APISticker> {
         ...sticker,
         client: this.manager.client,
       });
+
+      if (addInCache) this.add(sticker);
     }
 
     return sticker;
-  }
-
-  add(sticker: Sticker | APISticker, replace = true) {
-    return super._add(
-      sticker instanceof Sticker ? sticker.partial : sticker,
-      replace,
-      sticker.id
-    );
   }
 
   /**

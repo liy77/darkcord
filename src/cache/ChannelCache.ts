@@ -2,7 +2,11 @@ import { Channel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
 import { BaseCacheOptions } from "@typings/index";
 import { Partials } from "@utils/Constants";
-import { APIChannel, APIGuildChannel, ChannelType } from "discord-api-types/v10";
+import {
+  APIChannel,
+  APIGuildChannel,
+  ChannelType,
+} from "discord-api-types/v10";
 
 import { Cache } from "./Cache";
 import { CacheManager } from "./CacheManager";
@@ -16,8 +20,10 @@ export class ChannelCache extends Cache<Channel | APIChannel> {
   }
 
   get(id: string, guild?: Guild) {
-    let channel = super.get(id);
+    return this._resolve(super.get(id), guild, true)
+  }
 
+  _resolve(channel: APIChannel | Channel, guild?: Guild, addInCache = false) {
     if (
       channel &&
       !this.manager._partial(Partials.Channel) &&
@@ -37,10 +43,10 @@ export class ChannelCache extends Cache<Channel | APIChannel> {
         guild
       );
 
-      this.add(channel);
+      if (addInCache) this.add(channel);
     }
 
-    return channel;
+    return channel
   }
 
   add(channel: APIChannel | Channel, replace = true) {
@@ -77,5 +83,9 @@ export class GuildChannelCache extends ChannelCache {
 
   get(id: string) {
     return super.get(id, this.guild);
+  }
+
+  add(channel: APIChannel | Channel, replace = true) {
+    return super.add(super._resolve(channel, this.guild), replace)
   }
 }

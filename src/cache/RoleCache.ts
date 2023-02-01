@@ -17,8 +17,18 @@ export class RoleCache extends Cache<Role | APIRole> {
   }
 
   get(id: string, guild?: Guild) {
-    let role = super.get(id) as any;
+    return this._resolve(super.get(id), guild, true);
+  }
 
+  add(role: APIRole | Role, replace = true) {
+    return super._add(role, replace, role.id);
+  }
+
+  _resolve(
+    role: (APIRole & { guildId?: string }) | Role,
+    guild?: Guild,
+    addInCache = false
+  ) {
     if (
       role &&
       !this.manager._partial(Partials.Role) &&
@@ -35,17 +45,11 @@ export class RoleCache extends Cache<Role | APIRole> {
       }
 
       role = new Role({ ...role, client: this.manager.client }, guild);
+
+      if (addInCache) this.add(role);
     }
 
     return role;
-  }
-
-  add(role: APIRole | Role, replace = true) {
-    return super._add(
-      role,
-      replace,
-      role.id
-    );
   }
 
   /**
@@ -54,7 +58,7 @@ export class RoleCache extends Cache<Role | APIRole> {
    * @param guild Guild object or Guild Id
    */
   async fetch(id: string, guild: APIGuild | Guild | string) {
-    const existing = await this.get(id);
+    const existing = this.get(id);
 
     if (existing) {
       return existing;
@@ -106,7 +110,7 @@ export class GuildRoleCache extends RoleCache {
   }
 
   add(role: APIRole | Role, replace = true) {
-    return super.add(role, replace);
+    return super.add(super._resolve(role, this.guild), replace);
   }
 
   fetch(id: string) {

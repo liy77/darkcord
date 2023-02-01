@@ -14,22 +14,25 @@ export class UserCache extends Cache<APIUser | User> {
   }
 
   get(id: string) {
-    let user = super.get(id);
+    return this.#resolve(super.get(id), true);
+  }
 
+  add(user: User | APIUser, replace = true) {
+    return super._add(this.#resolve(user), replace, user.id);
+  }
+
+  #resolve(user: User | APIUser, addInCache = false) {
     if (
       user &&
       !this.manager._partial(Partials.User) &&
       !(user instanceof User)
     ) {
       user = new User({ ...user, client: this.manager.client });
-      this.add(user);
+
+      if (addInCache) this.add(user)
     }
 
-    return user;
-  }
-
-  add(user: User | APIUser, replace = true) {
-    return super._add(user, replace, user.id);
+    return user
   }
 
   async fetch(id: string) {
