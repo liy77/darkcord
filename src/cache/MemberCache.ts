@@ -24,7 +24,7 @@ export class MemberCache extends Cache<Member> {
   }
 
   add(member: Member, replace = true) {
-    return super._add(member.partial as Member, replace, member.id);
+    return super._add(member, replace, member.id);
   }
 
   async fetch(id: string) {
