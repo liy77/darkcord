@@ -11,7 +11,11 @@ export function Outline({ headings }: { headings: MarkdownHeading[] }) {
 		() =>
 			headings.map((heading, idx) => (
 				<a
-					className={`p-[5px] text-sm ${idx === active ? 'bg-blue text-white rounded' : ''}`}
+					className={`border-base pl-6.5 focus:ring-width-2 focus:ring-blue ml-[4px] border-l p-[5px] text-sm outline-0 focus:rounded focus:border-0 focus:ring ${
+						idx === active
+							? 'bg-blue text-white'
+							: 'dark:hover:bg-dark-200 dark:active:bg-dark-100 hover:bg-light-700 active:bg-light-800'
+					}`}
 					href={`#${heading.slug}`}
 					key={heading.slug}
 					title={heading.text}

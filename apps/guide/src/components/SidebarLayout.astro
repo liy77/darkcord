@@ -5,6 +5,9 @@ import { generateGithubURL } from '~/utils/generateGithubURL';
 import { ExternalLink } from './ExternalLink';
 import { Navbar } from './Navbar';
 import { Outline } from './Outline';
+import { SidebarItems } from './SidebarItems';
+
+const pages = await Astro.glob<{ category: string; title: string }>('../pages/**/*.mdx');
 
 type Props = MarkdownLayoutProps<{
 	title: string;
@@ -40,7 +43,11 @@ const { headings, frontmatter, url } = Astro.props;
 	});
 </script>
 
-<Navbar client:load />
+<Navbar client:load>
+	<div class="flex flex-col gap-3 p-3 pb-32 lg:pb-12" slot="pages">
+		<SidebarItems client:load pages={pages} />
+	</div>
+</Navbar>
 
 <main class="pt-18 lg:pl-76 xl:pr-64">
 	<article class="opacity-90">
@@ -55,7 +62,7 @@ const { headings, frontmatter, url } = Astro.props;
 			</div>
 
 			<div
-				class="h-[calc(100vh - 72px)] dark:bg-dark-600 border-base fixed top-[61px] right-0 bottom-0 z-20 hidden w-64 border-l bg-white pr-2 xl:block"
+				class="h-[calc(100vh - 72px)] dark:bg-[#151718] border-base fixed top-[61px] right-0 bottom-0 z-20 hidden w-64 border-l bg-white pr-2 xl:block"
 			>
 				<Outline client:load headings={headings} />
 			</div>

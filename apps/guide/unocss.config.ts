@@ -89,7 +89,7 @@ export default defineConfig({
 	],
 	theme: {
 		colors: {
-			'theme-background-default': '#151718',
+			'background-default': '#151718',
 		},
 	},
 	include: [

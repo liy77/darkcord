@@ -1,4 +1,4 @@
-import { FiExternalLink } from 'react-icons/fi';
+import { EditIcon, iconSize } from '@expo/styleguide';
 
 interface ExternalLinkProps {
 	href: string;
@@ -8,7 +8,7 @@ interface ExternalLinkProps {
 export function ExternalLink({ href, title }: ExternalLinkProps) {
 	return (
 		<a className="inline-flex place-items-center gap-2 text-sm font-semibold" href={href}>
-			<FiExternalLink size={18} />
+			<EditIcon size={iconSize.sm} color="currentColor" />
 			<p>{title}</p>
 		</a>
 	);
