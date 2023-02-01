@@ -1,5 +1,5 @@
 {
-	"extends": ["neon/common", "neon/react", "neon/astro", "neon/prettier"],
+	"extends": ["neon/react", "neon/astro", "neon/node", "neon/prettier"],
 	"parserOptions": {
 		"project": "./tsconfig.eslint.json"
 	},

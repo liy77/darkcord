@@ -1,9 +1,9 @@
-import { defineConfig, presetUno, presetWebFonts } from 'unocss';
+import { defineConfig, presetTypography, presetUno, presetWebFonts } from 'unocss';
 
 export default defineConfig({
 	shortcuts: {
 		'header-base': 'dark:bg-[#151718] dark:border-[#3a3f42] bg-white border-[#d7dbdf]',
-		'border-base': 'border-[#3a3f42]',
+		'border-base': 'dark:border-[#3a3f42] border-[#c1c8cd]',
 	},
 	presets: [
 		presetUno({ dark: 'class' }),
@@ -29,6 +29,55 @@ export default defineConfig({
 				],
 			},
 		}),
+		presetTypography({
+			cssExtend: {
+				pre: {
+					padding: '1em',
+					'line-height': '1.5',
+					'border-radius': '4px',
+				},
+				code: {
+					'font-size': '1em',
+					'font-weight': 'unset',
+				},
+				a: {
+					'text-decoration': 'none',
+				},
+				'a > img': {
+					display: 'inline-block',
+				},
+				h1: {
+					'scroll-margin-top': '6.5rem',
+				},
+				'.level-h1': {
+					margin: '1rem 0',
+				},
+				h2: {
+					'margin-top': '1.25em',
+					'scroll-margin-top': '6.5rem',
+				},
+				'.level-h2': {
+					margin: '1.25em 0',
+				},
+				h3: {
+					'margin-top': '1.25em',
+					'scroll-margin-top': '6.5rem',
+				},
+				'.level-h3': {
+					margin: '1.25em 0',
+				},
+				h4: {
+					'margin-top': '1.25em',
+					'scroll-margin-top': '6.5rem',
+				},
+				'.level-h4': {
+					margin: '1.25em 0',
+				},
+				p: {
+					margin: '.5em 0',
+				},
+			},
+		}),
 	],
 	rules: [
 		[
@@ -43,4 +92,16 @@ export default defineConfig({
 			'theme-background-default': '#151718',
 		},
 	},
+	include: [
+		/.vue$/,
+		/.vue?vue/,
+		/.svelte$/,
+		/.[jt]sx$/,
+		/.mdx?$/,
+		/.astro$/,
+		/.elm$/,
+		/.html$/,
+		/.*\/ui\.js(.*)?$/,
+		/.*\/ui\.mjs(.*)?$/,
+	],
 });

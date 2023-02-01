@@ -3,8 +3,12 @@ import { MarkdownLayoutProps } from 'astro';
 import SidebarLayout from '../components/SidebarLayout.astro';
 import '../styles/main.css';
 
-type Props = MarkdownLayoutProps<{}>;
-const props = Astro.props;
+type Props = MarkdownLayoutProps<{
+	title: string;
+	description: string;
+	category: string;
+}>;
+const { ...props } = Astro.props;
 ---
 
 <html lang="en">
@@ -31,6 +35,7 @@ const props = Astro.props;
 					document.documentElement.classList.toggle('dark', false);
 				}
 			}
+
 			(() => {
 				const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 				const persistedColorPreference = localStorage.getItem('theme') || 'auto';
