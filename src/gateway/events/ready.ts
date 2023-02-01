@@ -31,7 +31,7 @@ export class Ready extends Event {
     }
 
     // Ready heartbeat
-    this.gatewayShard.heartbeatAck = true
+    this.gatewayShard.heartbeatAck = true;
     this.gatewayShard.sendHeartbeat();
 
     if (!this.client.applicationId) {
@@ -50,14 +50,13 @@ export class Ready extends Event {
       });
     }
 
-    this.client.cache.users._add(
-      new User({ ...data.user, client: this.gatewayShard.client })
-    );
+    this.client.cache.users._add(this.client.user);
 
     for (const guild of data.guilds) {
       this.gatewayShard.pendingGuildsMap.set(guild.id, guild);
     }
 
     this.gatewayShard.emit("ready");
+    this.client.websocket.fireClientReady();
   }
 }
