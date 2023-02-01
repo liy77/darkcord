@@ -1,6 +1,10 @@
 import { defineConfig, presetUno, presetWebFonts } from 'unocss';
 
 export default defineConfig({
+	shortcuts: {
+		'header-base': 'dark:bg-[#151718] dark:border-[#3a3f42] bg-white border-[#d7dbdf]',
+		'border-base': 'border-[#3a3f42]',
+	},
 	presets: [
 		presetUno({ dark: 'class' }),
 		presetWebFonts({
@@ -26,4 +30,17 @@ export default defineConfig({
 			},
 		}),
 	],
+	rules: [
+		[
+			/^text-(.*)$/,
+			([, c], { theme }) => {
+				if (theme.colors[c]) return { color: theme.colors[c] };
+			},
+		],
+	],
+	theme: {
+		colors: {
+			'theme-background-default': '#151718',
+		},
+	},
 });

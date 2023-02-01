@@ -12,7 +12,7 @@ export default defineConfig({
 		prefetch({
 			throttle: 3,
 		}),
-		unocss(),
-		image(),
+		unocss({ configFile: 'unocss.config.ts' }),
+		image({ serviceEntryPoint: '@astrojs/image/sharp' }),
 	],
 });
