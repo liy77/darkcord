@@ -112,17 +112,20 @@ export class User extends Base {
       return null;
     }
 
-    return RouteBases.cdn +
+    let url = RouteBases.cdn +
       CDNRoutes.userAvatar(
         this.id,
         this.avatar,
         options?.format ?? this.avatar.startsWith("a_")
           ? ImageFormat.GIF
           : ImageFormat.PNG
-      ) +
-      options?.size
-      ? "?size=" + options?.size?.toString()
-      : "";
+      )
+    
+    if (options?.size) {
+      url += "?size=" + options?.size?.toString();
+    }
+
+    return url
   }
 
   /**

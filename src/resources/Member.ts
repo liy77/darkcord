@@ -102,7 +102,7 @@ export class Member extends Base {
       return null;
     }
 
-    return RouteBases.cdn +
+    let url = RouteBases.cdn +
       CDNRoutes.guildMemberAvatar(
         this.guild.id,
         this.id,
@@ -110,10 +110,13 @@ export class Member extends Base {
         options?.format ?? this.avatar.startsWith("a_")
           ? ImageFormat.GIF
           : ImageFormat.PNG
-      ) +
-      options?.size
-      ? "?size=" + options?.size?.toString()
-      : "";
+      )
+    
+    if (options?.size) {
+      url += "?size=" + options?.size?.toString();
+    }
+
+    return url
   }
 
   displayAvatarURL(options?: DisplayUserAvatarOptions) {
