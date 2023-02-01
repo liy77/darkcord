@@ -13,22 +13,22 @@ export class GuildMembersChunk extends Event {
 
     if (!guild) return;
 
-    let members: (APIGuildMember | Member)[] = data.members;
+    let members: (APIGuildMember | Member)[] = data?.members;
 
-    members = members.map(
-      (member) =>
-        new Member(
-          member as APIGuildMember,
-          guild as Guild
-        )
-    );
+    if (members) {
+      members = members.map(
+        (member) => new Member(member as APIGuildMember, guild as Guild)
+      );
 
-    for (const member of members) {
-      guild.members.add(member as Member);
+      for (const member of members) {
+        guild.members.add(member as Member);
+      }
     }
 
-    for (const presence of data.presences) {
-      guild.presences.push(presence);
+    if (data?.presences) {
+      for (const presence of data?.presences) {
+        guild.presences.push(presence);
+      }
     }
 
     this.client.emit("guildMembersChunk", {
