@@ -4,7 +4,7 @@ import { Client } from "./Client";
 export class WebSocket {
   shards: Map<string, GatewayShard>;
   constructor(public client: Client) {
-    this.shards = new Map()
+    this.shards = new Map();
   }
 
   get ping() {
@@ -27,7 +27,9 @@ export class WebSocket {
     gatewayShard.on("reconnectRequired", () =>
       this.client.emit("shardReconnectRequired", id)
     );
-    gatewayShard.on("debug", (message) => this.client.emit("shardDebug", message))
+    gatewayShard.on("debug", (message) =>
+      this.client.emit("shardDebug", message)
+    );
 
     this.shards.set(id, gatewayShard);
 
@@ -35,6 +37,19 @@ export class WebSocket {
   }
 
   allReady() {
-    return [...this.shards.values()].every((shard) => shard.ready);
+    return [...this.shards.values()].every((shard) => shard.ready && shard.pendingGuilds === 0);
+  }
+
+  /**
+   * Emits "ready" event to client if all shards has ready
+   */
+  fireClientReady() {
+    // Checking if all shards has ready
+    if (this.allReady() && !this.client.isReady && this.client.user && this.client.application) {
+
+      this.client.isReady = true;
+      this.client.readyAt = Date.now();
+      this.client.emit("ready");
+    }
   }
 }
