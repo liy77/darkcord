@@ -1,4 +1,5 @@
 import { AuditLogEntry } from "@typings/index";
+import { Events } from "@utils/Constants";
 import { objectSnakeKeysToCamelKeys } from "@utils/index";
 import { APIAuditLogEntry } from "discord-api-types/v10";
 import { Event } from "./Event";
@@ -15,6 +16,6 @@ export class GuildAuditLogEntryCreate extends Event {
       targetId: data.target_id,
     };
 
-    this.client.emit("guildAuditLogEntryCreate", log);
+    this.client.emit(Events.GuildAuditLogEntryCreate, log);
   }
 }

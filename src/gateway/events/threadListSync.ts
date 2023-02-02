@@ -7,6 +7,7 @@ import {
 import { Event } from "./Event";
 import { ThreadChannel } from "../../resources/Channel";
 import { ThreadMember } from "@resources/Member";
+import { Events } from "@utils/Constants";
 
 export class ThreadListSync extends Event {
   run(data: GatewayThreadListSyncDispatchData) {
@@ -64,6 +65,6 @@ export class ThreadListSync extends Event {
       }
     }
 
-    this.client.emit("threadListSync", threads, guild);
+    this.client.emit(Events.ThreadListSync, threads, guild);
   }
 }

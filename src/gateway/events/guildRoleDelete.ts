@@ -1,3 +1,4 @@
+import { Events } from "@utils/Constants";
 import { GatewayGuildRoleDeleteDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -9,6 +10,6 @@ export class GuildRoleDelete extends Event {
 
     const deleted = guild.roles.get(data.role_id);
 
-    this.client.emit("guildRoleDelete", deleted, guild);
+    this.client.emit(Events.GuildRoleDelete, deleted, guild);
   }
 }

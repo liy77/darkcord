@@ -1,5 +1,6 @@
 import { Channel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
+import { Events } from "@utils/Constants";
 import { GatewayChannelCreateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -16,7 +17,7 @@ export class ChannelCreate extends Event {
     if (!existing) {
         const channel = Channel.from({ ...data, client: this.client }, guild);
         
-        this.client.emit("channelCreate", channel)
+        this.client.emit(Events.ChannelCreate, channel)
     }
   }
 }

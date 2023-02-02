@@ -2,6 +2,7 @@ import { TextBasedChannel, ThreadChannel } from "@resources/Channel";
 import { GatewayMessageDeleteDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { isTextBasedChannel, structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class MessageDelete extends Event {
   run(data: GatewayMessageDeleteDispatchData) {
@@ -12,7 +13,7 @@ export class MessageDelete extends Event {
       if (channel instanceof ThreadChannel) channel.messageCount--;
 
       const message = structuredClone(channel.messages.get(data.id));
-      this.client.emit("messageDelete", message);
+      this.client.emit(Events.MessageDelete, message);
       channel.messages.delete(data.id);
     }
   }

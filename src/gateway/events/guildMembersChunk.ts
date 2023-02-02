@@ -1,6 +1,6 @@
 import { Guild } from "@resources/Guild";
 import { Member } from "@resources/Member";
-import { Partials } from "@utils/Constants";
+import { Events, Partials } from "@utils/Constants";
 import {
   APIGuildMember,
   GatewayGuildMembersChunkDispatchData,
@@ -31,7 +31,7 @@ export class GuildMembersChunk extends Event {
       }
     }
 
-    this.client.emit("guildMembersChunk", {
+    this.client.emit(Events.GuildMembersChunk, {
       chunkCount: data.chunk_count,
       chunkIndex: data.chunk_index,
       notFound: data.not_found,
@@ -42,7 +42,7 @@ export class GuildMembersChunk extends Event {
     });
 
     if (data.chunk_index >= data.chunk_count - 1) {
-      this.client.emit("guildMembersChunked", guild, data.chunk_count);
+      this.client.emit(Events.GuildMembersChunked, guild, data.chunk_count);
     }
   }
 }

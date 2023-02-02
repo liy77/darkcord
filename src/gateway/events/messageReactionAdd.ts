@@ -1,6 +1,6 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { Reaction } from "@resources/Emoji";
-import { Partials } from "@utils/Constants";
+import { Events, Partials } from "@utils/Constants";
 import { isTextBasedChannel } from "@utils/index";
 import { GatewayMessageReactionAddDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
@@ -33,7 +33,7 @@ export class MessageReactionAdd extends Event {
 
       message.reactions._add(reaction, true, reaction.emoji.id ?? reaction.emoji.name);
 
-      this.client.emit("messageReactionAdd", reaction, user, message);
+      this.client.emit(Events.MessageReactionAdd, reaction, user, message);
     }
   }
 }

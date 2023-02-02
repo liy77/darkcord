@@ -2,6 +2,7 @@ import { ThreadMember } from "@resources/Member";
 import { GatewayThreadMembersUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { GuildChannel } from "../../resources/Channel";
+import { Events } from "@utils/Constants";
 
 export class ThreadMembersUpdate extends Event {
   run(data: GatewayThreadMembersUpdateDispatchData) {
@@ -27,7 +28,7 @@ export class ThreadMembersUpdate extends Event {
     this.client.cache.threads._add(thread);
 
     this.client.emit(
-      "threadMembersUpdate",
+      Events.ThreadMembersUpdate,
       addedMembers,
       data.removed_member_ids
     );

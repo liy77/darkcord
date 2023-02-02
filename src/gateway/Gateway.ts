@@ -26,7 +26,7 @@ import { Zlib } from "@utils/Zlib";
 import type ZlibSync from "zlib-sync";
 import { EventSource } from "./EventSource";
 import { WebSocketUtil } from "./WebSocketUtil";
-import { GatewayStatus } from "../utils/Constants";
+import { Events, GatewayStatus, ShardEvents } from "@utils/Constants";
 import crypto from "node:crypto";
 import {
   setTimeout,
@@ -213,7 +213,7 @@ export class GatewayShard extends EventEmitter {
   }
 
   debug(message: string) {
-    return this.emit("debug", message);
+    return this.emit(ShardEvents.Debug, message);
   }
 
   _makeErr(message: string, code: number) {
@@ -289,7 +289,7 @@ export class GatewayShard extends EventEmitter {
     this.debug(
       `Connected to Discord Gateway in ${Date.now() - this.connectedAt}ms`
     );
-    this.emit("connect");
+    this.emit(ShardEvents.Connect);
   }
 
   #onClose(event: WebSocket.CloseEvent) {
@@ -301,7 +301,7 @@ export class GatewayShard extends EventEmitter {
 
     if (reason === "Discord Gateway Reconnect") return;
 
-    this.emit("close", code, reason);
+    this.emit(ShardEvents.Close, code, reason);
     this.debug(`Connection closed with code: ${code} ${reason}`);
 
     this.status = GatewayStatus.Disconnected;
@@ -310,7 +310,7 @@ export class GatewayShard extends EventEmitter {
   }
 
   #onPacket(data: GatewayReceivePayload | GatewaySendPayload) {
-    this.client.emit("packet", data);
+    this.client.emit(Events.Packet, data);
     switch (data.op) {
       case GatewayOpcodes.Hello: {
         this.heartbeatInterval = data.d.heartbeat_interval;
@@ -324,7 +324,7 @@ export class GatewayShard extends EventEmitter {
 
         clearTimeout(this.helloTimeout);
 
-        this.emit("hello");
+        this.emit(ShardEvents.Hello);
 
         if (this.preReady === false) {
           this.preReady = true;
@@ -337,7 +337,7 @@ export class GatewayShard extends EventEmitter {
       case GatewayOpcodes.HeartbeatAck: {
         this.heartbeatAck = true;
         this.ping = Date.now() - this.lastHeartbeatAck;
-        this.emit("ping", this.ping);
+        this.emit(ShardEvents.Ping, this.ping);
         this.debug(`Received heartbeat ack. Pong: ${this.ping}`);
         break;
       }
@@ -366,7 +366,7 @@ export class GatewayShard extends EventEmitter {
         if (data.t) {
           const eventName = camelCase(data.t) as keyof ClientEvents;
 
-          this.emit("dispatch", eventName, data.d);
+          this.emit(ShardEvents.Dispatch, eventName, data.d);
 
           if (data.t === GatewayDispatchEvents.Resumed) {
             this.status = GatewayStatus.Ready;
@@ -392,11 +392,11 @@ export class GatewayShard extends EventEmitter {
         this.sessionId = data.d.session_id;
         this.sequenceId = data.d.seq;
 
-        this.emit("resume");
+        this.emit(ShardEvents.Resume);
         break;
       }
       case GatewayOpcodes.Reconnect: {
-        this.emit("reconnectRequired");
+        this.emit(ShardEvents.ReconnectRequired);
         this.debug("Received reconnect Op Code");
         this.reconnect();
         break;
@@ -436,7 +436,7 @@ export class GatewayShard extends EventEmitter {
             data = this._inflate.result;
           }
         } catch (err) {
-          this.emit("error", err);
+          this.emit(ShardEvents.Error, err);
           return;
         }
       }
@@ -456,12 +456,12 @@ export class GatewayShard extends EventEmitter {
           data = WebSocketUtil.unpack(data as Buffer, "etf");
         }
       } catch (err) {
-        this.emit("error", err);
+        this.emit(ShardEvents.Error, err);
       }
 
       this.#onPacket(data);
     } catch (err) {
-      this.emit("error", err);
+      this.emit(ShardEvents.Error, err);
     }
   }
 
@@ -486,7 +486,7 @@ export class GatewayShard extends EventEmitter {
 
   /**
    * Process the queue
-   * @returns 
+   * @returns
    */
   processQueue() {
     if (this.queueProcessing || this.queue.length === 0) {
@@ -544,7 +544,7 @@ export class GatewayShard extends EventEmitter {
   }
 
   /**
-   * Resume this gateway 
+   * Resume this gateway
    */
   resume() {
     if (this.sessionId === undefined) {
@@ -568,7 +568,7 @@ export class GatewayShard extends EventEmitter {
 
   /**
    * Identify this
-   * @returns 
+   * @returns
    */
   identify() {
     if (!this.preReady) {
@@ -736,7 +736,7 @@ export class GatewayShard extends EventEmitter {
     }
 
     this.status = GatewayStatus.Reconnecting;
-    this.emit("reconnecting");
+    this.emit(ShardEvents.Reconnecting);
     this.debug("Discord asked to reconnect, reconnecting gateway...");
     clearInterval(this.heartbeatSendInterval);
     this.close(1000, "Discord Gateway Reconnect");
@@ -756,6 +756,6 @@ export class GatewayShard extends EventEmitter {
       this.heartbeatSendInterval = undefined;
     }
 
-    this.close(1000, "Shard destroyed");
+    this.close(1_000, "Shard destroyed");
   }
 }

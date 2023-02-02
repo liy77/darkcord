@@ -1,6 +1,6 @@
 import { Channel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
-import { GatewayStatus } from "@utils/Constants";
+import { Events, GatewayStatus } from "@utils/Constants";
 import { GatewayGuildCreateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { Member } from "@resources/Member";
@@ -39,7 +39,7 @@ export class GuildCreate extends Event {
     this.client.cache.guilds._add(guild);
 
     if (this.client.websocket.allReady()) {
-      this.client.emit("guildCreate", guild);
+      this.client.emit(Events.GuildCreate, guild);
     } else if (this.gatewayShard.status === GatewayStatus.WaitingGuilds) {
       this.gatewayShard.pendingGuilds--;
       this.gatewayShard.pendingGuildsMap.delete(guild.id);

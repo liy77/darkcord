@@ -1,6 +1,7 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
 import { Member } from "@resources/Member";
+import { Events } from "@utils/Constants";
 import {
   APIChannel,
   GatewayTypingStartDispatchData,
@@ -24,7 +25,7 @@ export class TypingStart extends Event {
       | TextBasedChannel
       | APIChannel;
 
-    this.client.emit("typingStart", {
+    this.client.emit(Events.TypingStart, {
       channelId,
       channel,
       startedTimestamp,

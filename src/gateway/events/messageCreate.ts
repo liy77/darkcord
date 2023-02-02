@@ -2,6 +2,7 @@ import { GatewayMessageCreateDispatchData } from "discord-api-types/v10";
 import { Message } from "@resources/Message";
 import { Event } from "./Event";
 import { Resolvable } from "@utils/Resolvable";
+import { Events } from "@utils/Constants";
 
 export class MessageCreate extends Event {
   async run(data: GatewayMessageCreateDispatchData) {
@@ -15,6 +16,6 @@ export class MessageCreate extends Event {
       guild
     );
 
-    this.client.emit("messageCreate", Resolvable.resolveMessage(message, this.client));
+    this.client.emit(Events.MessageCreate, Resolvable.resolveMessage(message, this.client));
   }
 }

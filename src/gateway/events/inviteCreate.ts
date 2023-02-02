@@ -5,6 +5,7 @@ import {
 } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { Channel } from "@resources/Channel";
+import { Events } from "@utils/Constants";
 
 export class InviteCreate extends Event {
   run(data: GatewayInviteCreateDispatchData) {
@@ -21,6 +22,6 @@ export class InviteCreate extends Event {
     });
 
     guild.invites.set(invite.code, invite);
-    this.client.emit("inviteCreate", invite);
+    this.client.emit(Events.InviteCreate, invite);
   }
 }

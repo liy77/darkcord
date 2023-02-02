@@ -2,6 +2,7 @@ import { TextBasedChannel } from "@resources/Channel";
 import { GatewayMessageReactionRemoveAllDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { isTextBasedChannel, structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class MessageReactionRemoveAll extends Event {
   run(data: GatewayMessageReactionRemoveAllDispatchData) {
@@ -16,7 +17,7 @@ export class MessageReactionRemoveAll extends Event {
       if (message) {
         const removed = structuredClone(message.reactions);
         message.reactions.clear();
-        this.client.emit("messageReactionRemoveAll", message, removed);
+        this.client.emit(Events.MessageReactionRemoveAll, message, removed);
       }
     }
   }

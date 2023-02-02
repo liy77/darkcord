@@ -8,6 +8,7 @@ import {
 } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { isTextBasedChannel } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class ChannelPinsUpdate extends Event {
   run(data: GatewayChannelPinsUpdateDispatchData) {
@@ -28,6 +29,6 @@ export class ChannelPinsUpdate extends Event {
     }
 
     this.client.cache.channels.add(channel as APIChannel);
-    this.client.emit("channelPinsUpdate", channel);
+    this.client.emit(Events.ChannelPinsUpdate, channel);
   }
 }

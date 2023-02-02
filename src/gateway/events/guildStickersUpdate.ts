@@ -1,6 +1,7 @@
 import { GatewayGuildStickersUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class GuildStickersUpdate extends Event {
   run(data: GatewayGuildStickersUpdateDispatchData) {
@@ -13,6 +14,6 @@ export class GuildStickersUpdate extends Event {
       guild.stickers.add(sticker);
     }
 
-    this.client.emit("guildStickersUpdate", oldStickers, guild.stickers, guild);
+    this.client.emit(Events.GuildStickersUpdate, oldStickers, guild.stickers, guild);
   }
 }

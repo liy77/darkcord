@@ -1,6 +1,7 @@
 import { GatewayGuildDeleteDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class GuildDelete extends Event {
   run(data: GatewayGuildDeleteDispatchData) {
@@ -8,6 +9,6 @@ export class GuildDelete extends Event {
 
     this.client.cache.guilds.delete(data.id);
 
-    this.client.emit("guildDelete", deleted);
+    this.client.emit(Events.GuildDelete, deleted);
   }
 }

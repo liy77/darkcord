@@ -1,4 +1,4 @@
-import { User } from "@resources/User";
+import { Events } from "@utils/Constants";
 import { GatewayGuildBanAddDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -7,6 +7,6 @@ export class GuildBanAdd extends Event {
     const guild = this.getGuild(data.guild_id);
     const user = await this.getUser(data.user.id);
 
-    this.client.emit("guildBanAdd", guild, user);
+    this.client.emit(Events.GuildBanAdd, guild, user);
   }
 }

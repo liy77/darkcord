@@ -2,6 +2,7 @@ import { Guild } from "@resources/Guild";
 import { GatewayChannelDeleteDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class ChannelDelete extends Event {
   run(data: GatewayChannelDeleteDispatchData) {
@@ -19,6 +20,6 @@ export class ChannelDelete extends Event {
 
     this.client.cache.channels.delete(data.id);
 
-    this.client.emit("channelDelete", channel);
+    this.client.emit(Events.ChannelDelete, channel);
   }
 }

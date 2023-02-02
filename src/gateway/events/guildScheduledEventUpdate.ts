@@ -2,6 +2,7 @@ import { GatewayGuildScheduledEventUpdateDispatchData } from "discord-api-types/
 import { Event } from "./Event";
 import { ScheduledEvent } from "@resources/Guild";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class GuildScheduledEventUpdate extends Event {
   run(data: GatewayGuildScheduledEventUpdateDispatchData) {
@@ -13,6 +14,6 @@ export class GuildScheduledEventUpdate extends Event {
     const old = structuredClone(guild.scheduledEvents.get(event.id));
     guild.scheduledEvents.set(event.id, event);
 
-    this.client.emit("guildScheduledEventUpdate", old, event);
+    this.client.emit(Events.GuildScheduledEventUpdate, old, event);
   }
 }

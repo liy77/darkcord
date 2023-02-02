@@ -5,6 +5,7 @@ import {
 } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class GuildMemberUpdate extends Event {
   run(data: GatewayGuildMemberUpdateDispatchData) {
@@ -26,6 +27,6 @@ export class GuildMemberUpdate extends Event {
       )
     );
 
-    this.client.emit("guildMemberUpdate", oldMember, updated);
+    this.client.emit(Events.GuildMemberUpdate, oldMember, updated);
   }
 }

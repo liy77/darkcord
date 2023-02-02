@@ -1,3 +1,4 @@
+import { Events } from "@utils/Constants";
 import { GatewayVoiceServerUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -7,7 +8,7 @@ export class VoiceServerUpdate extends Event {
     const guild = this.getGuild(data.guild_id);
     const token = data.token;
 
-    this.client.emit("voiceServerUpdate", {
+    this.client.emit(Events.VoiceServerUpdate, {
       host,
       guild,
       token,

@@ -3,6 +3,7 @@ import { Guild } from "@resources/Guild";
 import { GatewayChannelUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class ChannelUpdate extends Event {
   run(data: GatewayChannelUpdateDispatchData) {
@@ -22,6 +23,6 @@ export class ChannelUpdate extends Event {
 
     this.client.cache.channels.add(updated);
 
-    this.client.emit("channelUpdate", old, updated);
+    this.client.emit(Events.ChannelUpdate, old, updated);
   }
 }

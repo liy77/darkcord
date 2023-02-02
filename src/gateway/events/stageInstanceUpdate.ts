@@ -1,6 +1,7 @@
 import { GatewayStageInstanceUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class StageInstanceUpdate extends Event {
   run(data: GatewayStageInstanceUpdateDispatchData) {
@@ -10,6 +11,6 @@ export class StageInstanceUpdate extends Event {
 
     guild.stageInstances.set(data.id, data);
 
-    this.client.emit("stageInstanceUpdate", old, data);
+    this.client.emit(Events.StageInstanceUpdate, old, data);
   }
 }

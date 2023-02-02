@@ -1,6 +1,6 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { Reaction } from "@resources/Emoji";
-import { Partials } from "@utils/Constants";
+import { Events, Partials } from "@utils/Constants";
 import { GatewayMessageReactionRemoveDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { isTextBasedChannel } from "../../utils/index";
@@ -31,7 +31,7 @@ export class MessageReactionRemove extends Event {
         (await channel.messages.fetch(data.message_id));
 
       message.reactions.delete(reaction.emoji.id);
-      this.client.emit("messageReactionRemove", reaction, user, message);
+      this.client.emit(Events.MessageReactionRemove, reaction, user, message);
     }
   }
 }

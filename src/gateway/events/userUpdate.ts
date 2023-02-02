@@ -1,6 +1,7 @@
 import { GatewayUserUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class UserUpdate extends Event {
   run(data: GatewayUserUpdateDispatchData) {
@@ -12,6 +13,6 @@ export class UserUpdate extends Event {
 
     const updated = this.client.cache.users.add(data);
 
-    this.client.emit("userUpdate", old, updated);
+    this.client.emit(Events.UserUpdate, old, updated);
   }
 }

@@ -5,6 +5,7 @@ import { StageChannel, VoiceChannel } from "@resources/Channel";
 import { Event } from "./Event";
 import { isEqual } from "@utils/index";
 import { structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class VoiceStateUpdate extends Event {
   run(data: GatewayVoiceStateUpdateDispatchData) {
@@ -62,20 +63,20 @@ export class VoiceStateUpdate extends Event {
         if (oldVoiceState) {
           oldChannel.members.delete(member.id);
           const m = channel.members.add(member);
-          this.client.emit("voiceChannelSwitch", m, channel, oldChannel);
+          this.client.emit(Events.VoiceChannelSwitch, m, channel, oldChannel);
         } else {
           const m = channel.members.add(member);
-          this.client.emit("voiceChannelJoin", m, channel);
+          this.client.emit(Events.VoiceChannelJoin, m, channel);
         }
       } else if (oldChannel) {
         oldChannel.members.delete(member.id);
 
-        this.client.emit("voiceChannelLeave", member, oldChannel);
+        this.client.emit(Events.VoiceChannelLeave, member, oldChannel);
       }
     }
 
     if (!isEqual(oldVoiceState, updated)) {
-      this.client.emit("voiceStateUpdate", member, updated);
+      this.client.emit(Events.VoiceStateUpdate, member, updated);
     }
   }
 }

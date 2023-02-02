@@ -2,6 +2,7 @@ import { TextBasedChannel, ThreadChannel } from "@resources/Channel";
 import { GatewayMessageDeleteBulkDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { isTextBasedChannel, structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class MessageDeleteBulk extends Event {
   run(data: GatewayMessageDeleteBulkDispatchData) {
@@ -20,7 +21,7 @@ export class MessageDeleteBulk extends Event {
         messages.set(message.id, message);
       }
 
-      this.client.emit("messageDeleteBulk", messages);
+      this.client.emit(Events.MessageDeleteBulk, messages);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { GatewayStatus } from "@utils/Constants";
+import { GatewayStatus, ShardEvents } from "@utils/Constants";
 import { GatewayReadyDispatchData } from "discord-api-types/v10";
 import { User } from "@resources/User";
 import { Event } from "./Event";
@@ -56,7 +56,7 @@ export class Ready extends Event {
       this.gatewayShard.pendingGuildsMap.set(guild.id, guild);
     }
 
-    this.gatewayShard.emit("ready");
+    this.gatewayShard.emit(ShardEvents.Ready);
     this.client.websocket.fireClientReady();
   }
 }

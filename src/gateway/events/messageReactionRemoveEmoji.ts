@@ -2,6 +2,7 @@ import { TextBasedChannel } from "@resources/Channel";
 import { GatewayMessageReactionRemoveEmojiDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { isTextBasedChannel, structuredClone } from "@utils/index";
+import { Events } from "@utils/Constants";
 
 export class MessageReactionRemoveEmoji extends Event {
   run(data: GatewayMessageReactionRemoveEmojiDispatchData) {
@@ -19,7 +20,7 @@ export class MessageReactionRemoveEmoji extends Event {
         const removed = structuredClone(message.reactions.get(emoji.id));
         message.reactions.delete(emoji.id);
 
-        this.client.emit("messageReactionRemoveEmoji", message, removed);
+        this.client.emit(Events.MessageReactionRemoveEmoji, message, removed);
       }
     }
   }

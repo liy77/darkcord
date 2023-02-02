@@ -1,6 +1,7 @@
 import { GatewayGuildScheduledEventCreateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { ScheduledEvent } from "@resources/Guild";
+import { Events } from "@utils/Constants";
 
 export class GuildScheduledEventCreate extends Event {
   run(data: GatewayGuildScheduledEventCreateDispatchData) {
@@ -11,6 +12,6 @@ export class GuildScheduledEventCreate extends Event {
 
     guild.scheduledEvents.set(event.id, event);
 
-    this.client.emit("guildScheduledEventCreate", event);
+    this.client.emit(Events.GuildScheduledEventCreate, event);
   }
 }

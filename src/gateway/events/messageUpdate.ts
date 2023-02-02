@@ -7,6 +7,7 @@ import {
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
 import { Resolvable } from "@utils/Resolvable";
+import { Events } from "@utils/Constants";
 
 export class MessageUpdate extends Event {
   async run(data: GatewayMessageUpdateDispatchData) {
@@ -25,7 +26,7 @@ export class MessageUpdate extends Event {
     );
 
     this.client.emit(
-      "messageUpdate",
+      Events.MessageUpdate,
       old,
       Resolvable.resolveMessage(updated, this.client)
     );
