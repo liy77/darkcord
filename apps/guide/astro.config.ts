@@ -2,6 +2,7 @@ import image from '@astrojs/image';
 import mdx from '@astrojs/mdx';
 import prefetch from '@astrojs/prefetch';
 import react from '@astrojs/react';
+import { remarkCodeHike } from '@code-hike/mdx';
 import unocss from '@unocss/astro';
 import compress from 'astro-compress';
 import critters from 'astro-critters';
@@ -11,6 +12,7 @@ import { h } from 'hastscript';
 import { escape } from 'html-escaper';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
+import shikiThemeDarkPlus from 'shiki/themes/dark-plus.json' assert { type: 'json' };
 import { fileURLToPath } from 'url';
 
 const PermaLink = h(
@@ -40,6 +42,9 @@ export default defineConfig({
 	integrations: [
 		react(),
 		mdx({
+			remarkPlugins: [
+				[remarkCodeHike, { autoImport: false, theme: shikiThemeDarkPlus, lineNumbers: true, showCopyButton: true }],
+			],
 			rehypePlugins: [
 				rehypeSlug,
 				[
@@ -81,6 +86,10 @@ export default defineConfig({
 		critters(),
 		compress(),
 	],
+	markdown: {
+		extendDefaultPlugins: true,
+		syntaxHighlight: false,
+	},
 	vite: {
 		resolve: {
 			alias: {
