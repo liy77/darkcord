@@ -34,6 +34,7 @@ import {
   RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPIChannelJSONBody,
   RESTPatchAPIChannelResult,
+  RESTPatchAPIGuildJSONBody,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
   RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
@@ -690,5 +691,13 @@ export class Rest extends EventEmitter {
     return this.post(Routes.guildChannels(guildId), options, {
       reason,
     }) as Promise<APIGuildChannelResolvable>;
+  }
+
+  modifyGuild(
+    guildId: string,
+    options: RESTPatchAPIGuildJSONBody,
+    reason?: string
+  ) {
+    return this.patch(Routes.guild(guildId), options, { reason }) as Promise<APIGuild>;
   }
 }

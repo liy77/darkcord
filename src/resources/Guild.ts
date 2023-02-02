@@ -9,6 +9,7 @@ import {
   DataWithClient,
   KeysToCamelCase,
 } from "@typings/index";
+import { Resolvable } from "@utils/Resolvable";
 import {
   APIAutoModerationRuleTriggerMetadata,
   APIGuild,
@@ -40,6 +41,7 @@ import {
   RESTPatchAPIApplicationCommandJSONBody,
   RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPICurrentGuildMemberJSONBody,
+  RESTPatchAPIGuildJSONBody,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
   RESTPostAPIApplicationCommandsJSONBody,
@@ -53,7 +55,7 @@ import {
 } from "discord-api-types/v10";
 
 import { Base } from "./Base";
-import { WelcomeChannel } from "./Channel";
+import { Channel, WelcomeChannel } from "./Channel";
 import { Invite } from "./Invite";
 import { Member } from "./Member";
 import { Permissions } from "./Permission";
@@ -96,14 +98,7 @@ export class BaseGuild extends Base {
   constructor(data: DataWithClient<APIPartialGuild>) {
     super(data, data.client);
 
-    this.name = data.name;
-    this.banner = data.banner ?? null;
-    this.icon = data.icon ?? null;
-    this.features = data.features;
-    this.splash = data.splash ?? null;
-    this.description = data.description ?? null;
-    this.verificationLevel = data.verification_level;
-    this.vanityUrlCode = data.vanity_url_code ?? null;
+    this._update(data);
   }
 
   iconURL(format?: GuildIconFormat) {
@@ -132,6 +127,18 @@ export class BaseGuild extends Base {
             : ImageFormat.PNG
         )
     );
+  }
+
+  _update(data: APIPartialGuild) {
+    this.name = data.name;
+    this.banner = data.banner ?? null;
+    this.icon = data.icon ?? null;
+    this.features = data.features;
+    this.splash = data.splash ?? null;
+    this.description = data.description ?? null;
+    this.verificationLevel = data.verification_level;
+    this.vanityUrlCode = data.vanity_url_code ?? null;
+    return this;
   }
 }
 
@@ -385,18 +392,9 @@ export class Guild extends BaseGuild {
     this.maxMembers = data.max_members;
     this.approximateMemberCount = data.approximate_member_count;
     this.approximatePresenceCount = data.approximate_presence_count;
-    this.iconHash = data.icon_hash;
-    this.widgetChannelId = data.widget_channel_id;
-    this.widgetEnabled = data.widget_enabled;
-    this.ownerId = data.owner_id;
-    this.owner = data.owner;
-    this.discoverySplash = data.discovery_splash;
-    this.afkChannelId = data.afk_channel_id;
-    this.afkTimeout = data.afk_timeout;
-    this.publicUpdatesChannelId = data.public_updates_channel_id;
     this.shardId = (data as APIGuildWithShard)?.shard_id;
-    this.nsfwLevel = data.nsfw_level;
-    this.premiumSubscriptionCount = data.premium_subscription_count ?? null;
+
+    this._update(data);
 
     if (Array.isArray(this.partial.roles)) {
       for (const role of this.partial.roles) {
@@ -704,8 +702,8 @@ export class Guild extends BaseGuild {
     );
   }
 
-  createChannel(options: CreateChannelOptions, reason?: string) {
-    return this._client.rest.createGuildChannel(
+  async createChannel(options: CreateChannelOptions, reason?: string) {
+    const data = await this._client.rest.createGuildChannel(
       this.id,
       {
         position: options.position,
@@ -723,14 +721,20 @@ export class Guild extends BaseGuild {
         default_reaction_emoji: options.defaultReactionEmoji,
         rtc_region: options.rtcRegion,
         user_limit: options.userLimit,
-        rate_limit_per_user: options.rateLimitPerUser
+        rate_limit_per_user: options.rateLimitPerUser,
       },
       reason
+    );
+
+    return Resolvable.resolveChannel(
+      Channel.from({ ...data, client: this._client }, this),
+      this._client,
+      this
     );
   }
 
   deleteChannel(id: string, reason?: string) {
-    return this._client.rest.deleteChannel(id, reason)
+    return this._client.rest.deleteChannel(id, reason);
   }
 
   permissionsOf(userId: string | Member) {
@@ -792,6 +796,36 @@ export class Guild extends BaseGuild {
       this.id,
       commands
     );
+  }
+
+  async edit(
+    options: KeysToCamelCase<RESTPatchAPIGuildJSONBody>,
+    reason?: string
+  ) {
+    const data = await this._client.rest.modifyGuild(this.id, options, reason);
+
+    return this._update(data);
+  }
+
+  _update(data: APIGuild) {
+    if ("nsfw_level" in data) this.nsfwLevel = data.nsfw_level;
+    if ("premium_subscription_count" in data)
+      this.premiumSubscriptionCount = data.premium_subscription_count;
+    if ("icon_hash" in data) this.iconHash = data.icon_hash;
+    if ("widget_channel_id" in data)
+      this.widgetChannelId = data.widget_channel_id;
+    if ("widget_enabled" in data) this.widgetEnabled = data.widget_enabled;
+    if ("owner_id" in data) this.ownerId = data.owner_id;
+    if ("owner" in data) this.owner = data.owner;
+    if ("discovery_splash" in data)
+      this.discoverySplash = data.discovery_splash;
+    if ("afk_channel_id" in data) this.afkChannelId = data.afk_channel_id;
+    if ("afk_timeout" in data) this.afkTimeout = data.afk_timeout;
+    if ("public_updates_channel_id" in data)
+      this.publicUpdatesChannelId = data.public_updates_channel_id;
+
+    super._update(data);
+    return this;
   }
 }
 
