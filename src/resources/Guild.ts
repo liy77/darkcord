@@ -729,8 +729,8 @@ export class Guild extends BaseGuild {
     );
   }
 
-  deleteChannel(id: string) {
-    return this._client.rest.deleteChannel(id)
+  deleteChannel(id: string, reason?: string) {
+    return this._client.rest.deleteChannel(id, reason)
   }
 
   permissionsOf(userId: string | Member) {

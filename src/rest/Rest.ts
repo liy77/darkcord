@@ -515,8 +515,8 @@ export class Rest extends EventEmitter {
     }) as Promise<APIDMChannel>;
   }
 
-  deleteChannel(channelId: string) {
-    return this.delete(Routes.channel(channelId)) as Promise<void>;
+  deleteChannel(channelId: string, reason?: string) {
+    return this.delete(Routes.channel(channelId), { reason }) as Promise<void>;
   }
 
   modifyChannel(
