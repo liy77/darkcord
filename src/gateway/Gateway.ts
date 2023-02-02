@@ -619,7 +619,7 @@ export class GatewayShard extends EventEmitter {
 
     const nonce = options.nonce ?? crypto.randomUUID();
 
-    let missingIntents = [];
+    const missingIntents = [];
     if (
       !(options.userIds || options.query) &&
       !(this.intents & GatewayIntentBits.GuildMembers)
