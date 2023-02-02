@@ -5,6 +5,7 @@ import { GuildRoleCache } from "@cache/RoleCache";
 import { GuildStickerCache } from "@cache/StickerCache";
 import {
   APIGuildWithShard,
+  CreateChannelOptions,
   DataWithClient,
   KeysToCamelCase,
 } from "@typings/index";
@@ -703,13 +704,41 @@ export class Guild extends BaseGuild {
     );
   }
 
-  permissionsOf(userId: string | Member) {
-    let member: Member
+  createChannel(options: CreateChannelOptions, reason?: string) {
+    return this._client.rest.createGuildChannel(
+      this.id,
+      {
+        position: options.position,
+        name: options.name,
+        permission_overwrites: options.permissionOverwrites,
+        nsfw: options.nsfw,
+        parent_id: options.parentId,
+        flags: options.flags,
+        topic: options.topic,
+        bitrate: options.bitrate,
+        video_quality_mode: options.videoQualityMode,
+        default_auto_archive_duration: options.defaultAutoArchiveDuration,
+        default_forum_layout: options.defaultForumLayout,
+        default_sort_order: options.defaultSortOrder,
+        default_reaction_emoji: options.defaultReactionEmoji,
+        rtc_region: options.rtcRegion,
+        user_limit: options.userLimit,
+        rate_limit_per_user: options.rateLimitPerUser
+      },
+      reason
+    );
+  }
 
+  deleteChannel(id: string) {
+    return this._client.rest.deleteChannel(id)
+  }
+
+  permissionsOf(userId: string | Member) {
+    let member: Member;
 
     if (userId instanceof Member) {
-      member = userId
-      userId = member.id
+      member = userId;
+      userId = member.id;
     }
 
     if (userId === this.ownerId) return new Permissions(Permissions.All);
