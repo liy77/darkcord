@@ -122,7 +122,7 @@ export namespace Resolvable {
       }
     }
 
-    if (resolved instanceof GuildChannel) {
+    if (resolved.isGuildChannel()) {
       resolved.guild.channels.add(resolved);
     }
 

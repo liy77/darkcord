@@ -10,7 +10,7 @@ export class MessageDelete extends Event {
 
     if (isTextBasedChannel(channel)) {
       if (!channel.messages.has(data.id)) return;
-      if (channel instanceof ThreadChannel) channel.messageCount--;
+      if (channel.isThread()) channel.messageCount--;
 
       const message = structuredClone(channel.messages.get(data.id));
       this.client.emit(Events.MessageDelete, message);
