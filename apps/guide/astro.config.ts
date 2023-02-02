@@ -22,7 +22,7 @@ const PermaLink = h(
 		height: '16',
 		viewBox: '0 0 24 24',
 		fill: 'none',
-		stroke: 'currentColor',
+		stroke: "#787f85",
 	},
 	h('path', {
 		d: 'M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71',
@@ -96,6 +96,7 @@ export default defineConfig({
 				'ariakit/button': fileURLToPath(new URL('node_modules/ariakit/esm/button/index.js', import.meta.url)),
 				'ariakit/disclosure': fileURLToPath(new URL('node_modules/ariakit/esm/disclosure/index.js', import.meta.url)),
 				'ariakit/separator': fileURLToPath(new URL('node_modules/ariakit/esm/separator/index.js', import.meta.url)),
+				'ariakit/dialog': fileURLToPath(new URL('node_modules/ariakit/esm/dialog/index.js', import.meta.url)),
 				'ariakit-utils/dom': fileURLToPath(new URL('node_modules/ariakit-utils/esm/dom.js', import.meta.url)),
 				'ariakit-utils/events': fileURLToPath(new URL('node_modules/ariakit-utils/esm/events.js', import.meta.url)),
 				'ariakit-utils/focus': fileURLToPath(new URL('node_modules/ariakit-utils/esm/focus.js', import.meta.url)),
