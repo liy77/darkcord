@@ -16,7 +16,7 @@ export function DiscordMessageAuthorReply({ avatar, bot, username }: DiscordMess
 				}
 			/>
 			{bot ? <div className="bg-blue-6 vertical-top mr-1 rounded px-1 text-xs">BOT</div> : null}
-			<span className="mr-1 cursor-pointer select-none text-sm font-medium leading-snug text-white hover:underline">
+			<span className="text-dark mr-1 cursor-pointer select-none text-sm font-medium leading-snug hover:underline dark:text-white">
 				{username ?? 'Liy'}
 			</span>
 		</>

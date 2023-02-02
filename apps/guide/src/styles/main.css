@@ -14,3 +14,7 @@
 			'Noto Color Emoji';
 	}
 }
+
+body {
+  overflow: hidden;
+}

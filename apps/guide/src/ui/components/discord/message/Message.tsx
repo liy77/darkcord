@@ -29,7 +29,7 @@ export function DiscordMessage({
 	replyNode,
 }: PropsWithChildren<DiscordMessageProps>) {
 	return (
-		<div className="font-source-sans-pro pt-0.1 bg-[rgb(54_57_63)] pb-4 rounded">
+		<div className="font-source-sans-pro pt-0.1 rounded bg-white pb-4 dark:bg-[rgb(54_57_63)]">
 			<div className="relative">
 				<div className="pl-18 hover:bg-[rgb(4_4_5)]/7 group py-0.5 pr-12 leading-snug">
 					{(reply || replyNode) && !followUp ? reply ? <DiscordMessageReply {...reply} /> : replyNode ?? null : null}
@@ -55,7 +55,7 @@ export function DiscordMessage({
 						) : (
 							node
 						)}
-						<div className="text-white [&>p]:m-0 [&>p]:leading-snug">{children}</div>
+						<div className="text-dark dark:text-white [&>p]:m-0 [&>p]:leading-snug">{children}</div>
 					</div>
 				</div>
 			</div>

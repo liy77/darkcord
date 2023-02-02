@@ -1,15 +1,15 @@
-import { iconSize, SearchIcon, ThemeAutoIcon } from '@expo/styleguide';
+import { HamburgerIcon, iconSize, ThemeAutoIcon } from '@expo/styleguide';
 import { Button } from 'ariakit/button';
 import { useEffect, useState } from 'react';
 import { useMedia } from 'react-use';
-import { isAppleDevice } from '~/utils/isAppleDevice.js';
+import { Search } from '~/ui/components/index.js';
 import { Sidebar } from './Sidebar.jsx';
 import { MDXPage } from './SidebarItems.jsx';
 
 export function Navbar({ pages }: { pages?: MDXPage[] | undefined }) {
 	const matches = useMedia('(min-width: 992px)', false);
-	const [isMac, setIsMac] = useState<boolean | null>(null);
 	const [opened, setOpened] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
 		if (matches) {
@@ -17,33 +17,28 @@ export function Navbar({ pages }: { pages?: MDXPage[] | undefined }) {
 		}
 	}, [matches]);
 
-	useEffect(() => {
-		setIsMac(typeof navigator !== 'undefined' && isAppleDevice());
-	}, []);
-
 	return (
 		<>
 			<header className="header-base fixed top-0 left-0 z-20 w-full border-b">
 				<div className="h-60px block px-6">
 					<div className="flex h-full flex-row place-content-between place-items-center">
-						<span>Logo</span>
-						<div className="flex flex-row place-items-center gap-4">
-							<Button as="div" className="border-base rounded border px-4 py-2.5 outline-0">
-								<div className="flex flex-row place-items-center gap-24">
-									<div className="flex flex-row place-items-center gap-2">
-										<SearchIcon color="currentColor" size={iconSize.sm} />
-										<span className="opacity-65">Search</span>
-									</div>
+						<Button
+							aria-label="Menu"
+							className="focus:ring-width-2 focus:ring-blue flex h-6 w-6 transform-gpu cursor-pointer select-none appearance-none place-items-center rounded border-0 bg-transparent p-0 text-sm font-semibold leading-none no-underline outline-0 focus:ring active:translate-y-px lg:hidden"
+							onClick={() => setOpened((open) => !open)}
+						>
+							<HamburgerIcon size={iconSize.xl} color="#787f85" />
+						</Button>
 
-									<div className="opacity-65 flex flex-row place-items-center gap-2">
-										{isMac !== null && <div>{isMac ? '⌘' : 'Ctrl'} + K</div>}
-									</div>
-								</div>
-							</Button>
+						<span className="hidden md:flex md:flex-row">Placeholder</span>
+
+						<div className="flex flex-row place-items-center gap-4">
+							<Search visibleOnMobile={matches} open={open} setOpen={setOpen} />
 
 							<Button
+								style={{ display: matches ? 'flex' : 'none' }}
 								aria-label="Toggle Theme"
-								className="flex hidden h-6 w-6 transform-gpu cursor-pointer select-none appearance-none place-items-center rounded-full rounded border-0 bg-transparent p-0 leading-none no-underline outline-0 focus:ring active:translate-y-px"
+								className="flex h-6 w-6 transform-gpu cursor-pointer select-none appearance-none place-items-center rounded-full rounded border-0 bg-transparent p-0 text-sm font-semibold leading-none no-underline outline-0 active:translate-y-px"
 							>
 								<ThemeAutoIcon size={iconSize.xl} color="currentColor" />
 							</Button>
