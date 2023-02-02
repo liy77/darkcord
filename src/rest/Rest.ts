@@ -11,6 +11,7 @@ import {
   APIExtendedInvite,
   APIGatewayBotInfo,
   APIGuild,
+  APIGuildChannelResolvable,
   APIGuildForumChannel,
   APIGuildIntegration,
   APIGuildMember,
@@ -41,6 +42,7 @@ import {
   RESTPostAPIChannelMessagesThreadsJSONBody,
   RESTPostAPIChannelThreadsJSONBody,
   RESTPostAPIChannelWebhookJSONBody,
+  RESTPostAPIGuildChannelJSONBody,
   RESTPostAPIGuildForumThreadsJSONBody,
   RESTPostAPIGuildPruneJSONBody,
   RESTPostAPIGuildPruneResult,
@@ -678,5 +680,15 @@ export class Rest extends EventEmitter {
       Routes.applicationGuildCommands(applicationId, guildId),
       options
     ) as Promise<APIApplication[]>;
+  }
+
+  createGuildChannel(
+    guildId: string,
+    options: RESTPostAPIGuildChannelJSONBody,
+    reason?: string
+  ) {
+    return this.post(Routes.guildChannels(guildId), options, {
+      reason,
+    }) as Promise<APIGuildChannelResolvable>;
   }
 }
