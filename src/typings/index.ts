@@ -241,6 +241,7 @@ export interface ClientEvents {
   shardReady: [id: string];
   shardPreReady: [id: string];
   shardError: [error: any, id: string];
+  shardDispatch: [event: string, data: any];
   connect: [];
 
   // Message
@@ -248,7 +249,11 @@ export interface ClientEvents {
   messageUpdate: [old: Message, updated: Message];
   messageDelete: [message: Message];
   messageDeleteBulk: [messagesDeleted: Map<string, Message>];
-  messageReactionAdd: [reaction: Reaction | APIReaction, user: User | APIUser, message: Message];
+  messageReactionAdd: [
+    reaction: Reaction | APIReaction,
+    user: User | APIUser,
+    message: Message
+  ];
   messageReactionRemove: [
     reaction: Reaction | APIReaction,
     user: User | APIUser,
@@ -331,6 +336,7 @@ export interface ClientEvents {
 
   // Client
   warn: [message: string];
+  debug: [message: string];
 
   // Integration
   integrationCreate: [integration: Integration];
