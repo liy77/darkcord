@@ -154,7 +154,7 @@ export class Message extends Base {
     }
   }
 
-  async reply(content: MessagePostData) {
+  async reply(content: MessagePostData | string) {
     if (typeof content === "string") {
       content = {
         content,

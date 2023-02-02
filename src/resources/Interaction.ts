@@ -35,7 +35,7 @@ import { Message } from "./Message";
 import { Member } from "./Member";
 import { Resolvable } from "@utils/Resolvable";
 import { Channel, GuildChannel } from "./Channel";
-import { MakeError } from "@utils/index";
+import { MakeError, transformMessagePostData } from "@utils/index";
 
 export class Interaction extends Base {
   /**
@@ -175,7 +175,7 @@ export class ReplyableInteraction extends Interaction {
     return this.deleteReply("@original");
   }
 
-  async reply(data: MessagePostData) {
+  async reply(content: MessagePostData | string) {
     if (this.acknowledged) {
       throw MakeError({
         name: "InteractionAlreadyAcknowledged",
@@ -183,16 +183,18 @@ export class ReplyableInteraction extends Interaction {
       });
     }
 
+    content = transformMessagePostData(content);
+
     if (this.isHTTP) {
       await this._http.respond(
-        data,
+        content,
         InteractionResponseType.ChannelMessageWithSource
       );
     } else {
       await this._client.rest.respondInteraction(
         this.id,
         this.token,
-        data,
+        content,
         InteractionResponseType.ChannelMessageWithSource
       );
     }
@@ -200,20 +202,20 @@ export class ReplyableInteraction extends Interaction {
     this.acknowledged = true;
   }
 
-  async editReply(messageId: string, data: MessagePostData) {
+  async editReply(messageId: string, content: MessagePostData | string) {
     await this._client.rest.editWebhookMessage(
       this.applicationId,
       this.token,
       messageId,
-      data
+      transformMessagePostData(content)
     );
   }
 
-  editOriginalReply(data: MessagePostData) {
-    return this.editReply("@original", data);
+  editOriginalReply(content: MessagePostData) {
+    return this.editReply("@original", content);
   }
 
-  createFollowUP(data: MessagePostData) {
+  createFollowUP(content: MessagePostData) {
     if (!this.acknowledged) {
       throw MakeError({
         name: "InteractionNoAcknowledged",
@@ -224,7 +226,7 @@ export class ReplyableInteraction extends Interaction {
     return this._client.rest.executeWebhook(
       this.applicationId,
       this.token,
-      data
+      transformMessagePostData(content)
     );
   }
 
@@ -330,18 +332,20 @@ export class ComponentInteraction extends ReplyableInteraction {
     }
   }
 
-  async editParent(data: MessagePostData) {
+  async editParent(content: MessagePostData) {
+    content = transformMessagePostData(content);
+
     if (this.acknowledged) {
-      return this.editOriginalReply(data);
+      return this.editOriginalReply(content);
     }
 
     if (this.isHTTP) {
-      await this._http.respond(data, InteractionResponseType.UpdateMessage);
+      await this._http.respond(content, InteractionResponseType.UpdateMessage);
     } else {
       await this._client.rest.respondInteraction(
         this.id,
         this.token,
-        data,
+        content,
         InteractionResponseType.UpdateMessage
       );
     }

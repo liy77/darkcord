@@ -168,7 +168,7 @@ export class TextBasedChannel extends Channel {
     this.lastPinTimestamp = data.last_pin_timestamp;
   }
 
-  async createMessage(content: MessagePostData) {
+  async createMessage(content: MessagePostData | string) {
     const message = await this._client.rest.createMessage(
       this.id,
       transformMessagePostData(content)
