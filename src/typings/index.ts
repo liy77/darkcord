@@ -32,7 +32,9 @@ import {
   GatewayReceivePayload,
   GatewaySendPayload,
   MessageFlags,
+  RESTPatchAPIChannelJSONBody,
   RESTPostAPIChannelMessageJSONBody,
+  RESTPostAPIGuildChannelJSONBody,
   UserAvatarFormat,
 } from "discord-api-types/v10";
 import http from "node:http";
@@ -400,3 +402,7 @@ export interface Typing {
 }
 
 export type MessageTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
+
+export type CreateChannelOptions =
+  KeysToCamelCase<RESTPostAPIGuildChannelJSONBody> &
+    KeysToCamelCase<RESTPatchAPIChannelJSONBody>;
