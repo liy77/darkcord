@@ -132,17 +132,53 @@ export class GatewayShard extends EventEmitter {
    */
   uptime?: Date;
   _inflate: import("zlib-sync").Inflate;
+  /**
+   * Source of gateway events
+   */
   events: EventSource;
+  /**
+   * Status of this shard
+   */
   status: GatewayStatus;
+  /**
+   * Queue is processing
+   */
   queueProcessing: boolean;
+  /**
+   * The array of functions to be executed
+   */
   queue: CallableFunction[];
+  /**
+   * This shard resume url
+   */
   resumeURL?: string;
+  /**
+   * The last close sequence id
+   */
   closeSequenceId?: number;
+  /**
+   * Timeout to receive hello
+   */
   helloTimeout: NodeJS.Timeout;
+  /**
+   * Total of itens in queue
+   */
   queueTotal: number;
+  /**
+   * Remaining itens in queue
+   */
   queueRemaining: number;
+  /**
+   * Queue timeout
+   */
   queueTimer: NodeJS.Timeout;
+  /**
+   * Time the shard was connected
+   */
   connectedAt: number;
+  /**
+   * Intents of this shard to be sent in identify
+   */
   intents: GatewayIntentBits;
 
   constructor(public client: Client, options?: GatewayShardOptions) {
@@ -157,13 +193,11 @@ export class GatewayShard extends EventEmitter {
     this.heartbeatInterval = -1;
     this.ping = -1;
     this.status = GatewayStatus.Disconnected;
-    this.options = Object.freeze(
-      Object.assign({
-        encoding: options.encoding ?? "json",
-        compress: Boolean(options.compress),
-        shardId: options.shardId ?? "0",
-      })
-    ) as Readonly<Required<GatewayShardOptions>>;
+    this.options = Object.freeze({
+      encoding: options.encoding ?? "json",
+      compress: Boolean(options.compress),
+      shardId: options.shardId ?? "0",
+    }) as Readonly<Required<GatewayShardOptions>>;
     this.helloTimeout = null;
     this.shardId = this.options.shardId;
     this.pendingGuildsMap = new Map();
@@ -431,6 +465,11 @@ export class GatewayShard extends EventEmitter {
     }
   }
 
+  /**
+   * Send's payload to gateway
+   * @param data Data to be sent
+   * @param important If this value is true the process will be added at the top of the queue
+   */
   send(data: GatewaySendPayload, important = false) {
     const sender = () =>
       this.ws?.send(WebSocketUtil.pack(data, this.options.encoding));
@@ -445,6 +484,10 @@ export class GatewayShard extends EventEmitter {
     }
   }
 
+  /**
+   * Process the queue
+   * @returns 
+   */
   processQueue() {
     if (this.queueProcessing || this.queue.length === 0) {
       return;
@@ -500,6 +543,9 @@ export class GatewayShard extends EventEmitter {
     this.sendHeartbeat();
   }
 
+  /**
+   * Resume this gateway 
+   */
   resume() {
     if (this.sessionId === undefined) {
       this.identify();
@@ -520,6 +566,10 @@ export class GatewayShard extends EventEmitter {
     );
   }
 
+  /**
+   * Identify this
+   * @returns 
+   */
   identify() {
     if (!this.preReady) {
       return;
@@ -567,13 +617,19 @@ export class GatewayShard extends EventEmitter {
 
     const nonce = options.nonce ?? crypto.randomUUID();
 
-    let missingIntents = []
-    if (!(options.userIds || options.query) && !(this.intents & GatewayIntentBits.GuildMembers)) {
-      missingIntents.push("GuildMembers")
+    let missingIntents = [];
+    if (
+      !(options.userIds || options.query) &&
+      !(this.intents & GatewayIntentBits.GuildMembers)
+    ) {
+      missingIntents.push("GuildMembers");
     }
 
-    if (options.presences && !(this.intents & GatewayIntentBits.GuildPresences)) {
-      missingIntents.push("GuildPresences")
+    if (
+      options.presences &&
+      !(this.intents & GatewayIntentBits.GuildPresences)
+    ) {
+      missingIntents.push("GuildPresences");
     }
 
     if (missingIntents.length > 0) {
@@ -581,7 +637,7 @@ export class GatewayShard extends EventEmitter {
     }
 
     if (options.userIds?.length > 100) {
-      throw new Error("Cannot request more than 100 users")
+      throw new Error("Cannot request more than 100 users");
     }
 
     this.send({
