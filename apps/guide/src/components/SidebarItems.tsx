@@ -1,7 +1,7 @@
 import { MDXInstance } from 'astro';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-use';
-import { Section } from '~/ui/components/Section';
+import { Section } from '~/ui/components/Section.jsx';
 
 export type MDXPage = MDXInstance<{ category: string; title: string }>;
 

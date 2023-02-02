@@ -1,0 +1,55 @@
+---
+layout: '../layouts/SidebarLayout.astro'
+title: Test
+description: Test
+category: Test
+---
+
+import { CH } from '@code-hike/mdx/components';
+import { DiscordMessage } from '../ui/components';
+
+## Test Code Block
+
+<CH.Code client:load>
+
+```js index.js mark=4,6:10
+const test = 'test';
+```
+
+</CH.Code>
+
+## Test Shell Block
+
+<CH.Code client:load>
+
+```shellscript npm
+npm install darkcord
+```
+
+```shellscript yarn
+yarn add darkcord
+```
+
+```shellscript pnpm
+pnpm add darkcord
+```
+
+</CH.Code>
+
+## Test Discord Components
+
+    <DiscordMessage
+    	interaction={{
+    		author: {
+    			avatar:
+    				'https://cdn.discordapp.com/guilds/222078108977594368/users/81440962496172032/avatars/c059c5d04d717ea05790f7a6447e4843.webp?size=160',
+    			username: 'Crawl',
+    		},
+    		command: 'ping',
+    	}}
+    	author={{
+      bot: false
+    	}}
+    >
+    	Pong!
+    </DiscordMessage>
