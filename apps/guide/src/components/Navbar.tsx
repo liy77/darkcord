@@ -1,10 +1,10 @@
 import { iconSize, SearchIcon, ThemeAutoIcon } from '@expo/styleguide';
-import { Button } from 'ariakit';
+import { Button } from 'ariakit/button';
 import { useEffect, useState } from 'react';
 import { useMedia } from 'react-use';
-import { isAppleDevice } from '~/utils/isAppleDevice';
-import { Sidebar } from './Sidebar';
-import { MDXPage } from './SidebarItems';
+import { isAppleDevice } from '~/utils/isAppleDevice.js';
+import { Sidebar } from './Sidebar.jsx';
+import { MDXPage } from './SidebarItems.jsx';
 
 export function Navbar({ pages }: { pages?: MDXPage[] | undefined }) {
 	const matches = useMedia('(min-width: 992px)', false);

@@ -38,8 +38,8 @@
 		"rehype-slug": "^5.1.0"
 	},
 	"devDependencies": {
-		"@astrojs/image": "^0.13.1",
-		"@astrojs/mdx": "^0.15.2",
+		"@astrojs/image": "^0.14.0",
+		"@astrojs/mdx": "^0.16.0",
 		"@astrojs/prefetch": "^0.1.2",
 		"@astrojs/react": "^2.0.2",
 		"@types/react": "^18.0.21",
