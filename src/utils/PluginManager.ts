@@ -12,6 +12,7 @@ import * as BitField from "@resources/BitField";
 import * as Base from "@resources/Base";
 import * as AuditLog from "@resources/AuditLog";
 import * as Application from "@resources/Application";
+import { ClientEvents } from "@typings/index";
 
 export type AnyResource =
   | typeof AnyChannel
@@ -58,7 +59,7 @@ export class PluginManager {
   }
 
   emit(event: string, ...args: any[]) {
-    this.client.emit(event, ...args);
+    this.client.emit(event as keyof ClientEvents, ...args);
   }
 
   getResourcePack(resourceName: string): ResourceObject {
