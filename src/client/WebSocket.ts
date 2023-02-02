@@ -1,8 +1,12 @@
 import { Events, ShardEvents } from "@utils/Constants";
 import { DiscordAPIError, InvalidTokenError } from "@utils/Errors";
-import { GatewaySendPayload } from "discord-api-types/v10";
+import {
+  GatewayPresenceUpdateData,
+  GatewaySendPayload,
+} from "discord-api-types/v10";
 import { GatewayShard } from "gateway/Gateway";
 import { Client } from "./Client";
+import { MakeError } from "@utils/index";
 
 export class WebSocket {
   shards: Map<string, GatewayShard>;
@@ -98,6 +102,25 @@ export class WebSocket {
     for (const shard of this.shards.values()) {
       shard.send(payload);
     }
+  }
+
+  setStatus(data: GatewayPresenceUpdateData) {
+    for (const shard of this.shards.keys()) {
+      this.setShardStatus(shard, data);
+    }
+  }
+
+  setShardStatus(shardId: string, data: GatewayPresenceUpdateData) {
+    const shard = this.shards.get(shardId);
+
+    if (!shard) {
+      throw MakeError({
+        name: "InvalidShardId",
+        message: `The shard with id ${shardId} does not exist`,
+      });
+    }
+
+    shard.sendPresence(data);
   }
 
   allReady() {

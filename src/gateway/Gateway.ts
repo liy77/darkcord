@@ -11,6 +11,7 @@ import {
   GatewayRequestGuildMembersDataWithUserIds,
   GatewaySendPayload,
   GatewayVoiceStateUpdateData,
+  PresenceUpdateStatus,
 } from "discord-api-types/v10";
 import EventEmitter from "node:events";
 import {
@@ -180,6 +181,7 @@ export class GatewayShard extends EventEmitter {
    * Intents of this shard to be sent in identify
    */
   intents: GatewayIntentBits;
+  presence: GatewayPresenceUpdateData;
 
   constructor(public client: Client, options?: GatewayShardOptions) {
     super();
@@ -666,9 +668,33 @@ export class GatewayShard extends EventEmitter {
   }
 
   sendPresence(data: GatewayPresenceUpdateData) {
+    if ("afk" in data) {
+      this.presence.afk = data.afk;
+    }
+
+    if ("activities" in data) {
+      this.presence.activities = data.activities;
+    }
+
+    if ("status" in data) {
+      this.presence.status = data.status;
+    }
+
+    if ("since" in data) {
+      this.presence.since = data.since;
+    } else {
+      this.presence.since =
+        this.presence.status === PresenceUpdateStatus.Idle ? Date.now() : null;
+    }
+
     this.send({
       op: GatewayOpcodes.PresenceUpdate,
-      d: data,
+      d: {
+        afk: Boolean(this.presence.afk),
+        activities: this.presence.activities,
+        since: this.presence.since,
+        status: this.presence.status,
+      },
     });
   }
 

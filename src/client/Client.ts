@@ -9,7 +9,11 @@ import {
   InteractionClientOptions,
 } from "@typings/index";
 import { bitsArrayToBits, MakeError } from "@utils/index";
-import { APIGatewayBotInfo, ApplicationFlags } from "discord-api-types/v10";
+import {
+  APIGatewayBotInfo,
+  ApplicationFlags,
+  GatewayPresenceUpdateData,
+} from "discord-api-types/v10";
 import EventEmitter from "node:events";
 
 import { GatewayShard } from "../gateway/Gateway";
@@ -234,5 +238,22 @@ export class Client extends BaseClient<ClientEvents> {
 
   disconnect() {
     return this.websocket.disconnect();
+  }
+
+  setStatus(data: GatewayPresenceUpdateData) {
+    this.websocket.setStatus(data);
+    return data;
+  }
+
+  setShardStatus(shardId: string | number, data: GatewayPresenceUpdateData) {
+    this.websocket.setShardStatus(String(shardId), data);
+    return {
+      shardId,
+      status: data,
+    };
+  }
+
+  get shards() {
+    return this.websocket.shards;
   }
 }
