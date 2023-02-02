@@ -21,11 +21,11 @@ import { ClientApplication } from "../resources/Application";
 
 export declare interface BaseClient<E extends Record<string, any>> {
   on<T extends keyof E>(event: T, listener: (...args: E[T]) => any): this;
-  on(event: string, listener: (...args: any[]) => any): this;
+  on(event: keyof E, listener: (...args: any[]) => any): this;
   once<T extends keyof E>(event: T, listener: (...args: E[T]) => any): this;
-  once(event: string, listener: (...args: any[]) => any): this;
+  once(event: keyof E, listener: (...args: any[]) => any): this;
   emit<T extends keyof E>(event: T, ...args: E[T]): boolean;
-  emit(event: string, ...args: any[]): boolean;
+  emit(event: keyof E, ...args: any[]): boolean;
 }
 
 export class BaseClient<E> extends EventEmitter {
@@ -228,30 +228,11 @@ export class Client extends BaseClient<ClientEvents> {
     this.application = null;
   }
 
-  async connect() {
-    const compress = this.options?.gateway?.compress;
-    let gateway: APIGatewayBotInfo;
+  connect() {
+    return this.websocket.connect();
+  }
 
-    try {
-      gateway = await this.rest.getGateway();
-    } catch {
-      throw MakeError({
-        name: "InvalidToken",
-        message: "Invalid token was provided.",
-      });
-    }
-
-    const totalShards = this.options.gateway.totalShards ?? gateway.shards;
-
-    for (let id = 0; id < totalShards; id++) {
-      const shard = new GatewayShard(this, {
-        compress,
-        shardId: id.toString(),
-        encoding: this.options.gateway?.encoding,
-      });
-
-      // Handling shard
-      await this.websocket.handleShard(shard);
-    }
+  disconnect() {
+    return this.websocket.disconnect();
   }
 }
