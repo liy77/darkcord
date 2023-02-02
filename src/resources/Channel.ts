@@ -4,16 +4,16 @@ import {
   APIChannelBase,
   APIDMChannel,
   APIGuildCategoryChannel,
-  APIGuildChannel,
+  APIGuildChannelResolvable,
   APIGuildForumChannel,
   APIGuildForumDefaultReactionEmoji,
   APIGuildForumTag,
   APIGuildStageVoiceChannel,
-  APIGuildTextChannel,
   APIGuildVoiceChannel,
   APIGuildWelcomeScreenChannel,
   APIOverwrite,
   APITextBasedChannel,
+  APITextChannel,
   APIThreadChannel,
   APIUser,
   APIVoiceChannelBase,
@@ -46,7 +46,7 @@ import { MemberCache } from "../cache/MemberCache";
 import { Emoji } from "./Emoji";
 import { channelMention } from "@utils/Constants";
 import { Resolvable } from "@utils/Resolvable";
-import { transformMessagePostData } from "@utils/index";
+import { isTextBasedChannel, transformMessagePostData } from "@utils/index";
 
 export class ChannelFlags extends BitField<CFlags, typeof CFlags> {
   constructor(flags: CFlags) {
@@ -80,8 +80,11 @@ export class Channel extends Base {
     this.flags = data.flags ? new ChannelFlags(data.flags) : null;
   }
 
-  edit(options: KeysToCamelCase<RESTPatchAPIChannelJSONBody>, reason?: string) {
-    return this._client.rest.modifyChannel(
+  async edit(
+    options: KeysToCamelCase<RESTPatchAPIChannelJSONBody>,
+    reason?: string
+  ) {
+    const data = await this._client.rest.modifyChannel(
       this.id,
       {
         name: options.name,
@@ -104,10 +107,63 @@ export class Channel extends Base {
       },
       reason
     );
+
+    return this._update(data);
   }
 
   toString() {
     return channelMention(this.id);
+  }
+
+  _update(
+    data: APIChannel
+  ):
+    | GuildChannel
+    | DMChannel
+    | CategoryChannel
+    | ForumChannel
+    | Channel
+    | ThreadChannel
+    | StageChannel
+    | VoiceChannel {
+    if ("name" in data) this.name = data.name;
+    if ("flags" in data) this.flags = new ChannelFlags(data.flags);
+
+    return this;
+  }
+
+  isDM(): this is DMChannel {
+    return this instanceof DMChannel;
+  }
+
+  isText(): this is TextBasedChannel {
+    return isTextBasedChannel(this);
+  }
+
+  isGuildText(): this is GuildTextChannel {
+    return this instanceof GuildTextChannel;
+  }
+
+  isGuildChannel(): this is GuildChannel {
+    return (
+      this instanceof GuildChannel ||
+      this.isGuildText() ||
+      this.isVoice() ||
+      this.isThread() ||
+      this.isStage()
+    );
+  }
+
+  isThread(): this is ThreadChannel {
+    return this instanceof ThreadChannel;
+  }
+
+  isStage(): this is StageChannel {
+    return this instanceof StageChannel;
+  }
+
+  isVoice(): this is VoiceChannel {
+    return this instanceof VoiceChannel;
   }
 
   static from(data: DataWithClient<APIChannel>, guild?: Guild) {
@@ -237,19 +293,15 @@ export class GuildChannel extends Channel {
    * The threads in this channel
    */
   threads: Cache<ThreadChannel>;
-  constructor(
-    data: DataWithClient<APIGuildChannel<ChannelType>>,
-    guild: Guild
-  ) {
+  constructor(data: DataWithClient<APIGuildChannelResolvable>, guild: Guild) {
     super(data);
 
     this.guild = guild;
     this.guildId = data.guild_id;
-    this.parentId = data.parent_id;
     this.permissionOverwrites = new Cache();
-    this.position = data.position;
-    this.nsfw = data.nsfw;
     this.threads = new Cache(this._client.cache._cacheLimit("threads"));
+
+    this._update(data);
 
     for (const perm of data.permission_overwrites) {
       this.permissionOverwrites._add(
@@ -277,6 +329,15 @@ export class GuildChannel extends Channel {
       reason
     );
   }
+
+  _update(data: APIGuildChannelResolvable) {
+    if ("position" in data) this.position = data.position;
+    if ("nsfw" in data) this.nsfw = data.nsfw;
+    if ("parent_id" in data) this.parentId = data.parent_id;
+
+    super._update(data as APIChannel);
+    return this;
+  }
 }
 
 export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
@@ -289,14 +350,10 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
    * Amount of seconds a user has to wait before sending another message (0-21600)
    */
   rateLimitPerUser?: number;
-  constructor(
-    data: DataWithClient<APIGuildTextChannel<GuildTextChannelType>>,
-    guild: Guild
-  ) {
+  constructor(data: DataWithClient<APITextChannel>, guild: Guild) {
     super(data, guild);
 
-    this.topic = data.topic;
-    this.rateLimitPerUser = data.rate_limit_per_user;
+    this._update(data);
     this.messages = new ChannelMessageCache(
       this._client.options.cache?.messageCacheLimitPerChannel,
       this._client.cache,
@@ -321,6 +378,15 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
       ),
       this._client
     );
+  }
+
+  _update(data: APITextChannel) {
+    if ("topic" in data) this.topic = data.topic;
+    if ("rate_limit_per_user" in data)
+      this.rateLimitPerUser = data.rate_limit_per_user;
+
+    super._update(data);
+    return this;
   }
 }
 
@@ -401,7 +467,6 @@ export class ThreadChannel extends TextBasedChannel {
     this.totalMessageSent = data.total_message_sent;
     this.memberCount = data.member_count;
     this.guildId = data.guild_id || guild.id;
-    this.flags = new ChannelFlags(data.flags);
     this.messageCount = data.message_count;
     this.channel = data.parent_id
       ? (guild.channels.get(data.parent_id) as GuildTextChannel)
@@ -412,16 +477,7 @@ export class ThreadChannel extends TextBasedChannel {
 
     this.members = new Cache();
 
-    // MetaData
-    const metadata = data.thread_metadata;
-    this.archived = metadata.archived;
-    this.archiveTimestamp = new Date(metadata.archive_timestamp);
-    this.autoArchiveDuration = metadata.auto_archive_duration;
-    this.createTimestamp = metadata.create_timestamp
-      ? new Date(data.thread_metadata.create_timestamp)
-      : null;
-    this.invitable = Boolean(metadata.invitable);
-    this.locked = Boolean(metadata.locked);
+    this._update(data);
   }
 
   addMember(userId: string) {
@@ -443,6 +499,27 @@ export class ThreadChannel extends TextBasedChannel {
    */
   leave() {
     return this._client.rest.leaveThread(this.id);
+  }
+
+  _update(data: APIThreadChannel) {
+    // MetaData
+    if ("thread_metadada" in data) {
+      const metadata = data.thread_metadata;
+      if ("archived" in metadata) this.archived = metadata.archived;
+      if ("archive_timestamp" in metadata)
+        this.archiveTimestamp = new Date(metadata.archive_timestamp);
+      if ("auto_archive_duration" in metadata)
+        this.autoArchiveDuration = metadata.auto_archive_duration;
+      if ("create_timestamp" in metadata)
+        this.createTimestamp = metadata.create_timestamp
+          ? new Date(metadata.create_timestamp)
+          : null;
+      if ("invitable" in metadata) this.invitable = Boolean(metadata.invitable);
+      if ("locked" in metadata) this.locked = Boolean(metadata.locked);
+    }
+
+    super._update(data);
+    return this;
   }
 }
 
@@ -539,15 +616,26 @@ export class BaseVoiceChannel extends GuildChannel {
    */
   members: MemberCache;
   constructor(
-    data: DataWithClient<APIVoiceChannelBase<ChannelType>>,
+    data: DataWithClient<
+      APIVoiceChannelBase<ChannelType.GuildVoice | ChannelType.GuildStageVoice>
+    >,
     guild: Guild
   ) {
     super(data, guild);
 
-    this.bitrate = data.bitrate;
-    this.rtcRegion = data.rtc_region;
-    this.userLimit = data.user_limit;
+    this._update(data);
     this.members = new MemberCache(Infinity, this._client.cache, guild);
+  }
+
+  _update(
+    data: APIVoiceChannelBase<
+      ChannelType.GuildVoice | ChannelType.GuildStageVoice
+    >
+  ) {
+    if ("bitrate" in data) this.bitrate = data.bitrate;
+    if ("rtc_region" in data) this.rtcRegion = data.rtc_region;
+    if ("user_limit" in data) this.userLimit = data.user_limit;
+    return this;
   }
 }
 
