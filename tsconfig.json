@@ -19,5 +19,8 @@
             "@typings/*": ["./typings/*"],
             "@cache/*": ["./cache/*"]
         }
-    }
+    },
+    "exclude": [
+        "./apps/*"
+    ]
 }
