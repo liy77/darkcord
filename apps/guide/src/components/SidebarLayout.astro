@@ -1,11 +1,11 @@
 ---
 import { Separator } from 'ariakit/separator';
 import { MarkdownLayoutProps } from 'astro';
-import { generateGithubURL } from '~/utils/generateGithubURL';
-import { ExternalLink } from './ExternalLink';
-import { Navbar } from './Navbar';
-import { Outline } from './Outline';
-import { SidebarItems } from './SidebarItems';
+import { generateGithubURL } from '~/utils/generateGithubURL.js';
+import { ExternalLink } from './ExternalLink.jsx';
+import { Navbar } from './Navbar.jsx';
+import { Outline } from './Outline.jsx';
+import { SidebarItems } from './SidebarItems.jsx';
 
 const pages = await Astro.glob<{ category: string; title: string }>('../pages/**/*.mdx');
 

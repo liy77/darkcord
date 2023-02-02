@@ -104,8 +104,6 @@ export default defineConfig({
 				'ariakit-react-utils/hooks': fileURLToPath(new URL('node_modules/ariakit-react-utils/esm/hooks.js', import.meta.url)),
 				'ariakit-react-utils/misc': fileURLToPath(new URL('node_modules/ariakit-react-utils/esm/misc.js', import.meta.url)),
 				'ariakit-react-utils/system': fileURLToPath(new URL('node_modules/ariakit-react-utils/esm/system.js', import.meta.url)),
-				'react-icons/fi': fileURLToPath(new URL('node_modules/react-icons/fi/index.esm.js', import.meta.url)),
-				'react-icons/vsc': fileURLToPath(new URL('node_modules/react-icons/vsc/index.esm.js', import.meta.url)),
 				'react-use': fileURLToPath(new URL('node_modules/react-use/esm/index.js', import.meta.url)),
 			},
 		},
