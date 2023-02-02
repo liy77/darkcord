@@ -1,5 +1,9 @@
 import { RequestHandlerOptions, RequestHeaders } from "@typings/index";
-import { delay, DiscordAPIError, parseResponse, RequestError } from "@utils/index";
+import { DiscordAPIError, RequestError } from "@utils/Errors";
+import {
+  delay,
+  parseResponse,
+} from "@utils/index";
 import { RouteBases } from "discord-api-types/v10";
 import { BodyInit, fetch, FormData } from "undici";
 
@@ -231,8 +235,8 @@ export class RequestHandler {
           router,
           method,
           data?.code,
-          data?.errors ??
-            Object.entries(data).map(([key, message]) => `${key}: ${message}`)
+          res.status,
+          data?.errors ?? data
         );
       }
 
