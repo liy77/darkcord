@@ -17,12 +17,14 @@ export function DiscordMessageAuthor({ avatar, username, bot }: DiscordMessageAu
 			/>
 			<h2 className="text-size-inherit m-0 font-medium leading-snug">
 				<span className="mr-1">
-					<span className="cursor-pointer text-base font-medium text-white hover:underline">{username ?? 'Liy'}</span>
+					<span className="text-dark cursor-pointer text-base font-medium hover:underline dark:text-white">
+						{username ?? 'Liy'}
+					</span>
 
 					{bot ? <span className="bg-blue-6 vertical-top relative top-1 ml-1 rounded px-1 text-xs">BOT</span> : null}
 				</span>
 
-				<span className="ml-1 cursor-default text-xs leading-snug text-[rgb(163_166_170)]">
+				<span className="text-dark ml-1 cursor-default text-xs leading-snug dark:text-[rgb(163_166_170)]">
 					Today at{' '}
 					{new Date().toLocaleTimeString('en-US', {
 						hour: 'numeric',
