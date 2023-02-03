@@ -3,7 +3,7 @@ import { Button } from 'ariakit/button';
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { useKey } from 'react-use';
-import { isAppleDevice } from '~/utils/isAppleDevice.js';
+import { isAppleDevice } from '../../../utils/isAppleDevice.js';
 
 interface CommandMenuTriggerProps {
 	setOpen: Dispatch<SetStateAction<boolean>>;
