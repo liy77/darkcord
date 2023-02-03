@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import { CommandMenu, CommandMenuTrigger } from '../CommandMenu';
+import { CommandMenu, CommandMenuTrigger } from '..';
 import type { MDXPage } from '../Sidebar/SidebarItems.jsx';
 
 interface SearchProps {
