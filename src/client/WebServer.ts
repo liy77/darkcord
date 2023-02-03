@@ -1,5 +1,16 @@
-import { MessagePostData, RawWebServerResponse, WebServerEvents, WebServerOptions } from "@typings/index";
-import { APICommandAutocompleteInteractionResponseCallbackData, APIInteraction, APIInteractionResponseCallbackData, InteractionResponseType, InteractionType } from "discord-api-types/v10";
+import {
+  MessagePostData,
+  RawWebServerResponse,
+  WebServerEvents,
+  WebServerOptions,
+} from "@typings/index";
+import {
+  APICommandAutocompleteInteractionResponseCallbackData,
+  APIInteraction,
+  APIInteractionResponseCallbackData,
+  InteractionResponseType,
+  InteractionType,
+} from "discord-api-types/v10";
 import { Buffer } from "node:buffer";
 import EventEmitter from "node:events";
 import http from "node:http";
@@ -9,7 +20,7 @@ import { InteractionClient } from "./Client";
 
 const decoder = new TextDecoder();
 
-let NACL: typeof import("tweetnacl");
+let NACL: typeof import("tweetnacl") | undefined;
 
 try {
   NACL = require("tweetnacl");
@@ -39,8 +50,9 @@ export class WebServer extends EventEmitter {
   constructor(public client: InteractionClient, options: WebServerOptions) {
     super();
     this._publicKey = client.publicKey;
-    this._port = options?.port ?? 3000;
-    this._hostname = options?.hostname ?? LOCAL_HOST;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    this._port = options.port ?? 3000;
+    this._hostname = options.hostname ?? LOCAL_HOST;
   }
 
   listen() {
@@ -68,7 +80,7 @@ export class WebServer extends EventEmitter {
 
   #verifyKey(body: string, signature: string, timestamp: string) {
     try {
-      return NACL.sign.detached.verify(
+      return NACL!.sign.detached.verify(
         Buffer.from(timestamp + body),
         Buffer.from(signature, "hex"),
         Buffer.from(this._publicKey, "hex")
@@ -89,7 +101,7 @@ export class WebServer extends EventEmitter {
     const timestamp = request.headers["x-signature-timestamp"] as string;
     const signature = request.headers["x-signature-ed25519"] as string;
 
-    const chunks = [];
+    const chunks: any[] = [];
     request.on("data", (chunk) => {
       chunks.push(chunk);
     });

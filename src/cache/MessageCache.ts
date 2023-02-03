@@ -19,9 +19,9 @@ export class ChannelMessageCache extends Cache<Message> {
   }
 
   get(id: string) {
-    let message = super.get(id) as unknown as APIMessage | Message;
+    let message = super.get(id) as unknown as APIMessage | Message | undefined;
 
-    if (!message) return null;
+    if (!message) return;
 
     if (!(message instanceof Message)) {
       const guild =

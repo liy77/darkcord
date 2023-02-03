@@ -1,15 +1,15 @@
 import { AnyClient } from "@typings/index";
 
-export class Snowflake {
-  static getEpoch(id: string) {
+export namespace Snowflake {
+  export function getEpoch(id: string) {
     return Math.floor(Number(id) / 4194304);
   }
 
-  static getCreatedAt(id: string) {
+  export function getCreatedAt(id: string) {
     return this.getEpoch(id) + Snowflake.Epoch;
   }
 
-  static Epoch = 1420070400000;
+  export const Epoch = 1420070400000;
 }
 
 export class Base {
@@ -24,9 +24,9 @@ export class Base {
     client?: AnyClient,
     id?: string
   ) {
-    this._client = client;
+    this._client = client as AnyClient;
     this.partial = data;
-    this.id = data.id ?? id;
+    this.id = (data.id ?? id) as string;
   }
 
   get createdAt() {

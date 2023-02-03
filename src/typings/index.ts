@@ -101,11 +101,11 @@ export interface MakeErrorOptions {
 }
 
 export interface BaseClientOptions {
-  partials: Partials[];
+  partials?: Partials[];
 }
 
 export interface InteractionClientOptions extends BaseClientOptions {
-  webserver?: WebServerOptions;
+  webserver: WebServerOptions;
   rest?: {
     token?: string;
   };
@@ -218,8 +218,8 @@ export interface InteractionClientEvents {
 
 export interface AuditLogEntry
   extends Omit<KeysToCamelCase<APIAuditLogEntry>, "changes" | "options"> {
-  options: KeysToCamelCase<APIAuditLogEntry["options"]>;
-  changes: KeysToCamelCase<APIAuditLogChange>[];
+  options?: KeysToCamelCase<APIAuditLogEntry["options"]>;
+  changes?: KeysToCamelCase<APIAuditLogChange>[];
 }
 
 export interface VoiceServer {
@@ -316,8 +316,8 @@ export interface ClientEvents {
 
   // Channel
   channelCreate: [channel: Channel];
-  channelDelete: [channel: Channel | APIChannel];
-  channelUpdate: [old: Channel | APIChannel, updated: Channel];
+  channelDelete: [channel: Channel];
+  channelUpdate: [old: Channel, updated: Channel];
   channelPinsUpdate: [
     channel: TextBasedChannel | APITextBasedChannel<ChannelType>
   ];
@@ -406,3 +406,5 @@ export type MessageTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
 export type CreateChannelOptions =
   KeysToCamelCase<RESTPostAPIGuildChannelJSONBody> &
     KeysToCamelCase<RESTPatchAPIChannelJSONBody>;
+
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;

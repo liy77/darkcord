@@ -8,10 +8,10 @@ export class ChannelDelete extends Event {
   run(data: GatewayChannelDeleteDispatchData) {
     const channel = structuredClone(this.client.cache.channels.get(data.id));
 
-    let guild: Guild;
+    let guild: Guild | undefined;
 
     if ("guild_id" in data) {
-      guild = this.getGuild(data.guild_id);
+      guild = this.getGuild(data.guild_id!);
     }
 
     if (guild) {

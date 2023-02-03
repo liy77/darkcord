@@ -6,7 +6,7 @@ export class StageInstanceCreate extends Event {
   run(data: GatewayStageInstanceCreateDispatchData) {
     const guild = this.getGuild(data.guild_id);
 
-    guild.stageInstances.set(data.id, data);
+    guild!.stageInstances.set(data.id, data);
 
     this.client.emit(Events.StageInstanceCreate, data);
   }

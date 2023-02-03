@@ -16,9 +16,9 @@ export class MemberCache extends Cache<Member> {
   }
 
   get(id: string) {
-    const g = super.get(id) as unknown as APIGuildMember;
+    const g = super.get(id) as unknown as APIGuildMember | undefined;
 
-    if (!g) return null;
+    if (!g) return;
 
     return new Member(g, this.guild);
   }

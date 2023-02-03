@@ -10,7 +10,7 @@ import { Event } from "./Event";
 
 export class TypingStart extends Event {
   run(data: GatewayTypingStartDispatchData) {
-    let guild: Guild, member: Member;
+    let guild: Guild | null | undefined, member: Member | null | undefined;
 
     if (data.guild_id) {
       guild = this.getGuild(data.guild_id);
@@ -21,9 +21,9 @@ export class TypingStart extends Event {
     const channelId = data.channel_id;
     const guildId = data.guild_id;
     const userId = data.user_id;
-    const channel = this.client.cache.channels.get(channelId) as
-      | TextBasedChannel
-      | APIChannel;
+    const channel = this.client.cache.channels.get(
+      channelId
+    ) as TextBasedChannel;
 
     this.client.emit(Events.TypingStart, {
       channelId,

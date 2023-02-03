@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { GatewayStatus, ShardEvents } from "@utils/Constants";
 import { GatewayReadyDispatchData } from "discord-api-types/v10";
 import { User } from "@resources/User";
@@ -6,8 +7,7 @@ import { ClientApplication } from "@resources/Application";
 
 export class Ready extends Event {
   async run(data: GatewayReadyDispatchData) {
-    this.gatewayShard.pendingGuilds = data.guilds.length;
-    this.gatewayShard.pendingGuildsMap = new Map();
+    this.gatewayShard.pendingGuilds += data.guilds.length;
 
     this.client.user = new User({
       ...data.user,
@@ -39,7 +39,7 @@ export class Ready extends Event {
     }
 
     if (!this.client.applicationFlags) {
-      this.gatewayShard.client.applicationFlags = data.application.flags;
+      this.client.applicationFlags = data.application.flags;
     }
 
     if (!this.client.application) {

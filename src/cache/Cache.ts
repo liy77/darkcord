@@ -26,9 +26,10 @@ export class Cache<T = any> {
 
     // Configuring adapter
     if (adapter instanceof CacheManager) {
-      this.adapter = adapter.adapter;
+      this.adapter = adapter.adapter ?? new Map();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this.adapter) {
       this.adapter = new Map<string, T>();
     }
@@ -64,10 +65,12 @@ export class Cache<T = any> {
 
   get extender(): new () => Cache<T> {
     return (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       (
         this.constructor as unknown as {
           [Symbol.species]: typeof Cache;
         }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       )?.[Symbol.species] ?? Cache
     );
   }
@@ -162,7 +165,7 @@ export class Cache<T = any> {
   }
 
   map<R>(mapFn: (value: T, key: string) => R) {
-    const mapped = [];
+    const mapped: R[] = [];
 
     for (const [key, value] of this.entries()) {
       mapped.push(mapFn(value, key));

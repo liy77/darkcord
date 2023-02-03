@@ -9,10 +9,10 @@ export class ChannelUpdate extends Event {
   run(data: GatewayChannelUpdateDispatchData) {
     const old = structuredClone(this.client.cache.channels.get(data.id));
 
-    let guild: Guild;
+    let guild: Guild | undefined;
 
     if ("guild_id" in data) {
-      guild = this.getGuild(data.guild_id);
+      guild = this.getGuild(data.guild_id!);
     }
 
     const updated = Channel.from({ ...data, client: this.client }, guild);

@@ -10,8 +10,8 @@ import {
   APIApplicationCommandInteractionDataBasicOption,
   APIApplicationCommandInteractionDataOption,
   APIApplicationCommandOptionChoice,
-  APIChannel,
   APIChatInputApplicationCommandInteractionData,
+  APIGuildMember,
   APIInteraction,
   APIInteractionDataResolved,
   APIInteractionDataResolvedGuildMember,
@@ -106,7 +106,7 @@ export class Interaction extends Base {
 
 export class ReplyableInteraction extends Interaction {
   // For http response
-  _http: WebServerInteractionResponse;
+  _http?: WebServerInteractionResponse;
   /**
    * This interaction is received for webserver
    */
@@ -134,7 +134,7 @@ export class ReplyableInteraction extends Interaction {
     }
 
     if (this.isHTTP) {
-      await this._http.respond(
+      await this._http?.respond(
         {
           flags: flags || 0,
         },
@@ -186,7 +186,7 @@ export class ReplyableInteraction extends Interaction {
     content = transformMessagePostData(content);
 
     if (this.isHTTP) {
-      await this._http.respond(
+      await this._http?.respond(
         content,
         InteractionResponseType.ChannelMessageWithSource
       );
@@ -243,13 +243,10 @@ export class ReplyableInteraction extends Interaction {
       this.token,
       "@original"
     );
-    const channel = this._client.cache.channels.get(rawMessage.channel_id);
-    const guildId =
-      channel instanceof GuildChannel
-        ? channel.guildId
-        : "guild_id" in channel
-        ? channel.guild_id
-        : undefined;
+    const channel = this._client.cache.channels.get(
+      rawMessage.channel_id
+    ) as Channel;
+    const guildId = channel.isGuildChannel() ? channel.guildId : undefined;
 
     const message = new Message(
       { ...rawMessage, client: this._client },
@@ -280,7 +277,7 @@ export class ComponentInteraction extends ReplyableInteraction {
   /**
    * The guild's preferred locale, if invoked in a guild
    */
-  guildLocale: string;
+  guildLocale: string | null;
   /**
    * For components, the message they were attached to
    */
@@ -288,7 +285,7 @@ export class ComponentInteraction extends ReplyableInteraction {
   /**
    * The channel it was sent from
    */
-  channel: Channel | APIChannel;
+  channel: Channel;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
     httpResponse?: WebServerInteractionResponse
@@ -306,7 +303,7 @@ export class ComponentInteraction extends ReplyableInteraction {
       }),
       data.client
     );
-    this.channel = data.client.cache.channels.get(data.channel_id);
+    this.channel = data.client.cache.channels.get(data.channel_id) as Channel;
   }
 
   async deferUpdate() {
@@ -318,7 +315,7 @@ export class ComponentInteraction extends ReplyableInteraction {
     }
 
     if (this.isHTTP) {
-      await this._http.respond(
+      await this._http?.respond(
         {},
         InteractionResponseType.DeferredMessageUpdate
       );
@@ -340,7 +337,7 @@ export class ComponentInteraction extends ReplyableInteraction {
     }
 
     if (this.isHTTP) {
-      await this._http.respond(content, InteractionResponseType.UpdateMessage);
+      await this._http?.respond(content, InteractionResponseType.UpdateMessage);
     } else {
       await this._client.rest.respondInteraction(
         this.id,
@@ -360,19 +357,19 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
   /**
    * The guild's preferred locale, if invoked in a guild
    */
-  guildLocale: string;
+  guildLocale: string | null;
   /**
    * For components, the message they were attached to
    */
-  message: Message;
+  message: Message | null;
   /**
    * The channel id it was sent from
    */
-  channelId: string;
+  channelId?: string;
   /**
    * The channel id it was sent from
    */
-  channel: Channel | APIChannel;
+  channel: Channel | null;
   constructor(
     data: DataWithClient<APIModalSubmitInteraction>,
     httpResponse?: WebServerInteractionResponse
@@ -387,7 +384,7 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
         )
       : null;
     this.channelId = data.channel_id;
-    this.channel = data.client.cache.channels.get(this.channelId);
+    this.channel = data.client.cache.channels.get(this.channelId as string) as Channel;
   }
 
   async deferUpdate() {
@@ -399,7 +396,7 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
     }
 
     if (this.isHTTP) {
-      await this._http.respond(
+      await this._http?.respond(
         {},
         InteractionResponseType.DeferredMessageUpdate
       );
@@ -419,7 +416,7 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
     }
 
     if (this.isHTTP) {
-      await this._http.respond(data, InteractionResponseType.UpdateMessage);
+      await this._http?.respond(data, InteractionResponseType.UpdateMessage);
     } else {
       await this._client.rest.respondInteraction(
         this.id,
@@ -451,6 +448,7 @@ export class CommandInteractionOptions {
 
     if (options[0]?.type === ApplicationCommandOptionType.SubcommandGroup) {
       this.subCommandGroup = options[0].name;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       options = options[0].options ?? [];
     }
 
@@ -461,7 +459,7 @@ export class CommandInteractionOptions {
   get(name: string) {
     const option = this.#options.find((o) => o.name === name);
 
-    switch (option.type) {
+    switch (option?.type) {
       case ApplicationCommandOptionType.Attachment: {
         return {
           value: this.#resolved.attachments?.[option.value],
@@ -488,9 +486,10 @@ export class CommandInteractionOptions {
       case ApplicationCommandOptionType.Role: {
         const role = this.#resolved.roles?.[option.value];
         return {
-          value: role
-            ? new Role({ ...role, client: this._client }, this.guild)
-            : null,
+          value:
+            role && this.guild
+              ? new Role({ ...role, client: this._client }, this.guild)
+              : null,
           name: option.name,
           type: option.type,
         };
@@ -516,37 +515,39 @@ export class CommandInteractionOptions {
 
   string(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.String ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.String ? r.value : null;
   }
 
   number(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.Number ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.Number ? r.value : null;
   }
 
   integer(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.Integer ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.Integer ? r.value : null;
   }
 
   boolean(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.Boolean ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.Boolean ? r.value : null;
   }
 
   attachment(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.Attachment ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.Attachment ? r.value : null;
   }
 
   user(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.User ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.User ? r.value : null;
   }
 
   mentionable(name: string) {
     const r = this.get(name);
-    return r.type === ApplicationCommandOptionType.Mentionable ? r.value : null;
+    return r?.type === ApplicationCommandOptionType.Mentionable
+      ? r.value
+      : null;
   }
 
   toArray() {
@@ -584,7 +585,7 @@ export class ChatInputApplicationCommandInteractionData extends Base {
     this.options = data.options
       ? new CommandInteractionOptions(
           data.options,
-          data.resolved,
+          data.resolved as APIInteractionDataResolved,
           data.client,
           guild
         )
@@ -618,7 +619,7 @@ export class UserApplicationCommandInteractionData extends Base {
   /**
    * Guild member target
    */
-  targetMember: APIInteractionDataResolvedGuildMember | Member;
+  targetMember?: APIInteractionDataResolvedGuildMember | Member;
   constructor(
     data: DataWithClient<APIUserApplicationCommandInteractionData>,
     guild?: Guild
@@ -626,6 +627,7 @@ export class UserApplicationCommandInteractionData extends Base {
     super(data, guild?._client);
 
     this.target =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       this._client.cache.users.get(data.target_id) ??
       data.resolved.users[data.target_id];
     this.targetId = data.target_id;
@@ -663,11 +665,11 @@ export class CommandInteraction extends ReplyableInteraction {
   /**
    * Member of the invoked command
    */
-  member: Member;
+  member: Member | null;
   /**
    * User of the invoked command
    */
-  user: User | APIUser;
+  user: User | APIUser | null;
   /**
    * The name of the invoked command
    */
@@ -679,11 +681,11 @@ export class CommandInteraction extends ReplyableInteraction {
   /**
    * For components, the message they were attached to
    */
-  message: Message;
+  message: Message | null;
   /**
    * The channel it was sent from
    */
-  channel: Channel | APIChannel;
+  channel: Channel | null;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
     httpResponse?: WebServerInteractionResponse
@@ -692,8 +694,8 @@ export class CommandInteraction extends ReplyableInteraction {
     this.guildId = data.guild_id;
     this.guildLocale = data.guild_locale;
     this.channelId = data.channel_id;
-    this.channel = data.client.cache.channels.get(data.channel_id);
-    this.guild = data.client.cache.guilds.get(data.guild_id);
+    this.channel = data.client.cache.channels.get(data.channel_id) as Channel;
+    this.guild = data.client.cache.guilds.get(data.guild_id as string);
     this.member = null;
     this.user = null;
     this.commandName = data.data.name;
@@ -706,11 +708,11 @@ export class CommandInteraction extends ReplyableInteraction {
       : null;
 
     if ("member" in data && this.guild) {
-      const member = new Member(data.member, this.guild);
+      const member = new Member(data.member as APIGuildMember, this.guild);
       this.member = this.guild.members.add(member);
       this.user = this.member.user;
     } else {
-      this.user = this._client.cache.users.add(data.user);
+      this.user = this._client.cache.users.add(data.user as APIUser);
     }
 
     if (data.data.type === ApplicationCommandType.ChatInput) {
@@ -729,6 +731,7 @@ export class CommandInteraction extends ReplyableInteraction {
         },
         this.guild
       );
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (data.data.type === ApplicationCommandType.User) {
       this.data = new UserApplicationCommandInteractionData(
         {
@@ -743,7 +746,7 @@ export class CommandInteraction extends ReplyableInteraction {
 
 export class AutocompleteInteraction extends Interaction {
   // For http response
-  _http: WebServerInteractionResponse;
+  _http?: WebServerInteractionResponse;
   /**
    * This interaction is received for webserver
    */
@@ -771,7 +774,7 @@ export class AutocompleteInteraction extends Interaction {
     }
 
     if (this.isHTTP) {
-      await this._http.respond(
+      await this._http?.respond(
         { choices },
         InteractionResponseType.ApplicationCommandAutocompleteResult
       );

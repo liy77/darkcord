@@ -11,11 +11,11 @@ export class ChannelCreate extends Event {
     let guild: Guild;
 
     if ("guild_id" in data) {
-      guild = this.getGuild(data.guild_id);
+      guild = this.getGuild(data.guild_id!) as Guild;
     }
 
     if (!existing) {
-        const channel = Channel.from({ ...data, client: this.client }, guild);
+        const channel = Channel.from({ ...data, client: this.client }, guild!);
         
         this.client.emit(Events.ChannelCreate, channel)
     }

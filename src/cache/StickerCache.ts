@@ -16,7 +16,8 @@ export class StickerCache extends Cache<Sticker | APISticker> {
   }
 
   get(id: string) {
-    return this.#resolve(super.get(id), true);
+    const sticker = super.get(id);
+    return sticker && this.#resolve(sticker, true);
   }
 
   add(sticker: Sticker | APISticker, replace = true) {

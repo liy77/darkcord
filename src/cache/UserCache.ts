@@ -14,7 +14,8 @@ export class UserCache extends Cache<APIUser | User> {
   }
 
   get(id: string) {
-    return this.#resolve(super.get(id), true);
+    const user = super.get(id);
+    return user && this.#resolve(user, true);
   }
 
   add(user: User | APIUser, replace = true) {
@@ -23,6 +24,7 @@ export class UserCache extends Cache<APIUser | User> {
 
   #resolve(user: User | APIUser, addInCache = false) {
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       user &&
       !this.manager._partial(Partials.User) &&
       !(user instanceof User)

@@ -19,6 +19,7 @@ import {
   GatewayShardEvents,
   GatewayShardOptions,
   KeysToCamelCase,
+  Optional,
 } from "@typings/index";
 import { MakeError, delay, camelCase } from "@utils/index";
 import WebSocket from "ws";
@@ -123,7 +124,7 @@ export class GatewayShard extends EventEmitter {
   /**
    * The size of pending guilds
    */
-  pendingGuilds?: number;
+  pendingGuilds: number;
   /**
    * Pending guilds map
    */
@@ -132,7 +133,7 @@ export class GatewayShard extends EventEmitter {
    * The time of shard is online
    */
   uptime?: Date;
-  _inflate: import("zlib-sync").Inflate;
+  _inflate: import("zlib-sync").Inflate | null;
   /**
    * Source of gateway events
    */
@@ -160,7 +161,7 @@ export class GatewayShard extends EventEmitter {
   /**
    * Timeout to receive hello
    */
-  helloTimeout: NodeJS.Timeout;
+  helloTimeout!: NodeJS.Timeout | null;
   /**
    * Total of itens in queue
    */
@@ -172,7 +173,7 @@ export class GatewayShard extends EventEmitter {
   /**
    * Queue timeout
    */
-  queueTimer: NodeJS.Timeout;
+  queueTimer!: NodeJS.Timeout | null;
   /**
    * Time the shard was connected
    */
@@ -196,15 +197,17 @@ export class GatewayShard extends EventEmitter {
     this.ping = -1;
     this.status = GatewayStatus.Disconnected;
     this.options = Object.freeze({
-      encoding: options.encoding ?? "json",
-      compress: Boolean(options.compress),
-      shardId: options.shardId ?? "0",
+      encoding: options?.encoding ?? "json",
+      compress: Boolean(options?.compress),
+      shardId: options?.shardId ?? "0",
     }) as Readonly<Required<GatewayShardOptions>>;
     this.helloTimeout = null;
     this.shardId = this.options.shardId;
+    this.pendingGuilds = 0
     this.pendingGuildsMap = new Map();
     this.events = new EventSource(this);
     this.intents = this.client.options.gateway.intents as GatewayIntentBits;
+    this._inflate = null;
 
     // RateLimit Queue
     this.queue = [];
@@ -324,7 +327,7 @@ export class GatewayShard extends EventEmitter {
           this.ackHeartbeat();
         }, this.heartbeatInterval).unref();
 
-        clearTimeout(this.helloTimeout);
+        if (this.helloTimeout) clearTimeout(this.helloTimeout);
 
         this.emit(ShardEvents.Hello);
 
@@ -365,28 +368,24 @@ export class GatewayShard extends EventEmitter {
           this.sequenceId = data.s;
         }
 
-        if (data.t) {
-          const eventName = camelCase(data.t) as keyof ClientEvents;
+        const eventName = camelCase(data.t) as keyof ClientEvents;
 
-          this.emit(ShardEvents.Dispatch, eventName, data.d);
+        this.emit(ShardEvents.Dispatch, eventName, data.d);
 
-          if (data.t === GatewayDispatchEvents.Resumed) {
-            this.status = GatewayStatus.Ready;
+        if (data.t === GatewayDispatchEvents.Resumed) {
+          this.status = GatewayStatus.Ready;
 
-            this.debug(
-              `Resumed session ${this.sessionId}. Replayed ${
-                data.s - this.closeSequenceId
-              }`
-            );
+          this.debug(
+            `Resumed session ${this.sessionId}. Replayed ${
+              data.s - (this.closeSequenceId ?? 0)
+            }`
+          );
 
-            this.sendHeartbeat();
-          }
+          this.sendHeartbeat();
+        }
 
-          if (
-            !this.client.options.gateway?.disabledEvents?.includes(eventName)
-          ) {
-            this.events.get(eventName)?.(data.d);
-          }
+        if (!this.client.options.gateway.disabledEvents.includes(eventName)) {
+          this.events.get(eventName)?.(data.d);
         }
         break;
       }
@@ -502,7 +501,7 @@ export class GatewayShard extends EventEmitter {
     }
 
     this.queueProcessing = true;
-    this.queue.shift()();
+    this.queue.shift()?.();
     this.queueRemaining--;
 
     if (this.queue.length === 0) {
@@ -560,8 +559,8 @@ export class GatewayShard extends EventEmitter {
         op: GatewayOpcodes.Resume,
         d: {
           token: this.client.token,
-          session_id: this.sessionId,
-          seq: this.closeSequenceId,
+          session_id: this.sessionId as string,
+          seq: this.closeSequenceId as number,
         },
       },
       true
@@ -577,7 +576,7 @@ export class GatewayShard extends EventEmitter {
       return;
     }
 
-    const customProps = this.client.options.gateway?.properties;
+    const customProps = this.client.options.gateway.properties;
 
     this.status = GatewayStatus.Identifying;
 
@@ -595,7 +594,7 @@ export class GatewayShard extends EventEmitter {
           compress: this.options.compress,
           shard: [
             Number(this.shardId),
-            this.client.options.gateway?.totalShards ??
+            this.client.options.gateway.totalShards ??
               (this.fetchedGateway?.shards as number),
           ],
         },
@@ -606,8 +605,8 @@ export class GatewayShard extends EventEmitter {
 
   requestGuildMembers(
     options: KeysToCamelCase<
-      | GatewayRequestGuildMembersDataWithQuery &
-          GatewayRequestGuildMembersDataWithUserIds
+      | Optional<GatewayRequestGuildMembersDataWithQuery, "query" | "limit"> &
+          Optional<GatewayRequestGuildMembersDataWithUserIds, "user_ids">
     >
   ) {
     if (options.query && !options.limit) {
@@ -619,7 +618,7 @@ export class GatewayShard extends EventEmitter {
 
     const nonce = options.nonce ?? crypto.randomUUID();
 
-    const missingIntents = [];
+    const missingIntents: string[] = [];
     if (
       !(options.userIds || options.query) &&
       !(this.intents & GatewayIntentBits.GuildMembers)
@@ -638,7 +637,7 @@ export class GatewayShard extends EventEmitter {
       throw MissingIntentsError(...missingIntents);
     }
 
-    if (options.userIds?.length > 100) {
+    if (options.userIds?.length && options.userIds.length > 100) {
       throw new Error("Cannot request more than 100 users");
     }
 
@@ -647,7 +646,9 @@ export class GatewayShard extends EventEmitter {
       d: {
         guild_id: options.guildId,
         limit: options.limit ?? 0,
-        query: options.userIds?.length ? undefined : options.query ?? "",
+        query: options.userIds?.length
+          ? (undefined as unknown as string)
+          : options.query ?? "",
         presences: options.presences,
         user_ids: options.userIds,
         nonce,

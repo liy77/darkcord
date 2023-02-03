@@ -9,28 +9,12 @@ import { Events } from "@utils/Constants";
 
 export class VoiceStateUpdate extends Event {
   run(data: GatewayVoiceStateUpdateDispatchData) {
-    const guild = this.getGuild(data.guild_id);
+    const guild = this.getGuild(data.guild_id as string);
 
     if (!guild) return;
 
     const oldVoiceState =
-      structuredClone(guild.voiceStates.get(data.user_id)) ??
-      new VoiceState(
-        {
-          user_id: data.user_id,
-          client: this.client,
-          channel_id: null,
-          deaf: null,
-          mute: null,
-          self_deaf: null,
-          self_video: null,
-          session_id: null,
-          request_to_speak_timestamp: null,
-          suppress: null,
-          self_mute: null,
-        },
-        guild
-      );
+      structuredClone(guild.voiceStates.get(data.user_id))
 
     const updated = new VoiceState(
       {
@@ -44,32 +28,32 @@ export class VoiceStateUpdate extends Event {
 
     let member = guild.members.get(data.user_id);
 
-    if (!member && data.member?.user && data.member?.joined_at) {
+    if (!member && data.member?.user && data.member.joined_at) {
       member = guild.members.add(
         new Member(data.member, guild)
       );
     }
 
-    if (oldVoiceState.channelId !== data.channel_id) {
-      const channel = this.client.cache.channels.get(data.channel_id);
+    if (oldVoiceState?.channelId !== data.channel_id) {
+      const channel = this.client.cache.channels.get(data.channel_id!);
       const oldChannel = this.client.cache.channels.get(
-        oldVoiceState.channelId
-      ) as VoiceChannel | StageChannel;
+        oldVoiceState?.channelId!
+      ) as VoiceChannel | StageChannel | null;
 
       if (
         data.channel_id &&
         (channel instanceof VoiceChannel || channel instanceof StageChannel)
       ) {
         if (oldVoiceState) {
-          oldChannel.members.delete(member.id);
-          const m = channel.members.add(member);
+          oldChannel?.members.delete(member!.id);
+          const m = channel.members.add(member!);
           this.client.emit(Events.VoiceChannelSwitch, m, channel, oldChannel);
         } else {
-          const m = channel.members.add(member);
+          const m = channel.members.add(member!);
           this.client.emit(Events.VoiceChannelJoin, m, channel);
         }
       } else if (oldChannel) {
-        oldChannel.members.delete(member.id);
+        oldChannel.members.delete(member!.id);
 
         this.client.emit(Events.VoiceChannelLeave, member, oldChannel);
       }

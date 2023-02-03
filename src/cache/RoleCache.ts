@@ -17,7 +17,8 @@ export class RoleCache extends Cache<Role | APIRole> {
   }
 
   get(id: string, guild?: Guild) {
-    return this._resolve(super.get(id), guild, true);
+    const role = super.get(id);
+    return role && this._resolve(role, guild, true);
   }
 
   add(role: APIRole | Role, replace = true) {
@@ -30,6 +31,7 @@ export class RoleCache extends Cache<Role | APIRole> {
     addInCache = false
   ) {
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       role &&
       !this.manager._partial(Partials.Role) &&
       !(role instanceof Role)
@@ -41,10 +43,10 @@ export class RoleCache extends Cache<Role | APIRole> {
         });
 
       if (!guild) {
-        guild = this.manager.client.cache.guilds.get(role.guildId);
+        guild = this.manager.client.cache.guilds.get(role.guildId!);
       }
 
-      role = new Role({ ...role, client: this.manager.client }, guild);
+      role = new Role({ ...role, client: this.manager.client }, guild!);
 
       if (addInCache) this.add(role);
     }
@@ -74,7 +76,7 @@ export class RoleCache extends Cache<Role | APIRole> {
           if (!(guild instanceof Guild)) {
             guild = this.manager.guilds.get(
               typeof guild === "string" ? guild : guild.id
-            );
+            ) as Guild;
           }
 
           return this.add(

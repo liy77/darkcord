@@ -1,5 +1,5 @@
-export class WebSocketUtil {
-  static pack(data: any, encoding: "etf" | "json") {
+export namespace WebSocketUtil {
+  export function pack(data: any, encoding: "etf" | "json") {
     if (encoding === "etf") {
       try {
         const erlpack = require("erlpack");
@@ -10,7 +10,7 @@ export class WebSocketUtil {
     return JSON.stringify(data);
   }
 
-  static unpack(data: any, encoding: "etf" | "json") {
+  export function unpack(data: any, encoding: "etf" | "json") {
     if (encoding === "etf") {
       try {
         const erlpack = require("erlpack");

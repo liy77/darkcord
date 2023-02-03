@@ -9,7 +9,7 @@ import { Events } from "@utils/Constants";
 
 export class InviteCreate extends Event {
   run(data: GatewayInviteCreateDispatchData) {
-    const guild = this.getGuild(data.guild_id);
+    const guild = this.getGuild(data.guild_id!);
 
     if (!guild) return;
     const channel = this.client.cache.channels.get(data.channel_id);
@@ -17,7 +17,7 @@ export class InviteCreate extends Event {
     const invite = new Invite({
       ...data,
       channel:
-        channel instanceof Channel ? (channel.partial as APIChannel) : channel,
+        channel instanceof Channel ? (channel.partial as APIChannel) : channel ?? null,
       client: this.client,
     });
 

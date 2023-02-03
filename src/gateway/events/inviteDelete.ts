@@ -5,7 +5,7 @@ import { Event } from "./Event";
 
 export class InviteDelete extends Event {
   run(data: GatewayInviteDeleteDispatchData) {
-    const guild = this.getGuild(data.guild_id);
+    const guild = this.getGuild(data.guild_id!);
 
     if (!guild) return;
       

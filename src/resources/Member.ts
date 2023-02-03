@@ -25,11 +25,11 @@ export class Member extends Base {
   /**
    * the member's guild avatar hash
    */
-  avatar: string;
+  avatar: string | null | undefined;
   /**
    * Timestamp of when the time out will be removed; until then, they cannot interact with the guild
    */
-  communicationDisabledUntil: string;
+  communicationDisabledUntil: string | null | undefined;
   /**
    * When the user joined the guild
    */
@@ -45,7 +45,7 @@ export class Member extends Base {
   /**
    * When the user started boosting the guild
    */
-  premiumSince: Date;
+  premiumSince: Date | null;
   /**
    * Whether the user has not yet passed the guild's Membership Screening requirements
    */
@@ -63,7 +63,7 @@ export class Member extends Base {
    */
   mute: boolean;
   constructor(data: APIGuildMember, public guild: Guild) {
-    super(data, guild._client, data.user.id);
+    super(data, guild._client, data.user?.id);
 
     this.avatar = data.avatar;
     this.communicationDisabledUntil = data.communication_disabled_until;
@@ -113,7 +113,7 @@ export class Member extends Base {
       )
     
     if (options?.size) {
-      url += "?size=" + options?.size?.toString();
+      url += "?size=" + options.size.toString();
     }
 
     return url

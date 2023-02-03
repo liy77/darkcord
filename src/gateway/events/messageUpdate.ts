@@ -8,6 +8,7 @@ import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
 import { Resolvable } from "@utils/Resolvable";
 import { Events } from "@utils/Constants";
+import { Guild } from "@resources/Guild";
 
 export class MessageUpdate extends Event {
   async run(data: GatewayMessageUpdateDispatchData) {
@@ -17,12 +18,18 @@ export class MessageUpdate extends Event {
 
     const old = structuredClone(channel.messages.get(data.id));
 
+    let guild: Guild | undefined;
+
+    if (data.guild_id) {
+      guild = this.getGuild(data.guild_id);
+    }
+
     const updated = new Message(
       {
         ...(data as APIMessage),
         client: this.client,
       },
-      data.guild_id && this.getGuild(data.guild_id)
+      guild
     );
 
     this.client.emit(

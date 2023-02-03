@@ -127,7 +127,8 @@ export class Channel extends Base {
     | StageChannel
     | VoiceChannel {
     if ("name" in data) this.name = data.name;
-    if ("flags" in data) this.flags = new ChannelFlags(data.flags);
+    if ("flags" in data)
+      this.flags = (data.flags && new ChannelFlags(data.flags)) ?? null;
 
     return this;
   }
@@ -169,25 +170,31 @@ export class Channel extends Base {
   static from(data: DataWithClient<APIChannel>, guild?: Guild) {
     switch (data.type) {
       case ChannelType.GuildText: {
+        if (!guild) return new Channel(data);
         return new GuildTextChannel(data, guild);
       }
       case ChannelType.DM: {
         return new DMChannel(data);
       }
       case ChannelType.GuildCategory: {
+        if (!guild) return new Channel(data);
         return new CategoryChannel(data, guild);
       }
       case ChannelType.GuildForum: {
+        if (!guild) return new Channel(data);
         return new ForumChannel(data, guild);
       }
       case ChannelType.GuildVoice: {
+        if (!guild) return new Channel(data);
         return new VoiceChannel(data, guild);
       }
       case ChannelType.GuildStageVoice: {
+        if (!guild) return new Channel(data);
         return new StageChannel(data, guild);
       }
       case ChannelType.PrivateThread:
       case ChannelType.PublicThread: {
+        if (!guild) return new Channel(data);
         return new ThreadChannel(data, guild);
       }
       default: {
@@ -201,11 +208,11 @@ export class TextBasedChannel extends Channel {
   /**
    * The id of the last message sent in this channel (may not point to an existing or valid message)
    */
-  lastMessageId?: string;
+  lastMessageId?: string | null;
   /**
    * When the last pinned message was pinned.
    */
-  lastPinTimestamp?: string;
+  lastPinTimestamp?: string | null;
   /**
    * Channel messages
    */
@@ -215,7 +222,7 @@ export class TextBasedChannel extends Channel {
     super(data);
 
     this.messages = new ChannelMessageCache(
-      this._client.options.cache?.messageCacheLimitPerChannel,
+      this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
       this
     );
@@ -297,22 +304,26 @@ export class GuildChannel extends Channel {
     super(data);
 
     this.guild = guild;
-    this.guildId = data.guild_id;
+    this.guildId = data.guild_id as string;
     this.permissionOverwrites = new Cache();
-    this.threads = new Cache(this._client.cache._cacheLimit("threads"));
+    this.threads = new Cache<ThreadChannel>(
+      this._client.cache._cacheLimit("threads")
+    );
 
     this._update(data);
 
-    for (const perm of data.permission_overwrites) {
-      this.permissionOverwrites._add(
-        new PermissionOverwrite(
-          {
-            ...perm,
-            client: this._client,
-          },
-          this
-        )
-      );
+    if (data.permission_overwrites) {
+      for (const perm of data.permission_overwrites) {
+        this.permissionOverwrites._add(
+          new PermissionOverwrite(
+            {
+              ...perm,
+              client: this._client,
+            },
+            this
+          )
+        );
+      }
     }
   }
 
@@ -332,8 +343,8 @@ export class GuildChannel extends Channel {
 
   _update(data: APIGuildChannelResolvable) {
     if ("position" in data) this.position = data.position;
-    if ("nsfw" in data) this.nsfw = data.nsfw;
-    if ("parent_id" in data) this.parentId = data.parent_id;
+    if ("nsfw" in data) this.nsfw = Boolean(data.nsfw);
+    if ("parent_id" in data) this.parentId = data.parent_id as string;
 
     super._update(data as APIChannel);
     return this;
@@ -355,7 +366,7 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
 
     this._update(data);
     this.messages = new ChannelMessageCache(
-      this._client.options.cache?.messageCacheLimitPerChannel,
+      this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
       this
     );
@@ -381,7 +392,7 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
   }
 
   _update(data: APITextChannel) {
-    if ("topic" in data) this.topic = data.topic;
+    if ("topic" in data) this.topic = data.topic as string;
     if ("rate_limit_per_user" in data)
       this.rateLimitPerUser = data.rate_limit_per_user;
 
@@ -394,13 +405,13 @@ export class ThreadChannel extends TextBasedChannel {
   /**
    * The client users member for the thread
    */
-  member?: ThreadMember;
+  member?: ThreadMember | null;
   /**
    * Number of messages (not including the initial message or deleted messages) in a thread
    *
    * If the thread was created before July 1, 2022, it stops counting at 50 messages
    */
-  messageCount?: number;
+  messageCount: number;
   /**
    * The approximate member count of the thread, does not count above 50 even if there are more members
    */
@@ -421,7 +432,7 @@ export class ThreadChannel extends TextBasedChannel {
   /**
    * The channel associated with this thread
    */
-  channel: GuildTextChannel;
+  channel: GuildTextChannel | null;
   /**
    * The id of the guild
    */
@@ -445,7 +456,7 @@ export class ThreadChannel extends TextBasedChannel {
   /**
    * Timestamp when the thread was created; only populated for threads created after 2022-01-09
    */
-  createTimestamp: Date;
+  createTimestamp: Date | null;
   /**
    * Whether non-moderators can add other non-moderators to the thread; only available on private threads
    */
@@ -463,11 +474,7 @@ export class ThreadChannel extends TextBasedChannel {
 
     this.guild = guild;
     this.ownerId = data.owner_id;
-    this.appliedTags = data.applied_tags;
-    this.totalMessageSent = data.total_message_sent;
-    this.memberCount = data.member_count;
     this.guildId = data.guild_id || guild.id;
-    this.messageCount = data.message_count;
     this.channel = data.parent_id
       ? (guild.channels.get(data.parent_id) as GuildTextChannel)
       : null;
@@ -502,8 +509,14 @@ export class ThreadChannel extends TextBasedChannel {
   }
 
   _update(data: APIThreadChannel) {
+    if ("applied_tags" in data) this.appliedTags = data.applied_tags;
+    if ("total_message_sent" in data)
+      this.totalMessageSent = data.total_message_sent;
+    if ("message_count" in data) this.messageCount = data.message_count ?? 0;
+    if ("member_count" in data) this.memberCount = data.member_count;
+
     // MetaData
-    if ("thread_metadada" in data) {
+    if ("thread_metadata" in data && data.thread_metadata) {
       const metadata = data.thread_metadata;
       if ("archived" in metadata) this.archived = metadata.archived;
       if ("archive_timestamp" in metadata)
@@ -535,7 +548,7 @@ export class DMChannel extends TextBasedChannel {
   constructor(data: DataWithClient<APIDMChannel>) {
     super({ ...data, client: data.client });
 
-    this.user = this._client.cache.users.add(data.recipients[0]);
+    this.user = this._client.cache.users.add(data.recipients?.[0]!);
     this.userId = this.user.id;
   }
 }
@@ -560,7 +573,7 @@ export class ForumChannel extends GuildChannel {
   /**
    * Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity
    */
-  defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+  defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
   /**
    * The default layout type used to display posts in a forum channel. Defaults to 0, which indicates a layout view has not been set by a channel admin
    */
@@ -572,11 +585,11 @@ export class ForumChannel extends GuildChannel {
   /**
    * The default sort order type used to order posts in a forum channel
    */
-  defaultSortOrder: SortOrderType;
+  defaultSortOrder: SortOrderType | null;
   /**
    * The initial rate_limit_per_user to set on newly created threads. This field is copied to the thread at creation time and does not live update
    */
-  defaultThreadRateLimitPerUser: number;
+  defaultThreadRateLimitPerUser?: number;
   /**
    * The set of tags that can be used in a forum channel
    */
@@ -584,17 +597,33 @@ export class ForumChannel extends GuildChannel {
   constructor(data: DataWithClient<APIGuildForumChannel>, guild: Guild) {
     super(data, guild);
 
-    this.availableTags = data.available_tags;
-    this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-    this.defaultForumLayout = data.default_forum_layout;
-    this.defaultReactionEmoji = {
-      emojiId: data.default_reaction_emoji.emoji_id,
-      emojiName: data.default_reaction_emoji.emoji_name,
-    };
-    this.defaultSortOrder = data.default_sort_order;
-    this.defaultThreadRateLimitPerUser =
-      data.default_thread_rate_limit_per_user;
-    this.threads = new Cache(this._client.cache._cacheLimit("threads"));
+    this._update(data);
+
+    this.threads = new Cache<ThreadChannel>(
+      this._client.cache._cacheLimit("threads")
+    );
+  }
+
+  _update(data: APIGuildForumChannel) {
+    if ("available_tags" in data) this.availableTags = data.available_tags;
+    if ("default_auto_archive_duration" in data)
+      this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+    if ("default_forum_layout" in data)
+      this.defaultForumLayout = data.default_forum_layout;
+    if ("default_sort_order" in data)
+      this.defaultSortOrder = data.default_sort_order;
+    if ("default_thread_rate_limit_per_user" in data)
+      this.defaultThreadRateLimitPerUser =
+        data.default_thread_rate_limit_per_user;
+    if ("default_reaction_emoji" in data && data.default_reaction_emoji) {
+      this.defaultReactionEmoji = {
+        emojiId: data.default_reaction_emoji!.emoji_id,
+        emojiName: data.default_reaction_emoji!.emoji_name,
+      };
+    }
+
+    super._update(data);
+    return this;
   }
 }
 
@@ -632,9 +661,11 @@ export class BaseVoiceChannel extends GuildChannel {
       ChannelType.GuildVoice | ChannelType.GuildStageVoice
     >
   ) {
-    if ("bitrate" in data) this.bitrate = data.bitrate;
-    if ("rtc_region" in data) this.rtcRegion = data.rtc_region;
-    if ("user_limit" in data) this.userLimit = data.user_limit;
+    if ("bitrate" in data && data.bitrate) this.bitrate = data.bitrate;
+    if ("rtc_region" in data && data.rtc_region)
+      this.rtcRegion = data.rtc_region;
+    if ("user_limit" in data && data.user_limit)
+      this.userLimit = data.user_limit;
     return this;
   }
 }
@@ -643,14 +674,14 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
   /**
    * The camera video quality mode of the voice channel
    */
-  videoQualityMode: VideoQualityMode;
+  videoQualityMode: VideoQualityMode | null;
 
   constructor(data: DataWithClient<APIGuildVoiceChannel>, guild: Guild) {
     super(data, guild);
 
-    this.videoQualityMode = data.video_quality_mode;
+    this.videoQualityMode = data.video_quality_mode ?? null;
     this.messages = new ChannelMessageCache(
-      this._client.options.cache?.messageCacheLimitPerChannel,
+      this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
       this
     );
@@ -716,11 +747,11 @@ export class WelcomeChannel extends Base {
   /**
    * The emoji id of the emoji that is shown on the left of the channel
    */
-  emojiId: string;
+  emojiId: string | null;
   /**
    * The emoji name of the emoji that is shown on the left of the channel
    */
-  emojiName: string;
+  emojiName: string | null;
   constructor(data: DataWithClient<APIGuildWelcomeScreenChannel>) {
     super(data, data.client, data.channel_id);
 
@@ -736,7 +767,8 @@ export class WelcomeChannel extends Base {
 
   get emoji() {
     return (
-      this._client.cache.emojis.get(this.emojiId) ??
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      this._client.cache.emojis.get(this.emojiId!) ??
       new Emoji({
         id: this.emojiId,
         name: this.emojiName,

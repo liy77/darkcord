@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Events, ShardEvents } from "@utils/Constants";
 import { DiscordAPIError, InvalidTokenError } from "@utils/Errors";
 import {
   GatewayPresenceUpdateData,
   GatewaySendPayload,
 } from "discord-api-types/v10";
-import { GatewayShard } from "gateway/Gateway";
+import { GatewayShard } from "../gateway/Gateway";
 import { Client } from "./Client";
 import { MakeError } from "@utils/index";
 
@@ -66,7 +67,7 @@ export class WebSocket {
 
     this.client.emit(Events.Debug, "Starting Shards...");
 
-    let totalShards = this.client.options?.gateway?.totalShards;
+    let totalShards = this.client.options.gateway.totalShards;
 
     if (!totalShards) {
       totalShards = gateway.shards;
@@ -77,13 +78,13 @@ export class WebSocket {
       );
     }
 
-    const compress = this.client.options?.gateway?.compress;
+    const compress = this.client.options.gateway.compress;
 
     for (let id = 0; id < totalShards; id++) {
       const shard = new GatewayShard(this.client, {
         compress,
         shardId: id.toString(),
-        encoding: this.client.options?.gateway?.encoding,
+        encoding: this.client.options.gateway.encoding,
       });
 
       // Handling shard

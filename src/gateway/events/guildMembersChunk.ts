@@ -13,7 +13,8 @@ export class GuildMembersChunk extends Event {
 
     if (!guild) return;
 
-    let members: (APIGuildMember | Member)[] = data?.members;
+    let members: (APIGuildMember | Member)[] | null | undefined =
+      data.members as APIGuildMember[] | null | undefined;
 
     if (members) {
       members = members.map(
@@ -25,8 +26,8 @@ export class GuildMembersChunk extends Event {
       }
     }
 
-    if (data?.presences) {
-      for (const presence of data?.presences) {
+    if (data.presences) {
+      for (const presence of data.presences) {
         guild.presences.push(presence);
       }
     }

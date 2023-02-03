@@ -11,7 +11,7 @@ import {
 import { Cache } from "./Cache";
 import { CacheManager } from "./CacheManager";
 
-export class ChannelCache extends Cache<Channel | APIChannel> {
+export class ChannelCache extends Cache<Channel> {
   constructor(
     options: number | BaseCacheOptions,
     public manager: CacheManager
@@ -20,19 +20,23 @@ export class ChannelCache extends Cache<Channel | APIChannel> {
   }
 
   get(id: string, guild?: Guild) {
-    return this._resolve(super.get(id), guild, true)
+    const channel = super.get(id);
+    return channel && this._resolve(channel, guild, true);
   }
 
   _resolve(channel: APIChannel | Channel, guild?: Guild, addInCache = false) {
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       channel &&
-      !this.manager._partial(Partials.Channel) &&
       !(channel instanceof Channel)
     ) {
-      if ((channel as APIGuildChannel<ChannelType>)?.guild_id && !guild) {
+      if (
+        (channel as APIGuildChannel<ChannelType> | undefined)?.guild_id &&
+        !guild
+      ) {
         guild = this.manager.guilds.get(
-          (channel as APIGuildChannel<ChannelType>).guild_id
-        );
+          (channel as APIGuildChannel<ChannelType>).guild_id!
+        ) as Guild;
       }
 
       channel = Channel.from(
@@ -46,7 +50,7 @@ export class ChannelCache extends Cache<Channel | APIChannel> {
       if (addInCache) this.add(channel);
     }
 
-    return channel
+    return channel;
   }
 
   add(channel: APIChannel | Channel, replace = true) {
@@ -56,19 +60,12 @@ export class ChannelCache extends Cache<Channel | APIChannel> {
   async fetch(id: string) {
     const item = await this.manager.client.rest.getChannel(id);
 
-    if (
-      !this.manager._partial(Partials.Channel) &&
-      !(item instanceof Channel)
-    ) {
-      const i = Channel.from({
-        ...item,
-        client: this.manager.client,
-      });
+    const i = Channel.from({
+      ...item,
+      client: this.manager.client,
+    });
 
-      return this.add(i);
-    }
-
-    return this.add(item);
+    return this.add(i);
   }
 }
 
@@ -86,6 +83,6 @@ export class GuildChannelCache extends ChannelCache {
   }
 
   add(channel: APIChannel | Channel, replace = true) {
-    return super.add(super._resolve(channel, this.guild), replace)
+    return super.add(super._resolve(channel, this.guild), replace);
   }
 }

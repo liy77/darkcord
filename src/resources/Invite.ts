@@ -14,7 +14,7 @@ export class Invite {
   /**
    * The guild this invite is for
    */
-  guild: Guild | InviteGuild;
+  guild: Guild | InviteGuild | null;
   /**
    * The expiration date of this invite
    */
@@ -30,7 +30,7 @@ export class Invite {
   /**
    * The channel this invite is for
    */
-  channel: GuildChannel | APIPartialChannel;
+  channel: GuildChannel | APIPartialChannel | null;
   /**
    * The type of target for this voice channel invite
    */
@@ -68,16 +68,17 @@ export class Invite {
     this.code = data.code;
 
     this.channel =
-      data.client.cache.channels.get(data.channel.id) ?? data.channel;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      data.client.cache.channels.get(data.channel!.id) ?? data.channel;
 
-    this.targetType = data.target_type;
+    this.targetType = data.target_type as InviteTargetType;
     this.targetUser = data.target_user
       ? data.client.cache.users.add(data.target_user)
       : null;
 
-    this.approximateMemberCount = data.approximate_member_count;
-    this.approximatePresenceCount = data.approximate_presence_count;
-    this.guildScheduledEvent = data.guild_scheduled_event
+    this.approximateMemberCount = data.approximate_member_count || 0;
+    this.approximatePresenceCount = data.approximate_presence_count || 0;
+    this.guildScheduledEvent = data.guild_scheduled_event && this.guild
       ? new ScheduledEvent(data.guild_scheduled_event, this.guild)
       : null;
 

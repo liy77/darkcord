@@ -47,7 +47,7 @@ export class ThreadListSync extends Event {
     }, new Cache<ThreadChannel>());
 
     for (const raw of data.members) {
-      const thread = this.client.cache.threads.get(raw.id);
+      const thread = this.client.cache.threads.get(raw.id!);
 
       if (thread) {
         const member = new ThreadMember(
@@ -57,7 +57,7 @@ export class ThreadListSync extends Event {
 
         thread.members._add(member);
 
-        const channel = guild.channels.get(thread.channel.id);
+        const channel = guild.channels.get(thread.channel!.id);
 
         if (channel instanceof GuildChannel) {
           channel.threads._add(thread);

@@ -7,6 +7,7 @@ export class GuildBanRemove extends Event {
   run(data: GatewayGuildBanRemoveDispatchData) {
     const guild = this.getGuild(data.guild_id);
     const user =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       this.client.cache.users.get(data.user.id) ??
       new User({ ...data.user, client: this.client });
 

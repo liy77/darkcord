@@ -89,7 +89,7 @@ export class PluginManager {
         Object.defineProperty(
           toBeModified.prototype,
           prop,
-          Object.getOwnPropertyDescriptor(modified.prototype, prop)
+          Object.getOwnPropertyDescriptor(modified.prototype, prop) as PropertyDescriptor
         );
       }
 
@@ -100,7 +100,7 @@ export class PluginManager {
         Object.defineProperty(
           toBeModified,
           prop,
-          Object.getOwnPropertyDescriptor(modified, prop)
+          Object.getOwnPropertyDescriptor(modified, prop) as PropertyDescriptor
         );
       }
     }

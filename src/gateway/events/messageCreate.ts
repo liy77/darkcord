@@ -3,10 +3,15 @@ import { Message } from "@resources/Message";
 import { Event } from "./Event";
 import { Resolvable } from "@utils/Resolvable";
 import { Events } from "@utils/Constants";
+import { Guild } from "@resources/Guild";
 
 export class MessageCreate extends Event {
   async run(data: GatewayMessageCreateDispatchData) {
-    const guild = data.guild_id && this.getGuild(data.guild_id);
+    let guild: Guild | undefined;
+
+    if (data.guild_id) {
+      guild = this.getGuild(data.guild_id);
+    }
 
     const message = new Message(
       {
@@ -16,6 +21,9 @@ export class MessageCreate extends Event {
       guild
     );
 
-    this.client.emit(Events.MessageCreate, Resolvable.resolveMessage(message, this.client));
+    this.client.emit(
+      Events.MessageCreate,
+      Resolvable.resolveMessage(message, this.client)
+    );
   }
 }

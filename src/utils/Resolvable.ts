@@ -38,11 +38,13 @@ export namespace Resolvable {
   ) {
     let resolved: Message;
     if (!(messageResolvable instanceof Message)) {
-      resolved = new Message(
-        { ...messageResolvable, client },
-        messageResolvable.guild_id &&
-          Resolvable.resolveGuild(messageResolvable.guild_id, client)
-      );
+      let guild: Guild | undefined;
+
+      if (messageResolvable.guild_id) {
+        guild = Resolvable.resolveGuild(messageResolvable.guild_id, client);
+      }
+
+      resolved = new Message({ ...messageResolvable, client }, guild);
     } else {
       resolved = messageResolvable;
     }
@@ -50,7 +52,7 @@ export namespace Resolvable {
     const channel = Resolvable.resolveChannel(
       resolved.channelId,
       client,
-      resolved.guild
+      resolved.guild!
     ) as TextBasedChannel;
 
     resolved.channel = channel;
@@ -68,7 +70,7 @@ export namespace Resolvable {
 
     if (!(guildResolvable instanceof Guild)) {
       if (typeof guildResolvable === "string") {
-        resolved = client.cache.guilds.get(guildResolvable);
+        resolved = client.cache.guilds.get(guildResolvable) as Guild;
       } else {
         resolved = new Guild({ ...guildResolvable, client });
       }
@@ -104,8 +106,8 @@ export namespace Resolvable {
     client: AnyClient,
     guildResolvable?: GuildResolvable
   ) {
-    let resolved: AnyChannel;
-    let guild: Guild;
+    let resolved: AnyChannel | undefined;
+    let guild: Guild | undefined;
 
     if (guildResolvable) {
       guild = Resolvable.resolveGuild(guildResolvable, client);
@@ -114,19 +116,17 @@ export namespace Resolvable {
     if (!(channelResolvable instanceof Channel)) {
       if (typeof channelResolvable === "string") {
         const c = client.cache.channels.get(channelResolvable);
-
-        resolved =
-          c instanceof Channel ? c : Channel.from({ ...c, client }, guild);
+        resolved = c
       } else {
-        resolved = Channel.from({ ...channelResolvable, client }, guild);
+        resolved = Channel.from({ ...channelResolvable, client }, guild!);
       }
     }
 
-    if (resolved.isGuildChannel()) {
+    if (resolved!.isGuildChannel()) {
       resolved.guild.channels.add(resolved);
     }
 
-    client.cache.channels.add(resolved);
+    client.cache.channels.add(resolved!);
 
     return resolved;
   }

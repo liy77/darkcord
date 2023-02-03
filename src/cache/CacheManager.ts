@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Client, InteractionClient } from "@client/Client";
 import { ThreadChannel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
@@ -29,7 +30,7 @@ export class CacheManager {
     this.roles = this._createCache("roles");
   }
 
-  _createCache(option: keyof Omit<ClientOptions["cache"], "adapter">) {
+  _createCache(option: string) {
     const options = this.client.options.cache as ClientOptions["cache"];
 
     let cache: any;
@@ -77,12 +78,12 @@ export class CacheManager {
     return o instanceof Cache;
   }
 
-  _cacheLimit(option: keyof Omit<ClientOptions["cache"], "adapter">) {
+  _cacheLimit(option: string) {
     const o = this.client.options.cache?.[option] || 0;
     return this._cacheInstance(o)
       ? o.limit
       : typeof o === "number"
       ? o
-      : o.maxSize;
+      : (o as { maxSize: number }).maxSize;
   }
 }

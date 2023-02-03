@@ -19,7 +19,7 @@ export class VoiceState extends Base {
   /**
    * The channel id this user is connected to
    */
-  channelId: string;
+  channelId: string | null;
   /**
    * Whether this user is deafened by the server
    */
@@ -27,7 +27,7 @@ export class VoiceState extends Base {
   /**
    * The guild member this voice state is for
    */
-  member: Member;
+  member: Member | null;
   /**
    * Whether this user is muted by the server
    */
@@ -35,7 +35,7 @@ export class VoiceState extends Base {
   /**
    * The time at which the user requested to speak
    */
-  requestToSpeakTimestamp: Date;
+  requestToSpeakTimestamp: Date | null;
   /**
    * Whether this user is locally deafened
    */
@@ -71,7 +71,7 @@ export class VoiceState extends Base {
     this.userId = data.user_id;
     this.channelId = data.channel_id;
     this.deaf = data.deaf;
-    this.member = data.member ? guild.members.get(data.user_id) : null;
+    this.member = data.member ? guild.members.get(data.user_id) ?? null : null;
     this.mute = data.mute;
     this.requestToSpeakTimestamp = data.request_to_speak_timestamp
       ? new Date(data.request_to_speak_timestamp)
@@ -79,10 +79,10 @@ export class VoiceState extends Base {
 
     this.selfDeaf = data.self_deaf;
     this.selfMute = data.self_mute;
-    this.selfStream = data.self_stream;
+    this.selfStream = Boolean(data.self_stream);
     this.selfVideo = data.self_video;
     this.sessionId = data.session_id;
-    this.guildId = data.guild_id;
+    this.guildId = data.guild_id as string;
     this.suppress = data.suppress;
   }
 
@@ -99,7 +99,7 @@ export class VoiceState extends Base {
   ) {
     return this._client.rest.modifyGuildVoiceState(
       this.guildId,
-      this.userId === this._client.user.id ? "@me" : this.userId,
+      this.userId === this._client.user?.id ? "@me" : this.userId,
       options
     );
   }

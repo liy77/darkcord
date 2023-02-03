@@ -8,7 +8,7 @@ export class BitField<
   }
 
   toArray() {
-    return Object.keys(this.flags).filter((bit) =>
+    return Object.keys(this.flags as unknown as object).filter((bit) =>
       this.has((this.flags as Record<string, unknown>)[bit] as T)
     );
   }

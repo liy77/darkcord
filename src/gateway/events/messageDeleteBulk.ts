@@ -8,7 +8,7 @@ export class MessageDeleteBulk extends Event {
   run(data: GatewayMessageDeleteBulkDispatchData) {
     const channel = this.client.cache.channels.get(data.channel_id);
 
-    if (isTextBasedChannel(channel)) {
+    if (isTextBasedChannel(channel!)) {
       const messages = new Map();
 
       for (const id of data.ids) {
@@ -18,7 +18,7 @@ export class MessageDeleteBulk extends Event {
         const message = structuredClone(channel.messages.get(id));
 
         channel.messages.delete(id);
-        messages.set(message.id, message);
+        messages.set(message!.id, message);
       }
 
       this.client.emit(Events.MessageDeleteBulk, messages);

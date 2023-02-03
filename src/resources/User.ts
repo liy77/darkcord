@@ -112,20 +112,21 @@ export class User extends Base {
       return null;
     }
 
-    let url = RouteBases.cdn +
+    let url =
+      RouteBases.cdn +
       CDNRoutes.userAvatar(
         this.id,
         this.avatar,
         options?.format ?? this.avatar.startsWith("a_")
           ? ImageFormat.GIF
           : ImageFormat.PNG
-      )
-    
+      );
+
     if (options?.size) {
-      url += "?size=" + options?.size?.toString();
+      url += "?size=" + options.size.toString();
     }
 
-    return url
+    return url;
   }
 
   /**
@@ -147,19 +148,20 @@ export class User extends Base {
   /**
    * The dm of user
    */
-  get dm() {
-    let dm = this._client.cache.channels.find(
-      (ch: DMChannel | APIDMChannel) => {
-        const id = ch instanceof DMChannel ? ch.userId : ch.recipients[0].id;
-        return ch.type === ChannelType.DM && id === this.id;
-      }
-    ) as APIDMChannel | DMChannel;
+  get dm(): DMChannel | null {
+    let dm = this._client.cache.channels.find((ch) => {
+      if (!ch.isDM()) return false;
+      const id = ch.userId;
+      return ch.type === ChannelType.DM && id === this.id;
+    }) as APIDMChannel | DMChannel | null;
+
+    if (!dm) return null;
 
     if (!(dm instanceof DMChannel)) {
       dm = new DMChannel({ ...dm, client: this._client });
     }
 
-    return dm as DMChannel;
+    return dm;
   }
 
   /**
@@ -182,6 +184,6 @@ export class User extends Base {
   }
 
   toString() {
-    return userMention(this.id)
+    return userMention(this.id);
   }
 }

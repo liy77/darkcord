@@ -1,9 +1,6 @@
 import { RequestHandlerOptions, RequestHeaders } from "@typings/index";
 import { DiscordAPIError, RequestError } from "@utils/Errors";
-import {
-  delay,
-  parseResponse,
-} from "@utils/index";
+import { delay, parseResponse } from "@utils/index";
 import { RouteBases } from "discord-api-types/v10";
 import { BodyInit, fetch, FormData } from "undici";
 
@@ -92,7 +89,7 @@ export class RequestHandler {
     router = this.#apiRoute + router;
 
     const headers = {
-      Authorization: auth.startsWith("Bot") ? auth : "Bot " + auth,
+      Authorization: auth?.startsWith("Bot") ? auth : "Bot " + auth,
       "User-Agent": `DiscordBot (https://github.com/denkylabs/darkcord, v${
         require("../../package.json").version
       })`,
@@ -102,6 +99,7 @@ export class RequestHandler {
     if (contentType !== undefined) {
       headers["Content-Type"] = contentType as string;
     } else if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       contentType === undefined &&
       body instanceof FormData === false
     ) {
@@ -143,7 +141,7 @@ export class RequestHandler {
             buckets.globalDelay = globalDelayFor(timeout);
           }
 
-          delayPromise = buckets.globalDelay;
+          delayPromise = buckets.globalDelay as Promise<unknown>;
         } else {
           limit = bucket.limit;
           timeout = bucket.reset + buckets.restTimeOffset - Date.now();
@@ -169,10 +167,10 @@ export class RequestHandler {
       const _remaining = res.headers.get("x-ratelimit-remaining");
       const _reset = res.headers.get("x-ratelimit-reset");
 
-      let sublimitTimeout: number;
       const serverDate = new Date(_serverDate);
       const limit = _limit ? Number(_limit) : Infinity;
       const remaining = _remaining ? Number(_remaining) : 1;
+      let sublimitTimeout: number | undefined;
       let reset = _reset ? calculateReset(_reset, serverDate) : Date.now();
       let retryAfter: number | null | string = res.headers.get("retry-after");
       retryAfter = retryAfter ? Number(retryAfter) * 1000 : -1;
@@ -189,6 +187,7 @@ export class RequestHandler {
         if (res.headers.get("x-ratelimit-global") !== null) {
           buckets.globalRemaining = 0;
           buckets.globalReset = Date.now() + retryAfter;
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         } else if (bucket.limited === false) {
           sublimitTimeout = retryAfter;
         }

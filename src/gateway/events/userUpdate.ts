@@ -6,7 +6,7 @@ import { Events } from "@utils/Constants";
 export class UserUpdate extends Event {
   run(data: GatewayUserUpdateDispatchData) {
     const old = structuredClone(
-      data.id === this.client.user.id
+      data.id === this.client.user?.id
         ? this.client.user
         : this.client.cache.users.get(data.id)
     );

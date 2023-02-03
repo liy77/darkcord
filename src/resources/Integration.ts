@@ -60,7 +60,7 @@ export class Integration extends Base {
   /**
    * When this integration was last synced
    */
-  syncedAt: string;
+  syncedAt: Date | null;
   /**
    * Integration type
    */
@@ -68,7 +68,7 @@ export class Integration extends Base {
   /**
    * User for this integration
    */
-  user: User | APIUser;
+  user: User | APIUser | null;
   /**
    * The integration guild
    */
@@ -77,17 +77,17 @@ export class Integration extends Base {
     super(data, guild._client);
 
     this.account = data.account;
-    this.application = data.application;
-    this.enabled = data.enabled;
-    this.expireBehavior = data.expire_behavior;
-    this.enableEmoticons = data.enable_emoticons;
-    this.expireGracePeriod = data.expire_grace_period;
+    this.application = data.application as APIGuildIntegrationApplication;
+    this.enabled = Boolean(data.enabled);
+    this.expireBehavior = data.expire_behavior as IntegrationExpireBehavior;
+    this.enableEmoticons = Boolean(data.enable_emoticons);
+    this.expireGracePeriod = data.expire_grace_period as number;
     this.name = data.name;
-    this.revoked = data.revoked;
-    this.roleId = data.role_id;
-    this.scopes = data.scopes;
-    this.subscriberCount = data.subscriber_count;
-    this.syncedAt = data.synced_at;
+    this.revoked = Boolean(data.revoked);
+    this.roleId = data.role_id as string;
+    this.scopes = data.scopes as OAuth2Scopes[];
+    this.subscriberCount = data.subscriber_count as number;
+    this.syncedAt = data.synced_at ? new Date(data.synced_at) : null;
     this.type = data.type;
     this.user = data.user ? this._client.cache.users.add(data.user) : null;
     this.guild = guild;

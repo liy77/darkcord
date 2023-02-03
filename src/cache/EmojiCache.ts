@@ -16,11 +16,13 @@ export class EmojiCache extends Cache<Emoji | APIEmoji> {
   }
 
   get(id: string) {
-    return this.#resolve(super.get(id))
+    const emoji = super.get(id);
+    return emoji && this.#resolve(emoji)
   }
 
   #resolve(emoji: APIEmoji | Emoji, addInCache = false) {
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       emoji &&
       !this.manager._partial(Partials.Emoji) &&
       !(emoji instanceof Emoji)
@@ -33,7 +35,7 @@ export class EmojiCache extends Cache<Emoji | APIEmoji> {
   }
 
   add(emoji: Emoji | APIEmoji, replace = true) {
-    return super._add(this.#resolve(emoji), replace, emoji.id);
+    return super._add(this.#resolve(emoji), replace, (emoji.id || emoji.name) as string);
   }
 
   /**
