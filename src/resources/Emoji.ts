@@ -27,7 +27,7 @@ export class Emoji {
   /**
    * emoji name (can be null only in reaction emoji objects)
    */
-  name: string;
+  name: string | null;
   /**
    * whether this emoji is animated
    */
@@ -35,7 +35,7 @@ export class Emoji {
   /**
    * emoji id
    */
-  id: string;
+  id: string | null;
 
   partial: APIEmoji;
 
@@ -70,7 +70,7 @@ export class Emoji {
   get uriComponent() {
     return this.id
       ? `${this.animated ? "a:" : ""}${this.name}:${this.id}`
-      : encodeURIComponent(this.name);
+      : encodeURIComponent(this.name!);
   }
 
   toString() {
@@ -85,9 +85,9 @@ export class Emoji {
     return r && new Emoji(r);
   }
 
-  static parse(emoji: string): APIEmoji {
+  static parse(emoji: string): APIEmoji | null {
     if (emoji === encodeURIComponent(emoji)) emoji = decodeURIComponent(emoji);
-    if (!emoji.includes(":")) return;
+    if (!emoji.includes(":")) return null;
 
     const r = emoji.match(/<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/);
 
@@ -102,12 +102,13 @@ export class Emoji {
 
   static getEncodedURI(emoji: string | APIEmoji) {
     if (typeof emoji === "string") {
-      emoji = Emoji.parse(emoji);
+      emoji = Emoji.parse(emoji) as Emoji;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return emoji && emoji.id
       ? `${emoji.animated ? "a:" : ""}${emoji.name}:${emoji.id}`
-      : encodeURIComponent(emoji.name);
+      : encodeURIComponent(emoji.name!);
   }
 }
 
