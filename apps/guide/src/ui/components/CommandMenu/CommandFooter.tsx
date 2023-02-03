@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 function Text({ children }: PropsWithChildren) {
 	return (
@@ -11,7 +11,7 @@ function Text({ children }: PropsWithChildren) {
 	);
 }
 
-function KeyboardComponent({ content }: { content: string }) {
+export function KeyboardComponent({ content }: { content: string }) {
 	return (
 		<kbd
 			className="font-500 text-dark relative top-[-1px] inline-flex min-w-[22px] justify-center whitespace-pre-wrap rounded-[4px] bg-white dark:bg-[#1a1d1e] dark:text-[#9ba1a6]"

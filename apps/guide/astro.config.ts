@@ -7,12 +7,13 @@ import unocss from '@unocss/astro';
 import compress from 'astro-compress';
 import critters from 'astro-critters';
 import { defineConfig } from 'astro/config';
-import { toString, type Node } from 'hast-util-to-string';
+import type { Node } from 'hast-util-to-string';
+import { toString } from 'hast-util-to-string';
 import { h } from 'hastscript';
 import { escape } from 'html-escaper';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
-import shikiThemeDarkPlus from 'shiki/themes/dark-plus.json' assert { type: 'json' };
+import shikiThemeDarkPlus from 'shiki/themes/dracula-soft.json' assert { type: 'json' };
 import { fileURLToPath } from 'url';
 
 const PermaLink = h(
@@ -22,7 +23,7 @@ const PermaLink = h(
 		height: '16',
 		viewBox: '0 0 24 24',
 		fill: 'none',
-		stroke: "#787f85",
+		stroke: '#787f85',
 	},
 	h('path', {
 		d: 'M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71',
@@ -87,7 +88,6 @@ export default defineConfig({
 		compress(),
 	],
 	markdown: {
-		extendDefaultPlugins: true,
 		syntaxHighlight: false,
 	},
 	vite: {
@@ -102,9 +102,15 @@ export default defineConfig({
 				'ariakit-utils/focus': fileURLToPath(new URL('node_modules/ariakit-utils/esm/focus.js', import.meta.url)),
 				'ariakit-utils/misc': fileURLToPath(new URL('node_modules/ariakit-utils/esm/misc.js', import.meta.url)),
 				'ariakit-utils/platform': fileURLToPath(new URL('node_modules/ariakit-utils/esm/platform.js', import.meta.url)),
-				'ariakit-react-utils/hooks': fileURLToPath(new URL('node_modules/ariakit-react-utils/esm/hooks.js', import.meta.url)),
-				'ariakit-react-utils/misc': fileURLToPath(new URL('node_modules/ariakit-react-utils/esm/misc.js', import.meta.url)),
-				'ariakit-react-utils/system': fileURLToPath(new URL('node_modules/ariakit-react-utils/esm/system.js', import.meta.url)),
+				'ariakit-react-utils/hooks': fileURLToPath(
+					new URL('node_modules/ariakit-react-utils/esm/hooks.js', import.meta.url),
+				),
+				'ariakit-react-utils/misc': fileURLToPath(
+					new URL('node_modules/ariakit-react-utils/esm/misc.js', import.meta.url),
+				),
+				'ariakit-react-utils/system': fileURLToPath(
+					new URL('node_modules/ariakit-react-utils/esm/system.js', import.meta.url),
+				),
 				'react-use': fileURLToPath(new URL('node_modules/react-use/esm/index.js', import.meta.url)),
 			},
 		},

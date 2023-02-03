@@ -6,17 +6,7 @@ category: Test
 ---
 
 import { CH } from '@code-hike/mdx/components';
-import { DiscordMessage } from '../ui/components';
-
-## Test Code Block
-
-<CH.Code client:load>
-
-```js index.js mark=4,6:10
-const test = 'test';
-```
-
-</CH.Code>
+import { DiscordMessage, DiscordMessages } from '../ui/components';
 
 ## Test Shell Block
 
@@ -36,18 +26,82 @@ pnpm add darkcord
 
 </CH.Code>
 
+## Test Code Block
+
+<CH.Code client:load>
+
+```js index.js 6:10
+import { Client, Constants } from 'darkcord';
+
+const GatewayIntentBits = Constants.GatewayIntentBits;
+const ClientIntents = GatewayIntentBits.Guilds | GatewayIntentBits.GuildMessage | GatewayIntentBits.MessageContent;
+
+const client = new Client('token', {
+	gateway: {
+		intents: ClientIntents,
+	},
+});
+
+client.on('ready', () => {
+	console.log(`Connected to Discord Gateway`);
+});
+
+client.on('interactionCreate', async (interaction) => {
+	if (interaction.isCommand()) {
+		await interaction.reply({ content: 'Pong!' });
+	}
+});
+
+client.connect();
+```
+
+</CH.Code>
+
 ## Test Discord Components
 
+<DiscordMessages>
+	<DiscordMessage
+		interaction={{
+			author: {
+				avatar:
+					'https://images-ext-2.discordapp.net/external/2DbNbpGX2WMSOvnHtFavbh43G_XmLxx45kaaFHenGhA/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/630493603575103519/f6040d5d3a134837c487d5c67ddb7673.webp?size=160',
+				username: 'Liy',
+			},
+			command: 'ping',
+		}}
+		author={{
+			bot: true,
+			username: 'Darkcord Bot',
+		}}
+	>
+		Pong!
+	</DiscordMessage>
+
     <DiscordMessage
-    	interaction={{
+    	reply={{
     		author: {
-    				bot: false
+    			bot: true,
+    			username: 'Darkcord Bot',
     		},
-    		command: 'ping',
+    		content: 'Pong!',
     	}}
     	author={{
-      bot: true
+    		avatar:
+    			'https://images-ext-2.discordapp.net/external/2KYsFTgcCJ6S4RFODmtV1TjP5q9uShwc2IM8JKkzAzY/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/81440962496172032/998117d6b1110bf69c30925354b0b78a.webp',
+    		username: 'Niskii',
     	}}
     >
-    	Pong!
+    	This command is so cool!
     </DiscordMessage>
+
+    		<DiscordMessage
+    	author={{
+    			avatar:
+    				'https://images-ext-2.discordapp.net/external/2DbNbpGX2WMSOvnHtFavbh43G_XmLxx45kaaFHenGhA/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/630493603575103519/f6040d5d3a134837c487d5c67ddb7673.webp?size=160',
+    			username: 'Liy',
+    	}}
+    >
+    	Test 1 2 3
+    </DiscordMessage>
+
+</DiscordMessages>

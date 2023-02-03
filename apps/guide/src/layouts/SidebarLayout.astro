@@ -1,14 +1,14 @@
 ---
 import '@code-hike/mdx/styles.css';
-import { MarkdownLayoutProps } from 'astro';
+import type { MarkdownLayoutProps } from 'astro';
 import SidebarLayout from '../components/SidebarLayout.astro';
 import '../styles/cmdk.css';
 import '../styles/main.css';
 
 type Props = MarkdownLayoutProps<{
-	title: string;
-	description: string;
 	category: string;
+	description: string;
+	title: string;
 }>;
 const { ...props } = Astro.props;
 ---

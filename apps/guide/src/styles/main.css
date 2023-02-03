@@ -15,6 +15,6 @@
 	}
 }
 
-body {
-  overflow: hidden;
+[data-aria-hidden='true'] {
+	filter: blur(3.33px);
 }

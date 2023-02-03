@@ -1,5 +1,9 @@
-export * from './command';
-export * from './discord';
-export * from './search';
-export * from './Section';
-
+/* eslint-disable import/extensions */
+export * from './CommandMenu';
+export * from './Discord';
+export * from './ExternalLink.jsx';
+export * from './Header';
+export * from './Outline.jsx';
+export * from './Search';
+export * from './Section.jsx';
+export * from './Sidebar';
