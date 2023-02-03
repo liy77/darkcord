@@ -86,7 +86,7 @@ export class BaseGuild extends Base {
   /**
    * Verification level required for the guild
    */
-  verificationLevel: GuildVerificationLevel;
+  verificationLevel!: GuildVerificationLevel;
   /**
    * The vanity url code for the guild
    */
@@ -122,7 +122,7 @@ export class BaseGuild extends Base {
         CDNRoutes.guildBanner(
           this.id,
           this.banner,
-          format ?? this.icon.startsWith("a_")
+          format ?? this.icon!.startsWith("a_")
             ? ImageFormat.GIF
             : ImageFormat.PNG
         )
@@ -130,14 +130,17 @@ export class BaseGuild extends Base {
   }
 
   _update(data: APIPartialGuild) {
-    this.name = data.name;
-    this.banner = data.banner ?? null;
-    this.icon = data.icon ?? null;
-    this.features = data.features;
-    this.splash = data.splash ?? null;
-    this.description = data.description ?? null;
-    this.verificationLevel = data.verification_level;
-    this.vanityUrlCode = data.vanity_url_code ?? null;
+    if ("name" in data) this.name = data.name;
+    if ("banner" in data) this.banner = data.banner ?? null;
+    if ("icon" in data) this.icon = data.icon ?? null;
+    if ("features" in data) this.features = data.features as GuildFeature[];
+    if ("splash" in data) this.splash = data.splash ?? null;
+    if ("description" in data) this.description = data.description ?? null;
+    if ("verification_level" in data)
+      this.verificationLevel =
+        data.verification_level as GuildVerificationLevel;
+    if ("vanity_url_code" in data)
+      this.vanityUrlCode = data.vanity_url_code ?? null;
     return this;
   }
 }
@@ -150,7 +153,7 @@ export class WelcomeScreen {
   /**
    * The welcome screen short message
    */
-  description: string;
+  description: string | null;
   /**
    * Suggested channels
    */
@@ -183,7 +186,7 @@ export class InviteGuild extends BaseGuild {
   /**
    * The welcome screen of a Community guild, shown to new members
    */
-  welcomeScreen: WelcomeScreen;
+  welcomeScreen: WelcomeScreen | null;
   constructor(
     data: DataWithClient<APIInviteGuild & Pick<APIGuild, "welcome_screen">>
   ) {
@@ -342,7 +345,7 @@ export class Guild extends BaseGuild {
   /**
    * Guild shard id (only in Gateway Client)
    */
-  shardId?: string;
+  shardId: string | null;
   /**
    * Stage Instances in this guild
    */
@@ -392,7 +395,7 @@ export class Guild extends BaseGuild {
     this.maxMembers = data.max_members;
     this.approximateMemberCount = data.approximate_member_count;
     this.approximatePresenceCount = data.approximate_presence_count;
-    this.shardId = (data as APIGuildWithShard)?.shard_id;
+    this.shardId = "shard_id" in data ? data.shard_id : null;
 
     this._update(data);
 
@@ -442,6 +445,7 @@ export class Guild extends BaseGuild {
     reason?: string
   ) {
     if (
+      options.deleteMessageDays &&
       !Number.isNaN(options.deleteMessageDays) &&
       !options.deleteMessageSeconds
     ) {
@@ -703,26 +707,28 @@ export class Guild extends BaseGuild {
   }
 
   async createChannel(options: CreateChannelOptions, reason?: string) {
+    const opts = {
+      position: options.position,
+      name: options.name,
+      permission_overwrites: options.permissionOverwrites,
+      nsfw: options.nsfw,
+      parent_id: options.parentId,
+      flags: options.flags,
+      topic: options.topic,
+      bitrate: options.bitrate,
+      video_quality_mode: options.videoQualityMode,
+      default_auto_archive_duration: options.defaultAutoArchiveDuration,
+      default_forum_layout: options.defaultForumLayout,
+      default_sort_order: options.defaultSortOrder,
+      default_reaction_emoji: options.defaultReactionEmoji,
+      rtc_region: options.rtcRegion,
+      user_limit: options.userLimit,
+      rate_limit_per_user: options.rateLimitPerUser,
+    };
+
     const data = await this._client.rest.createGuildChannel(
       this.id,
-      {
-        position: options.position,
-        name: options.name,
-        permission_overwrites: options.permissionOverwrites,
-        nsfw: options.nsfw,
-        parent_id: options.parentId,
-        flags: options.flags,
-        topic: options.topic,
-        bitrate: options.bitrate,
-        video_quality_mode: options.videoQualityMode,
-        default_auto_archive_duration: options.defaultAutoArchiveDuration,
-        default_forum_layout: options.defaultForumLayout,
-        default_sort_order: options.defaultSortOrder,
-        default_reaction_emoji: options.defaultReactionEmoji,
-        rtc_region: options.rtcRegion,
-        user_limit: options.userLimit,
-        rate_limit_per_user: options.rateLimitPerUser,
-      },
+      opts,
       reason
     );
 
@@ -738,7 +744,7 @@ export class Guild extends BaseGuild {
   }
 
   permissionsOf(userId: string | Member) {
-    let member: Member;
+    let member: Member | undefined | null;
 
     if (userId instanceof Member) {
       member = userId;
@@ -747,21 +753,22 @@ export class Guild extends BaseGuild {
 
     if (userId === this.ownerId) return new Permissions(Permissions.All);
 
-    const raw = this.roles.get(this.id).permissions;
-    let perms = typeof raw === "string" ? BigInt(raw) : raw.allow;
+    const raw = this.roles.get(this.id)?.permissions;
+    let perms = typeof raw === "string" ? BigInt(raw) : raw?.allow || 0n;
 
     if (perms & Permissions.Flags.Administrator)
       return new Permissions(Permissions.All);
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!member) member = this.members.get(userId);
 
-    for (const roleId of member.roles) {
+    for (const roleId of member!.roles) {
       const role = this.roles.get(roleId);
 
       const perm =
-        typeof role.permissions === "string"
-          ? BigInt(role.permissions)
-          : role.permissions.allow;
+        typeof role!.permissions === "string"
+          ? BigInt(role!.permissions)
+          : role!.permissions.allow;
 
       if (perm & Permissions.Flags.Administrator) perms = Permissions.All;
       else perms |= perm;
@@ -771,14 +778,14 @@ export class Guild extends BaseGuild {
   }
 
   createApplicationCommand(options: RESTPostAPIApplicationCommandsJSONBody) {
-    return this._client.application.createGuildCommand(this.id, options);
+    return this._client.application!.createGuildCommand(this.id, options);
   }
 
   editApplicationCommand(
     commandId: string,
     options: RESTPatchAPIApplicationCommandJSONBody
   ) {
-    return this._client.application.editGuildCommand(
+    return this._client.application!.editGuildCommand(
       this.id,
       commandId,
       options
@@ -786,13 +793,13 @@ export class Guild extends BaseGuild {
   }
 
   deleteApplicationCommand(commandId: string) {
-    return this._client.application.deleteGuildCommand(this.id, commandId);
+    return this._client.application!.deleteGuildCommand(this.id, commandId);
   }
 
   bulkOverwriteApplicationCommands(
     commands: RESTPutAPIApplicationCommandsJSONBody
   ) {
-    return this._client.application.bulkOverwriteGuildCommands(
+    return this._client.application!.bulkOverwriteGuildCommands(
       this.id,
       commands
     );
@@ -810,7 +817,7 @@ export class Guild extends BaseGuild {
   _update(data: APIGuild) {
     if ("nsfw_level" in data) this.nsfwLevel = data.nsfw_level;
     if ("premium_subscription_count" in data)
-      this.premiumSubscriptionCount = data.premium_subscription_count;
+      this.premiumSubscriptionCount = data.premium_subscription_count ?? null;
     if ("icon_hash" in data) this.iconHash = data.icon_hash;
     if ("widget_channel_id" in data)
       this.widgetChannelId = data.widget_channel_id;
@@ -833,7 +840,7 @@ export class ScheduledEvent extends Base {
   /**
    * The channel id in which the scheduled event will be hosted, or null if entity type is EXTERNAL The channel id in which the scheduled event will be hosted, or null if entity type is EXTERNAL The channel id in which the scheduled event will be hosted, or null if entity type is EXTERNAL
    */
-  channelId: string;
+  channelId: string | null;
   /**
    * The user that created the scheduled event
    */
@@ -841,15 +848,15 @@ export class ScheduledEvent extends Base {
   /**
    * The id of the user that created the scheduled event
    */
-  creatorId: string;
+  creatorId?: string | null;
   /**
    * The description of the scheduled event
    */
-  description: string;
+  description?: string | null;
   /**
    * The id of the hosting entity associated with the scheduled event
    */
-  entityId: string;
+  entityId: string | null;
   /**
    * The type of hosting entity associated with the scheduled event
    */
@@ -857,7 +864,7 @@ export class ScheduledEvent extends Base {
   /**
    * The entity metadata for the scheduled event The entity metadata for the scheduled event The entity metadata for the scheduled event
    */
-  entityMetadata: APIGuildScheduledEventEntityMetadata;
+  entityMetadata: APIGuildScheduledEventEntityMetadata | null;
   /**
    * The privacy level of the scheduled event
    */
@@ -865,7 +872,7 @@ export class ScheduledEvent extends Base {
   /**
    * The number of users subscribed to the scheduled event
    */
-  userCount: number;
+  userCount?: number | null;
   /**
    * The status of the scheduled event
    */
