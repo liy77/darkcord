@@ -78,22 +78,22 @@ export namespace Resolvable {
       resolved = guildResolvable;
     }
 
-    if (Array.isArray(resolved.partial.roles)) {
-      for (const role of resolved.partial.roles) {
+    if (Array.isArray(resolved.rawData.roles)) {
+      for (const role of resolved.rawData.roles) {
         resolved.roles.add(role);
         client.cache.roles.add(role);
       }
     }
 
-    if (Array.isArray(resolved.partial.emojis)) {
-      for (const emoji of resolved.partial.emojis) {
+    if (Array.isArray(resolved.rawData.emojis)) {
+      for (const emoji of resolved.rawData.emojis) {
         resolved.emojis.add(emoji);
         client.cache.emojis.add(emoji);
       }
     }
 
-    if (Array.isArray(resolved.partial.stickers)) {
-      for (const sticker of resolved.partial.stickers) {
+    if (Array.isArray(resolved.rawData.stickers)) {
+      for (const sticker of resolved.rawData.stickers) {
         resolved.stickers.add(sticker);
       }
     }

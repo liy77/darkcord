@@ -325,7 +325,7 @@ export class Guild extends BaseGuild {
    * The type of Student Hub the guild is
    */
   hubType: GuildHubType | null;
-  declare partial: DataWithClient<APIGuild>;
+  declare rawData: APIGuild;
   /**
    * Members of guild
    */
@@ -399,22 +399,22 @@ export class Guild extends BaseGuild {
 
     this._update(data);
 
-    if (Array.isArray(this.partial.roles)) {
-      for (const role of this.partial.roles) {
+    if (Array.isArray(this.rawData.roles)) {
+      for (const role of this.rawData.roles) {
         this.roles.add(role);
         this._client.cache.roles.add(role);
       }
     }
 
-    if (Array.isArray(this.partial.emojis)) {
-      for (const emoji of this.partial.emojis) {
+    if (Array.isArray(this.rawData.emojis)) {
+      for (const emoji of this.rawData.emojis) {
         this.emojis.add(emoji);
         this._client.cache.emojis.add(emoji);
       }
     }
 
-    if (Array.isArray(this.partial.stickers)) {
-      for (const sticker of this.partial.stickers) {
+    if (Array.isArray(this.rawData.stickers)) {
+      for (const sticker of this.rawData.stickers) {
         this.stickers.add(sticker);
       }
     }

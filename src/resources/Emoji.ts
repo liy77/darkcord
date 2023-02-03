@@ -37,7 +37,7 @@ export class Emoji {
    */
   id: string | null;
 
-  partial: APIEmoji;
+  rawData: APIEmoji;
 
   constructor(data: APIEmoji) {
     this.id = data.id;
@@ -46,7 +46,7 @@ export class Emoji {
     this.available = data.available;
     this.name = data.name;
     this.animated = Boolean(data.animated);
-    this.partial = data;
+    this.rawData = data;
   }
 
   createdAt() {

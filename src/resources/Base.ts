@@ -18,14 +18,14 @@ export class Base {
    * object id
    */
   id: string;
-  partial: Record<string, any> & { id?: string };
+  rawData: Record<string, any> & { id?: string };
   constructor(
     data: Record<string, any> & { id?: string },
     client?: AnyClient,
     id?: string
   ) {
     this._client = client as AnyClient;
-    this.partial = data;
+    this.rawData = data;
     this.id = (data.id ?? id) as string;
   }
 

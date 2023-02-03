@@ -1,10 +1,6 @@
 import { Invite } from "@resources/Invite";
-import {
-  APIChannel,
-  GatewayInviteCreateDispatchData,
-} from "discord-api-types/v10";
+import { GatewayInviteCreateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
-import { Channel } from "@resources/Channel";
 import { Events } from "@utils/Constants";
 
 export class InviteCreate extends Event {
@@ -16,8 +12,7 @@ export class InviteCreate extends Event {
 
     const invite = new Invite({
       ...data,
-      channel:
-        channel instanceof Channel ? (channel.partial as APIChannel) : channel ?? null,
+      channel: channel!.rawData,
       client: this.client,
     });
 
