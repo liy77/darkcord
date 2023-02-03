@@ -1,7 +1,3 @@
-[data-aria-hidden='true'] {
-	filter: blur(3.33px);
-}
-
 [cmdk-overlay] {
 	background-color: rgba(0, 0, 0, 0.33);
 	height: 100vh;
@@ -93,7 +89,7 @@
 	margin: 4px 0;
 }
 
-[cmdk-group-heading] {
+/* [cmdk-group-heading] {
 	font-size: 0.75rem;
 	line-height: 1.5833333;
 	user-select: none;
@@ -102,7 +98,7 @@
 	align-items: center;
 	gap: 4px;
 	margin: 0 2px;
-}
+} */
 
 [cmdk-empty] {
 	display: flex;

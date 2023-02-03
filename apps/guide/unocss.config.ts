@@ -40,7 +40,14 @@ export default defineConfig({
 					'font-size': '1em',
 					'font-weight': 'unset',
 				},
+				':where(:not(pre) > code)::before': {
+					content: '""',
+				},
+				':where(:not(pre) > code)::after': {
+					content: '""',
+				},
 				a: {
+					color: '#60a5fa',
 					'text-decoration': 'none',
 				},
 				'a > img': {
@@ -88,6 +95,15 @@ export default defineConfig({
 		],
 	],
 	theme: {
+		animation: {
+			keyframes: {
+				search: {
+					'0%': { width: '0%' },
+					'80%': { width: '100%', opacity: 1 },
+					'100%': { width: '100%', opacity: 0 },
+				},
+			},
+		},
 		colors: {
 			'background-default': '#151718',
 		},
