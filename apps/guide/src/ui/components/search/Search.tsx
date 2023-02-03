@@ -1,18 +1,19 @@
-import { Dispatch, SetStateAction } from 'react';
-import { CommandMenu } from '../command';
-import { CommandMenuTrigger } from '../command/CommandMenuTrigger';
+import type { Dispatch, SetStateAction } from 'react';
+import { CommandMenu, CommandMenuTrigger } from '..';
+import type { MDXPage } from '../Sidebar/SidebarItems.jsx';
 
-type SearchProps = {
+interface SearchProps {
 	open: boolean;
+	pages?: MDXPage[] | undefined;
 	setOpen: Dispatch<SetStateAction<boolean>>;
 	visibleOnMobile: boolean;
-};
+}
 
-export function Search({ open, setOpen, visibleOnMobile }: SearchProps) {
+export function Search({ open, setOpen, visibleOnMobile, pages }: SearchProps) {
 	return (
 		<>
-			<CommandMenu open={open} setOpen={setOpen} />
-			<CommandMenuTrigger visibleOnMobile={visibleOnMobile} setOpen={setOpen} />
+			<CommandMenu open={open} pages={pages} setOpen={setOpen} />
+			<CommandMenuTrigger setOpen={setOpen} visibleOnMobile={visibleOnMobile} />
 		</>
 	);
 }

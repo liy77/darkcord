@@ -1,5 +1,8 @@
-export * from './command';
-export * from './discord';
-export * from './search';
-export * from './Section';
+export * from './CommandMenu';
+export * from './ExternalLink.jsx';
+export * from './Header';
+export * from './Outline.jsx';
+export * from './Search';
+export * from './Section.jsx';
+export * from './Sidebar';
 

@@ -7,7 +7,7 @@
 		"noEmit": true,
 		"allowJs": false,
 		"incremental": true,
-		"esModuleInterop": true,
+		"strictNullChecks": true,
 		"skipLibCheck": true,
 		"types": ["@astrojs/image/client"],
 		"paths": {

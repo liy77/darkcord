@@ -1,3 +1,3 @@
 export function isAppleDevice() {
-	return /(Mac|iPhone|iPod|iPad)/i.test(navigator?.userAgent ?? '');
+	return /mac|iphone|ipod|ipad/i.test(navigator?.userAgent ?? '');
 }

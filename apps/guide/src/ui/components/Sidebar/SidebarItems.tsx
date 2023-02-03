@@ -1,9 +1,9 @@
-import { MDXInstance } from 'astro';
+import type { MDXInstance } from 'astro';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-use';
-import { Section } from '~/ui/components/Section.jsx';
+import { Section } from '../../../ui';
 
-export type MDXPage = MDXInstance<{ category: string; title: string }>;
+export type MDXPage = MDXInstance<{ category: string; description: string; title: string }>;
 
 export function SidebarItems({ pages }: { pages: MDXPage[] }) {
 	const state = useLocation();
@@ -36,6 +36,7 @@ export function SidebarItems({ pages }: { pages: MDXPage[] }) {
 							? 'text-blue-4'
 							: 'dark:hover:bg-dark-200 dark:active:bg-dark-100 hover:bg-light-700 active:bg-light-800'
 					}`}
+					// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 					href={member.url || '/'}
 					key={index}
 					title={member.frontmatter.title}

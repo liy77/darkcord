@@ -1,5 +1,5 @@
 {
-	"extends": ["neon/react", "neon/astro", "neon/node", "neon/prettier"],
+	"extends": ["neon/node", "neon/typescript", "neon/prettier", "neon/react", "neon/astro", "neon/prettier"],
 	"parserOptions": {
 		"project": "./tsconfig.eslint.json"
 	},
@@ -10,6 +10,7 @@
 	},
 	"ignorePatterns": ["**/dist/*"],
 	"rules": {
-		"react/jsx-filename-extension": [1, { "extensions": [".tsx", ".astro"] }]
+		"react/jsx-filename-extension": [1, { "extensions": [".tsx", ".astro"] }],
+		"@typescript-eslint/consistent-type-definitions": ["error", "interface"]
 	}
 }
