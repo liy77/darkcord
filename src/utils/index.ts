@@ -7,7 +7,6 @@ import {
 import { FormData, fetch } from "undici";
 import { Blob } from "node:buffer";
 import {
-  APIChannel,
   APIInteractionResponse,
   Utils,
 } from "discord-api-types/v10";
@@ -121,6 +120,7 @@ export function extractMessageData(
 export async function buildAttachment(
   attachment: MessageAttachment & { file: URL | string }
 ): Promise<MessageAttachment> {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof attachment !== "object" || !attachment.file || !attachment.name) {
     throw MakeError({
       name: "InvalidAttachmentError",
@@ -182,7 +182,7 @@ export function camelCase(str: string) {
     .replaceAll(/['\u2019]/g, "")
     .match(/[^\x00-\x2ff\x3a-\x40\x5b-\x60\x7b-\x7f]+/g);
 
-  return words
+  return words!
     .map((v, index) => {
       if (index) {
         let s = v.toLowerCase();
@@ -262,22 +262,20 @@ export function isEqual<_1 extends any, _2 extends any>(
 
   if (typeof o1 === "object" && typeof o2 === "object") {
     return (
-      Object.entries(o1).every(equalObject(o2)) &&
-      Object.entries(o2).every(equalObject(o1))
+      Object.entries(o1 as Record<string, unknown>).every(equalObject(o2)) &&
+      Object.entries(o2 as Record<string, unknown>).every(equalObject(o1))
     );
   }
 
   return false;
 }
 
-export function structuredClone<T>(o: T): T {
+export function structuredClone<T>(o: T): T | null {
   if (!o) return null;
   return Object.assign(Object.create(o as unknown as object), o);
 }
 
-export function isTextBasedChannel(
-  c: Channel | APIChannel
-): c is TextBasedChannel {
+export function isTextBasedChannel(c: Channel): c is TextBasedChannel {
   return (
     c instanceof TextBasedChannel ||
     c instanceof GuildTextChannel ||
