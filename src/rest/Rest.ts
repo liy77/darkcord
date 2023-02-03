@@ -15,6 +15,7 @@ import {
   APIGuildForumChannel,
   APIGuildIntegration,
   APIGuildMember,
+  APIGuildScheduledEvent,
   APIGuildTextChannel,
   APIInteractionResponseCallbackData,
   APIMessage,
@@ -180,7 +181,7 @@ export class Rest extends EventEmitter {
       | APICommandAutocompleteInteractionResponseCallbackData,
     type: InteractionResponseType
   ) {
-    let d: BodyInit, contentType: string;
+    let d: BodyInit, contentType: string | undefined;
     if ("choices" in data) d = data;
     else {
       const extracted = extractMessageData(
@@ -258,11 +259,11 @@ export class Rest extends EventEmitter {
     ) as Promise<APIMessage>;
   }
 
-  deleteWebhookWithToken(id: string) {
-    return this.delete(Routes.webhook(id, this.token));
+  deleteWebhookWithToken(id: string, token: string) {
+    return this.delete(Routes.webhook(id, token));
   }
 
-  modifyWebhookWithToken(id: string, data: RESTPostAPIChannelWebhookJSONBody) {
+  modifyWebhookWithToken(id: string, token: string, data: RESTPostAPIChannelWebhookJSONBody) {
     return this.patch(
       Routes.webhook(id, this.token),
       data
@@ -320,9 +321,9 @@ export class Rest extends EventEmitter {
   getGuildBans(guildId: string, options?: RESTGetAPIGuildBansQuery) {
     const query = new URLSearchParams();
 
-    if (options.after) query.append("after", options.after);
-    if (options.before) query.append("before", options.before);
-    if (options.limit) query.append("limit", options.limit.toString());
+    if (options?.after) query.append("after", options.after);
+    if (options?.before) query.append("before", options.before);
+    if (options?.limit) query.append("limit", options.limit.toString());
 
     return this.get(
       Routes.guildBans(guildId) + options ? "?" + query.toString() : ""
@@ -544,7 +545,10 @@ export class Rest extends EventEmitter {
     userId: string,
     options: RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody
   ) {
-    return this.patch(Routes.guildVoiceState(guildId, userId), options);
+    return this.patch(
+      Routes.guildVoiceState(guildId, userId),
+      options
+    ) as Promise<void>;
   }
 
   createGuildScheduledEvent(
@@ -552,7 +556,9 @@ export class Rest extends EventEmitter {
     options: RESTPostAPIGuildScheduledEventJSONBody,
     reason?: string
   ) {
-    return this.post(Routes.guildScheduledEvents(guildId), options, { reason });
+    return this.post(Routes.guildScheduledEvents(guildId), options, {
+      reason,
+    }) as Promise<APIGuildScheduledEvent>;
   }
 
   deleteWebhookMessage(
@@ -698,6 +704,16 @@ export class Rest extends EventEmitter {
     options: RESTPatchAPIGuildJSONBody,
     reason?: string
   ) {
-    return this.patch(Routes.guild(guildId), options, { reason }) as Promise<APIGuild>;
+    return this.patch(Routes.guild(guildId), options, {
+      reason,
+    }) as Promise<APIGuild>;
+  }
+
+  editMessage(channelId: string, messageId: string, data: MessagePostData) {
+    const { d, contentType } = extractMessageData(data);
+
+    return this.patch(Routes.channelMessage(channelId, messageId), d, {
+      contentType,
+    }) as Promise<APIMessage>;
   }
 }

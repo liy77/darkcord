@@ -96,7 +96,7 @@ export class Message extends Base {
   /**
    * Guild was message has sent
    */
-  guild?: Guild;
+  guild: Guild | null;
   /**
    * This message has resolved
    */
@@ -105,17 +105,14 @@ export class Message extends Base {
    * Reactions in this message
    */
   reactions: Cache<Reaction | APIReaction>;
-  guildId: string;
+  guildId?: string;
   constructor(data: DataWithClient<APIMessage>, guild?: Guild) {
     super(data, data.client);
 
     this.isResolved = false;
     this.channelId = data.channel_id;
     this.timestamp = new Date(data.timestamp);
-    this.content = data.content;
-    this.mentionEveryone = data.mention_everyone;
-    this.embeds = data.embeds;
-    this.attachments = data.attachments;
+    this.editedTimestamp = null;
     this.referencedMessage = data.referenced_message
       ? Resolvable.resolveMessage(
           new Message(
@@ -123,7 +120,7 @@ export class Message extends Base {
               ...data.referenced_message,
               client: this._client,
             },
-            this.guild
+            this.guild!
           ),
           this._client
         )
@@ -132,16 +129,12 @@ export class Message extends Base {
     this.nonce = data.nonce;
     this.user = new User({ ...data.author, client: this._client });
     this.type = data.type;
-    this.position = data.position;
-    this.flags = new MessageFlags(data.flags);
-    this.editedTimestamp = data.edited_timestamp
-      ? new Date(data.edited_timestamp)
-      : null;
-    this.stickerItems = data.sticker_items;
+
     this.channel = null;
     this.guild = guild ?? null;
     this.guildId = guild?.id;
     this.reactions = new Cache();
+    this._update(data);
 
     if (Array.isArray(data.reactions)) {
       for (const reaction of data.reactions) {
@@ -149,7 +142,11 @@ export class Message extends Base {
           ? reaction
           : new Reaction({ ...reaction, client: this._client });
 
-        this.reactions._add(resolved, true, resolved.emoji.id ?? resolved.emoji.name);
+        this.reactions._add(
+          resolved,
+          true,
+          (resolved.emoji.id ?? resolved.emoji.name) as string
+        );
       }
     }
   }
@@ -174,7 +171,7 @@ export class Message extends Base {
       throw new Error("Message not resolved");
     }
 
-    return this.channel.createMessage(content);
+    return this.channel?.createMessage(content);
   }
 
   async createReaction(emoji: string | Emoji): Promise<APIReaction | Reaction> {
@@ -197,7 +194,7 @@ export class Message extends Base {
     return this.reactions._add(
       reaction,
       true,
-      reaction.emoji.id ?? reaction.emoji.name
+      (reaction.emoji.id ?? reaction.emoji.name) as string
     );
   }
 
@@ -206,6 +203,32 @@ export class Message extends Base {
       throw new Error("Message not resolved");
     }
 
-    return this.channel.deleteMessage(this.id, reason);
+    return this.channel?.deleteMessage(this.id, reason);
+  }
+
+  async edit(content: MessagePostData) {
+    const data = await this._client.rest.editMessage(
+      this.channelId,
+      this.id,
+      content
+    );
+
+    return this._update(data);
+  }
+
+  _update(data: APIMessage) {
+    if ("content" in data) this.content = data.content;
+    if ("mention_everyone" in data)
+      this.mentionEveryone = data.mention_everyone;
+    if ("embeds" in data) this.embeds = data.embeds;
+    if ("attachments" in data) this.attachments = data.attachments;
+    if ("position" in data) this.position = data.position ?? 0;
+    if ("flags" in data && data.flags)
+      this.flags = new MessageFlags(data.flags);
+    if ("edited_timestamp" in data && data.edited_timestamp)
+      this.editedTimestamp = new Date(data.edited_timestamp);
+    if ("sticker_items" in data) this.stickerItems = data.sticker_items;
+
+    return this;
   }
 }
