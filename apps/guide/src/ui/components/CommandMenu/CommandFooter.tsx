@@ -28,8 +28,8 @@ export function KeyboardComponent({ content }: { content: string }) {
 	);
 }
 
-export function CommandFooter() {
-	return (
+export function CommandFooter({ visibleOnMobile }: { visibleOnMobile: boolean }) {
+	return visibleOnMobile ? (
 		<div className="flex h-[44px] items-center gap-[16px] pl-[16px]">
 			<Text>
 				<KeyboardComponent content="↵" />
@@ -49,5 +49,5 @@ export function CommandFooter() {
 				<span>to close</span>
 			</Text>
 		</div>
-	);
+	) : null;
 }

@@ -19,7 +19,7 @@ export function DocsItem({ setOpen, link, title, description }: DocsItemProps) {
 					setOpen(false);
 				}}
 			>
-				<div className="mt-2 inline-flex items-center gap-3 break-words group-[aria-selected=true]:hover:bg-white">
+				<div className="mt-2 inline-flex items-center gap-3 break-words">
 					<div className="shrink-0">
 						<GuideIcon />
 					</div>

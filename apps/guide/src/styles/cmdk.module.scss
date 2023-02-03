@@ -6,7 +6,6 @@
 	top: 0;
 	width: 100vw;
 	z-index: 200;
-
 	@media screen and (max-width: 900px) {
 		display: none;
 	}
@@ -40,6 +39,7 @@
 	appearance: none;
 	background: transparent;
 	flex: 1;
+	font: inherit;
 	height: 100%;
 	outline: none;
 	padding: 12px 44px;
@@ -89,7 +89,7 @@
 	margin: 4px 0;
 }
 
-/* [cmdk-group-heading] {
+[cmdk-group-heading] {
 	font-size: 0.75rem;
 	line-height: 1.5833333;
 	user-select: none;
@@ -98,7 +98,7 @@
 	align-items: center;
 	gap: 4px;
 	margin: 0 2px;
-} */
+}
 
 [cmdk-empty] {
 	display: flex;
