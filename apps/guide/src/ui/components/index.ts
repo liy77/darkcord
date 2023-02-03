@@ -1,14 +1,8 @@
 export * from './CommandMenu';
-export * from './Discord/Message.jsx';
-export * from './Discord/MessageAuthor.jsx';
-export * from './Discord/MessageAuthorReply.jsx';
-export * from './Discord/MessageBaseReply.jsx';
-export * from './Discord/MessageInteraction.jsx';
-export * from './Discord/MessageReply.jsx';
-export * from './Discord/Messages.jsx';
 export * from './ExternalLink.jsx';
 export * from './Header';
 export * from './Outline.jsx';
 export * from './Search';
 export * from './Section.jsx';
 export * from './Sidebar';
+
