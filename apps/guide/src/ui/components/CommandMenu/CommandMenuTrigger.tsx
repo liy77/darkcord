@@ -37,11 +37,11 @@ export function CommandMenuTrigger({ setOpen, visibleOnMobile }: CommandMenuTrig
 			className="focus:ring-width-2 focus:ring-blue border-base rounded border px-4 py-2.5 outline-0 focus:ring"
 			onClick={() => setOpen(true)}
 		>
-			<div className="flex flex-row place-items-center gap-24">
-				<div className="flex flex-row place-items-center gap-2">
+			<div className="flex flex-row place-items-center gap-4">
+
 					<SearchIcon color="#787f85" size={iconSize.sm} />
 					<span className="opacity-65">Search</span>
-				</div>
+
 
 				<div className="opacity-65 flex flex-row place-items-center gap-2">
 					{isMac !== null && <div>{isMac ? '⌘' : 'Ctrl'} + K</div>}

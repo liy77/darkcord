@@ -1,7 +1,7 @@
 ---
 import { Separator } from 'ariakit/separator';
 import type { MarkdownLayoutProps } from 'astro';
-import { ExternalLink, Header, Outline, SidebarItems } from '../ui';
+import { ExternalLink,Header,Outline,SidebarItems } from '../ui';
 import { generateGithubURL } from '../utils/generateGithubURL.js';
 
 const pages = await Astro.glob<{ category: string; description: string; title: string }>('../pages/**/*.mdx');
@@ -40,7 +40,7 @@ const { headings, frontmatter, url } = Astro.props;
 	});
 </script>
 
-<Header client:load searchPages={pages}>
+<Header url={url} client:load searchPages={pages}>
 	<div class="flex flex-col gap-3 p-3 pb-32 lg:pb-12" slot="pages">
 		<SidebarItems client:load pages={pages} />
 	</div>

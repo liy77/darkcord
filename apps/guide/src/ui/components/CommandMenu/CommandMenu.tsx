@@ -10,9 +10,10 @@ interface CommandMenuProps {
 	open: boolean;
 	pages: MDXPage[] | undefined;
 	setOpen: Dispatch<SetStateAction<boolean>>;
+	visibleOnMobile: boolean;
 }
 
-export function CommandMenu({ open, setOpen, pages }: CommandMenuProps) {
+export function CommandMenu({ open, setOpen, pages, visibleOnMobile }: CommandMenuProps) {
 	const [query, setQuery] = useState('');
 	const [searchResults, setSearchResults] = useState<MDXPage[]>([]);
 
@@ -63,14 +64,15 @@ export function CommandMenu({ open, setOpen, pages }: CommandMenuProps) {
 			/>
 
 			<Command.Input
-				className="text-dark dark:text-[#ecedee]"
+				className="text-dark-4 dark:text-[#ecedee]"
 				onValueChange={setQuery}
-				placeholder="Quick search..."
+				placeholder="Search anything..."
 				value={query}
 			/>
 
 			<Command.List>
-				<Command.Empty>No results found</Command.Empty>
+				<Command.Group className="text-dark-4 dark:text-[#9ba1a6]" heading="Darkcord guide" />
+
 				{query
 					? searchResultsItems
 					: pages?.map((page) => (
@@ -83,10 +85,10 @@ export function CommandMenu({ open, setOpen, pages }: CommandMenuProps) {
 							/>
 					  ))}
 
-				{/* <Command.Group className="text-dark dark:text-[#9ba1a6]" heading="Darkcord guide" /> */}
+				<Command.Empty>No results found</Command.Empty>
 			</Command.List>
 
-			<CommandFooter />
+			<CommandFooter visibleOnMobile={visibleOnMobile} />
 		</Command.Dialog>
 	);
 }
