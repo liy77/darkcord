@@ -1,7 +1,6 @@
 import { MessageTimestampStyle } from "@typings/index";
 
 export enum Partials {
-  Channel,
   Emoji,
   User,
   Reaction,
