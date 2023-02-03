@@ -22,6 +22,7 @@ import {
   ForumLayoutType,
   GuildTextChannelType,
   RESTPatchAPIChannelJSONBody,
+  RESTPostAPIChannelWebhookJSONBody,
   RESTPostAPIStageInstanceJSONBody,
   SortOrderType,
   ThreadAutoArchiveDuration,
@@ -47,6 +48,7 @@ import { Emoji } from "./Emoji";
 import { channelMention } from "@utils/Constants";
 import { Resolvable } from "@utils/Resolvable";
 import { isTextBasedChannel, transformMessagePostData } from "@utils/index";
+import { Webhook } from "./Webhook";
 
 export class ChannelFlags extends BitField<CFlags, typeof CFlags> {
   constructor(flags: CFlags) {
@@ -72,6 +74,7 @@ export class Channel extends Base {
    */
   flags: ChannelFlags | null;
 
+  declare rawData: APIChannel;
   constructor(data: DataWithClient<APIChannelBase<ChannelType>>) {
     super(data, data.client);
 
@@ -389,6 +392,23 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
       ),
       this._client
     );
+  }
+
+  async createWebhook(data: RESTPostAPIChannelWebhookJSONBody) {
+    const webhook = await this._client.rest.createWebhook(this.id, data);
+    return new Webhook({ ...webhook, client: this._client });
+  }
+
+  async fetchWebhook(webhookId: string) {
+    const data = await this._client.rest.getWebhook(webhookId);
+
+    return new Webhook({ ...data, client: this._client });
+  }
+
+  async fetchWebhooks() {
+    const data = await this._client.rest.getChannelWebhooks(this.id);
+
+    return data.map((d) => new Webhook({ ...d, client: this._client }));
   }
 
   _update(data: APITextChannel) {
