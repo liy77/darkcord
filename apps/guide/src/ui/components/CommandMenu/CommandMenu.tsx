@@ -14,7 +14,7 @@ interface CommandMenuProps {
 
 export function CommandMenu({ open, setOpen, pages }: CommandMenuProps) {
 	const [query, setQuery] = useState('');
-	const [searchResults, setSearchResults] = useState<any[]>([]);
+	const [searchResults, setSearchResults] = useState<MDXPage[]>([]);
 
 	const searchResultsItems = useMemo(
 		() =>

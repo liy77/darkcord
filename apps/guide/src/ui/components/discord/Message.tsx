@@ -6,6 +6,16 @@ import { DiscordMessageInteraction } from './MessageInteraction.jsx';
 import type { IDiscordMessageReply } from './MessageReply';
 import { DiscordMessageReply } from './MessageReply.jsx';
 
+interface IMessage {
+	author?: IDiscordMessageAuthor | undefined;
+	authorNode?: ReactNode | undefined;
+	followUp?: boolean;
+	interaction?: IDiscordMessageInteraction | undefined;
+	interactionNode?: ReactNode | undefined;
+	reply?: IDiscordMessageReply | undefined;
+	replyNode?: ReactNode | undefined;
+}
+
 export function DiscordMessage({
 	reply,
 	replyNode,
@@ -15,15 +25,7 @@ export function DiscordMessage({
 	authorNode,
 	followUp,
 	children,
-}: PropsWithChildren<{
-	author?: IDiscordMessageAuthor | undefined;
-	authorNode?: ReactNode | undefined;
-	followUp?: boolean;
-	interaction?: IDiscordMessageInteraction | undefined;
-	interactionNode?: ReactNode | undefined;
-	reply?: IDiscordMessageReply | undefined;
-	replyNode?: ReactNode | undefined;
-}>) {
+}: PropsWithChildren<IMessage>) {
 	return (
 		<div className="relative">
 			<div className={`pl-18 hover:bg-[rgb(4_4_5)]/7 group py-0.5 pr-12 leading-snug ${followUp ? '' : 'mt-4'}`}>
