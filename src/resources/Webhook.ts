@@ -1,11 +1,8 @@
 import {
   APIPartialChannel,
   APIPartialGuild,
-  APIUser,
   APIWebhook,
   RESTPostAPIChannelWebhookJSONBody,
-  RouteBases,
-  Routes,
   WebhookType,
 } from "discord-api-types/v10";
 import { Rest } from "../rest/Rest";
@@ -33,11 +30,11 @@ export class Webhook extends Base {
   /**
    * the default name of the webhook
    */
-  name: string;
+  name: string | null;
   /**
    * the default user avatar hash of the webhook
    */
-  avatar: string;
+  avatar: string | null;
   /**
    * the secure token of the webhook (returned for Incoming Webhooks)
    */
@@ -45,7 +42,7 @@ export class Webhook extends Base {
   /**
    * the bot/OAuth2 application that created this webhook
    */
-  applicationId: string;
+  applicationId: string | null;
   /**
    * the guild of the channel that this webhook is following (returned for Channel Follower Webhooks)
    */
@@ -81,14 +78,17 @@ export class Webhook extends Base {
   }
 
   sendMessage(data: MessagePostData) {
+    if (!this.token) return Promise.resolve()
     return this.rest.executeWebhook(this.id, this.token, data);
   }
 
   delete() {
-    return this.rest.deleteWebhookWithToken(this.id);
+    if (!this.token) return Promise.resolve()
+    return this.rest.deleteWebhookWithToken(this.id, this.token);
   }
 
   edit(data: RESTPostAPIChannelWebhookJSONBody) {
-    return this.rest.modifyWebhookWithToken(this.id, data);
+    if (!this.token) return Promise.resolve()
+    return this.rest.modifyWebhookWithToken(this.id, this.token, data);
   }
 }
