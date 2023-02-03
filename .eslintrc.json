@@ -1,0 +1,18 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "plugins": ["@typescript-eslint"],
+  "ignorePatterns": ["**/dist/*", "**/typing/*", "**/apps/*", "**/*.js"],
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": "error",
+    "@typescript-eslint/ban-types": "error",
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/no-extraneous-class": "error",
+    "@typescript-eslint/no-unnecessary-condition": "error"
+  }
+}
