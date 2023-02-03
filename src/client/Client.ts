@@ -10,13 +10,11 @@ import {
 } from "@typings/index";
 import { bitsArrayToBits, MakeError } from "@utils/index";
 import {
-  APIGatewayBotInfo,
   ApplicationFlags,
   GatewayPresenceUpdateData,
 } from "discord-api-types/v10";
 import EventEmitter from "node:events";
 
-import { GatewayShard } from "../gateway/Gateway";
 import { Rest } from "../rest/Rest";
 import { WebServer } from "./WebServer";
 import { WebSocket } from "./WebSocket";
@@ -42,7 +40,7 @@ export class BaseClient<E> extends EventEmitter {
   /**
    * Application of this client
    */
-  application!: ClientApplication;
+  application: ClientApplication | null;
   /**
    * Client has ready
    */
@@ -55,7 +53,14 @@ export class BaseClient<E> extends EventEmitter {
   constructor(options?: BaseClientOptions) {
     super();
 
+    if (!options || typeof options !== "object") {
+      options = {
+        partials: [],
+      };
+    }
+
     options.partials ??= [];
+
     this.isReady = false;
     this.options = options;
     this.rest = new Rest();
@@ -79,9 +84,18 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
   webserver: WebServer;
   declare options: InteractionClientOptions;
   cache: CacheManager;
-  user: User;
+  user: User | null;
   constructor(public publicKey: string, options?: InteractionClientOptions) {
     super(options);
+
+    if (!options || typeof options !== "object") {
+      throw new TypeError("Invalid client options");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!options.webserver || typeof options.webserver !== "object") {
+      throw new TypeError("Invalid webserver options");
+    }
 
     if (!publicKey || typeof publicKey !== "string")
       throw MakeError({
@@ -91,15 +105,16 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
 
     if (
       options.rest?.token &&
-      (!options.rest?.token || typeof options.rest?.token !== "string")
-    )
+      (!options.rest.token || typeof options.rest.token !== "string")
+    ) {
       throw MakeError({
         name: "InvalidToken",
         message: "Invalid token was provided.",
       });
+    }
 
     this.user = null;
-    this.rest.token = options.rest?.token.replace(/^(Bot|Bearer)\s*/i, "");
+    this.rest.token = options.rest?.token?.replace(/^(Bot|Bearer)\s*/i, "");
 
     if (this.rest.token) {
       this.rest.requestHandler.setToken(this.rest.token);
@@ -159,7 +174,7 @@ export class Client extends BaseClient<ClientEvents> {
   /**
    * Client user
    */
-  user!: User;
+  user: User | null;
   /**
    * Plugin manager for library plugins
    */
@@ -167,8 +182,14 @@ export class Client extends BaseClient<ClientEvents> {
   constructor(token: string, options: ClientOptions) {
     super(options);
 
-    if (!options) {
-      throw new TypeError("Missing Options");
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!options || typeof options !== "object") {
+      throw new TypeError("Invalid client options");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!options.gateway || typeof options.gateway !== "object") {
+      throw new TypeError("Invalid gateway options");
     }
 
     options.gateway.compress = Boolean(options.gateway.compress);
@@ -185,10 +206,11 @@ export class Client extends BaseClient<ClientEvents> {
       options.gateway.encoding = Erlpack ? "etf" : "json";
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!options.gateway.intents) {
       throw MakeError({
         name: "MissingIntents",
-        message: "valid intents must be provided for the client",
+        message: "Valid intents must be provided for the client",
       });
     }
 
@@ -203,8 +225,10 @@ export class Client extends BaseClient<ClientEvents> {
       options.gateway.totalShards = undefined;
     }
 
+    options.gateway.disabledEvents ??= [];
+
     this.pluginManager = new PluginManager(this);
-    if (options.plugins?.length) {
+    if (options.plugins.length) {
       for (const plugin of options.plugins) {
         plugin(this.pluginManager);
       }
