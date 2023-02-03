@@ -2,13 +2,15 @@ import {
   APIPartialChannel,
   APIPartialGuild,
   APIWebhook,
-  RESTPostAPIChannelWebhookJSONBody,
+  RESTPatchAPIWebhookJSONBody,
   WebhookType,
 } from "discord-api-types/v10";
 import { Rest } from "../rest/Rest";
 import { DataWithClient, MessagePostData } from "@typings/index";
 import { Base } from "./Base";
 import { User } from "./User";
+import { Guild } from "./Guild";
+import { GuildChannel } from "./Channel";
 
 export class Webhook extends Base {
   /**
@@ -46,15 +48,18 @@ export class Webhook extends Base {
   /**
    * the guild of the channel that this webhook is following (returned for Channel Follower Webhooks)
    */
-  sourceGuild?: APIPartialGuild;
+  sourceGuild?: Guild | APIPartialGuild;
   /**
    * the channel that this webhook is following (returned for Channel Follower Webhooks)
    */
-  sourceChannel?: APIPartialChannel;
+  sourceChannel?: GuildChannel | APIPartialChannel;
   /**
    * the url used for executing the webhook (returned by the webhooks OAuth2 flow)
    */
   url?: string;
+  /**
+   * Rest to make requests
+   */
   rest: Rest;
 
   constructor(data: DataWithClient<APIWebhook>) {
@@ -62,33 +67,53 @@ export class Webhook extends Base {
 
     this.type = data.type;
     this.guildId = data.guild_id;
-    this.channelId = data.channel_id;
     this.user = data.user
       ? new User({ ...data.user, client: this._client })
       : null;
-    this.name = data.name;
-    this.avatar = data.avatar;
     this.token = data.token;
     this.applicationId = data.application_id;
-    this.sourceGuild = data.source_guild;
-    this.sourceChannel = data.source_channel;
-    this.url = data.url;
 
+    this._update(data);
     this.rest = new Rest(this.token);
   }
 
   sendMessage(data: MessagePostData) {
-    if (!this.token) return Promise.resolve()
+    if (!this.token) return Promise.resolve();
     return this.rest.executeWebhook(this.id, this.token, data);
   }
 
   delete() {
-    if (!this.token) return Promise.resolve()
+    if (!this.token) return Promise.resolve();
     return this.rest.deleteWebhookWithToken(this.id, this.token);
   }
 
-  edit(data: RESTPostAPIChannelWebhookJSONBody) {
-    if (!this.token) return Promise.resolve()
-    return this.rest.modifyWebhookWithToken(this.id, this.token, data);
+  async edit(data: RESTPatchAPIWebhookJSONBody) {
+    if (!this.token) return Promise.resolve();
+    const updated = await this.rest.modifyWebhookWithToken(
+      this.id,
+      this.token,
+      data
+    );
+
+    return this._update(updated);
+  }
+
+  _update(data: APIWebhook) {
+    if ("name" in data) this.name = data.name;
+    if ("avatar" in data) this.avatar = data.avatar;
+    if ("channel_id" in data) this.channelId = data.channel_id;
+    if ("url" in data) this.url = data.url;
+
+    if ("source_guild" in data && data.source_guild) {
+      this.sourceGuild =
+        this._client.cache.guilds.get(data.source_guild.id) ??
+        data.source_guild;
+    }
+    if ("source_channel" in data && data.source_channel) {
+      this.sourceChannel =
+        this._client.cache.channels.get(data.source_channel.id) ??
+        data.source_channel;
+    }
+    return this;
   }
 }

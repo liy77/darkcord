@@ -39,6 +39,7 @@ import {
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
   RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
+  RESTPatchAPIWebhookJSONBody,
   RESTPostAPIApplicationCommandsJSONBody,
   RESTPostAPIAutoModerationRuleJSONBody,
   RESTPostAPIChannelMessagesThreadsJSONBody,
@@ -232,6 +233,16 @@ export class Rest extends EventEmitter {
     ) as Promise<APIApplication>;
   }
 
+  createWebhook(
+    channelId: string,
+    data: RESTPostAPIChannelWebhookJSONBody,
+    reason?: string
+  ) {
+    return this.post(Routes.channelWebhooks(channelId), data, {
+      reason,
+    }) as Promise<APIWebhook>;
+  }
+
   executeWebhook(
     webhookId: string,
     webhookToken: string,
@@ -242,6 +253,14 @@ export class Rest extends EventEmitter {
     return this.post(Routes.webhook(webhookId, webhookToken), d, {
       contentType,
     }) as Promise<void>;
+  }
+
+  getChannelWebhooks(channelId: string) {
+    return this.get(Routes.channelWebhooks(channelId)) as Promise<APIWebhook[]>;
+  }
+
+  getWebhook(webhookId: string) {
+    return this.get(Routes.webhook(webhookId)) as Promise<APIWebhook>
   }
 
   editWebhookMessage(
@@ -263,7 +282,11 @@ export class Rest extends EventEmitter {
     return this.delete(Routes.webhook(id, token));
   }
 
-  modifyWebhookWithToken(id: string, token: string, data: RESTPostAPIChannelWebhookJSONBody) {
+  modifyWebhookWithToken(
+    id: string,
+    token: string,
+    data: RESTPatchAPIWebhookJSONBody
+  ) {
     return this.patch(
       Routes.webhook(id, this.token),
       data
