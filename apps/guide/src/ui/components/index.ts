@@ -1,4 +1,5 @@
 export * from './CommandMenu';
+export * from './Discord';
 export * from './ExternalLink.jsx';
 export * from './Header';
 export * from './Outline.jsx';
