@@ -230,7 +230,7 @@ export class Client extends BaseClient<ClientEvents> {
     this.pluginManager = new PluginManager(this);
     if (options.plugins.length) {
       for (const plugin of options.plugins) {
-        plugin(this.pluginManager);
+        this.pluginManager.load(plugin);
       }
     }
 

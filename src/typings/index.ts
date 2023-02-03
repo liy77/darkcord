@@ -41,9 +41,10 @@ import http from "node:http";
 import { Blob, Buffer } from "node:buffer";
 import { IncomingMessage, ServerResponse } from "node:http";
 
-import { Client, InteractionClient } from "client/Client";
+import { Client, InteractionClient } from "@client/Client";
 
-import { Integration } from "../resources/Integration";
+import { Integration } from "@resources/Integration";
+import { PluginFn } from "@utils/PluginManager";
 
 export interface RateLimitEvent {
   global: boolean;
@@ -144,7 +145,7 @@ export interface ClientOptions extends BaseClientOptions {
     roles?: CacheOption;
     messageCacheLimitPerChannel?: number;
   };
-  plugins: CallableFunction[];
+  plugins: PluginFn[];
 }
 
 export interface WebServerOptions {
