@@ -409,3 +409,25 @@ export type CreateChannelOptions =
     KeysToCamelCase<RESTPatchAPIChannelJSONBody>;
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
+
+type json<T> = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  [K in keyof T]: [T[K]] extends [Function]
+    ? never
+    : [T[K]] extends [bigint]
+    ? string
+    : [T[K]] extends [number]
+    ? number
+    : [K] extends [`_${string}`]
+    ? never
+    : [T[K]] extends [any[]]
+    ? T[K]
+    : [T[K]] extends [Map<any, infer I1>]
+    ? I1[]
+    : [T[K]] extends [Cache<infer I2>]
+    ? I2[]
+    : T[K];
+};
+
+export type JSONFY<T> = OmitNever<json<T>>;

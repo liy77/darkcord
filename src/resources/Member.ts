@@ -45,7 +45,7 @@ export class Member extends Base {
   /**
    * When the user started boosting the guild
    */
-  premiumSince: Date | null;
+  premiumSince: number | null;
   /**
    * Whether the user has not yet passed the guild's Membership Screening requirements
    */
@@ -84,7 +84,7 @@ export class Member extends Base {
 
     this.deaf = data.deaf;
     this.premiumSince = data.premium_since
-      ? new Date(data.premium_since)
+      ? Date.parse(data.premium_since)
       : null;
     this.pending = Boolean(data.pending);
     this.roles = data.roles;
@@ -102,7 +102,8 @@ export class Member extends Base {
       return null;
     }
 
-    let url = RouteBases.cdn +
+    let url =
+      RouteBases.cdn +
       CDNRoutes.guildMemberAvatar(
         this.guild.id,
         this.id,
@@ -110,13 +111,13 @@ export class Member extends Base {
         options?.format ?? this.avatar.startsWith("a_")
           ? ImageFormat.GIF
           : ImageFormat.PNG
-      )
-    
+      );
+
     if (options?.size) {
       url += "?size=" + options.size.toString();
     }
 
-    return url
+    return url;
   }
 
   displayAvatarURL(options?: DisplayUserAvatarOptions) {
@@ -143,6 +144,26 @@ export class Member extends Base {
   ) {
     return this.guild.editMember(this.id, options, reason);
   }
+
+  toJSON() {
+    return Base.toJSON(this as Member, [
+      "avatar",
+      "avatarURL",
+      "communicationDisabledUntil",
+      "createdAt",
+      "deaf",
+      "guild",
+      "id",
+      "joinedAt",
+      "mute",
+      "pending",
+      "permissions",
+      "premiumSince",
+      "rawData",
+      "roles",
+      "user",
+    ]);
+  }
 }
 
 export class ThreadMember extends Base {
@@ -153,7 +174,7 @@ export class ThreadMember extends Base {
   /**
    * An timestamp for when the member last joined
    */
-  joinTimestamp: Date;
+  joinTimestamp: number;
   /**
    * Member flags combined as a bitfield
    */
@@ -172,7 +193,7 @@ export class ThreadMember extends Base {
     this.thread = thread;
     this.threadId = data.id || thread.id;
     this.guild = thread.guild;
-    this.joinTimestamp = new Date(data.join_timestamp);
+    this.joinTimestamp = Date.parse(data.join_timestamp);
     this.flags = new BitField(data.flags, ThreadMemberFlags);
   }
 
@@ -188,5 +209,20 @@ export class ThreadMember extends Base {
    */
   get user() {
     return this._client.cache.users.get(this.id);
+  }
+
+  toJSON() {
+    return Base.toJSON(this as ThreadMember, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildMember",
+      "id",
+      "joinTimestamp",
+      "rawData",
+      "thread",
+      "threadId",
+      "user",
+    ]);
   }
 }

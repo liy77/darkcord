@@ -186,4 +186,29 @@ export class User extends Base {
   toString() {
     return userMention(this.id);
   }
+
+  toJSON() {
+    return Base.toJSON(this as User, [
+      "accentColor",
+      "avatar",
+      "avatarURL",
+      "banner",
+      "bot",
+      "createdAt",
+      "defaultAvatarURL",
+      "discriminator",
+      "dm",
+      "email",
+      "username",
+      "tag",
+      "system",
+      "rawData",
+      "publicFlags",
+      "premiumType",
+      "mfaEnabled",
+      "locale",
+      "id",
+      "flags",
+    ]);
+  }
 }

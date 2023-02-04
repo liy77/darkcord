@@ -1,4 +1,5 @@
-import { AnyClient } from "@typings/index";
+import { AnyClient, JSONFY } from "@typings/index";
+import { Cache } from "@cache/Cache";
 
 export namespace Snowflake {
   export function getEpoch(id: string) {
@@ -31,5 +32,36 @@ export class Base {
 
   get createdAt() {
     return Snowflake.getCreatedAt(this.id);
+  }
+
+  toJSON() {
+    Base.toJSON(this as Base, ["createdAt", "id", "rawData"])
+  }
+
+  static toJSON<T extends Base, U extends keyof T = keyof T>(source: T, props: U[]) {
+    const json = {} as Record<U, T[keyof T]>;
+
+    for (const prop of props) {
+      if ((prop as string).startsWith("_")) {
+        continue;
+      }
+
+      let value: any = source[prop];
+
+      if (value.toJSON) {
+        value = value.toJSON();
+      } else if (typeof value === "bigint") {
+        value = value.toString();
+      } else if (value instanceof Map || value instanceof Cache) {
+        value = [...value.values()];
+      } else if (typeof value === "function" || !value) {
+        continue;
+      }
+      json[prop] = value;
+    }
+
+    return json as unknown as JSONFY<{
+      [K in U as U extends never ? never : K]: T[K];
+    }>;
   }
 }

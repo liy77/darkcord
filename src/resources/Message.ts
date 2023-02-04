@@ -38,7 +38,7 @@ export class Message extends Base {
   /**
    * when this message was sent
    */
-  timestamp: Date;
+  timestamp: number;
   /**
    * Contents of the message
    */
@@ -88,7 +88,7 @@ export class Message extends Base {
   /**
    * When this message was edited (or null if never)
    */
-  editedTimestamp: Date | null;
+  editedTimestamp: number | null;
   /**
    * Sent if the message contains stickers
    */
@@ -111,7 +111,7 @@ export class Message extends Base {
 
     this.isResolved = false;
     this.channelId = data.channel_id;
-    this.timestamp = new Date(data.timestamp);
+    this.timestamp = Date.parse(data.timestamp);
     this.editedTimestamp = null;
     this.referencedMessage = data.referenced_message
       ? Resolvable.resolveMessage(
@@ -226,9 +226,38 @@ export class Message extends Base {
     if ("flags" in data && data.flags)
       this.flags = new MessageFlags(data.flags);
     if ("edited_timestamp" in data && data.edited_timestamp)
-      this.editedTimestamp = new Date(data.edited_timestamp);
+      this.editedTimestamp = Date.parse(data.edited_timestamp);
     if ("sticker_items" in data) this.stickerItems = data.sticker_items;
 
     return this;
+  }
+
+  toJSON() {
+    return Base.toJSON(this as Message, [
+      "attachments",
+      "channel",
+      "channelId",
+      "content",
+      "createdAt",
+      "editedTimestamp",
+      "embeds",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "isResolved",
+      "mentionEveryone",
+      "nonce",
+      "position",
+      "rawData",
+      "reactions",
+      "referencedMessage",
+      "stickerItems",
+      "timestamp",
+      "editedTimestamp",
+      "type",
+      "user",
+      "webhookId"
+    ])
   }
 }

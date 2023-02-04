@@ -303,35 +303,3 @@ export function transformMessagePostData(
   return data;
 }
 
-const {
-  isApplicationCommandDMInteraction,
-  isChatInputApplicationCommandInteraction,
-  isApplicationCommandGuildInteraction,
-  isContextMenuApplicationCommandInteraction,
-  isDMInteraction,
-  isGuildInteraction,
-  isInteractionButton,
-  isLinkButton,
-  isMessageComponentButtonInteraction,
-  isMessageComponentDMInteraction,
-  isMessageComponentGuildInteraction,
-  isMessageComponentInteraction,
-  isMessageComponentSelectMenuInteraction,
-} = Utils;
-
-// Exporting utils of Discord API
-export {
-  isApplicationCommandDMInteraction,
-  isChatInputApplicationCommandInteraction,
-  isApplicationCommandGuildInteraction,
-  isContextMenuApplicationCommandInteraction,
-  isDMInteraction,
-  isGuildInteraction,
-  isInteractionButton,
-  isLinkButton,
-  isMessageComponentButtonInteraction,
-  isMessageComponentDMInteraction,
-  isMessageComponentGuildInteraction,
-  isMessageComponentInteraction,
-  isMessageComponentSelectMenuInteraction,
-};

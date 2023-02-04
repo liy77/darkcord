@@ -118,10 +118,22 @@ export class Channel extends Base {
     return channelMention(this.id);
   }
 
+  toJSON() {
+    return Base.toJSON(this as Channel, [
+      "type",
+      "name",
+      "flags",
+      "rawData",
+      "id",
+      "createdAt",
+    ]);
+  }
+
   _update(
     data: APIChannel
   ):
     | GuildChannel
+    | GuildTextChannel
     | DMChannel
     | CategoryChannel
     | ForumChannel
@@ -173,6 +185,8 @@ export class Channel extends Base {
   static from(data: DataWithClient<APIChannel>, guild?: Guild) {
     switch (data.type) {
       case ChannelType.GuildText: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         if (!guild) return new Channel(data);
         return new GuildTextChannel(data, guild);
       }
@@ -273,6 +287,20 @@ export class TextBasedChannel extends Channel {
   sendTyping() {
     return this._client.rest.triggerTyping(this.id);
   }
+
+  toJSON() {
+    return Base.toJSON(this as TextBasedChannel, [
+      "createdAt",
+      "flags",
+      "id",
+      "messages",
+      "lastMessageId",
+      "lastPinTimestamp",
+      "name",
+      "type",
+      "rawData",
+    ]);
+  }
 }
 
 export class GuildChannel extends Channel {
@@ -352,6 +380,24 @@ export class GuildChannel extends Channel {
     super._update(data as APIChannel);
     return this;
   }
+
+  toJSON() {
+    return Base.toJSON(this as GuildChannel, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "name",
+      "nsfw",
+      "parentId",
+      "permissionOverwrites",
+      "position",
+      "rawData",
+      "threads",
+      "type",
+    ]);
+  }
 }
 
 export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
@@ -371,7 +417,7 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
     this.messages = new ChannelMessageCache(
       this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
-      this
+      this as TextBasedChannel
     );
   }
 
@@ -418,6 +464,29 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
 
     super._update(data);
     return this;
+  }
+
+  toJSON() {
+    return Base.toJSON(this as GuildTextChannel, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "lastMessageId",
+      "lastPinTimestamp",
+      "messages",
+      "name",
+      "nsfw",
+      "parentId",
+      "permissionOverwrites",
+      "position",
+      "rateLimitPerUser",
+      "rawData",
+      "threads",
+      "topic",
+      "type",
+    ]);
   }
 }
 
@@ -468,7 +537,7 @@ export class ThreadChannel extends TextBasedChannel {
   /**
    * Timestamp when the thread's archive status was last changed, used for calculating recent activity
    */
-  archiveTimestamp: Date;
+  archiveTimestamp: number;
   /**
    * Duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080
    */
@@ -476,7 +545,7 @@ export class ThreadChannel extends TextBasedChannel {
   /**
    * Timestamp when the thread was created; only populated for threads created after 2022-01-09
    */
-  createTimestamp: Date | null;
+  createTimestamp: number | null;
   /**
    * Whether non-moderators can add other non-moderators to the thread; only available on private threads
    */
@@ -540,12 +609,12 @@ export class ThreadChannel extends TextBasedChannel {
       const metadata = data.thread_metadata;
       if ("archived" in metadata) this.archived = metadata.archived;
       if ("archive_timestamp" in metadata)
-        this.archiveTimestamp = new Date(metadata.archive_timestamp);
+        this.archiveTimestamp = Date.parse(metadata.archive_timestamp);
       if ("auto_archive_duration" in metadata)
         this.autoArchiveDuration = metadata.auto_archive_duration;
       if ("create_timestamp" in metadata)
         this.createTimestamp = metadata.create_timestamp
-          ? new Date(metadata.create_timestamp)
+          ? Date.parse(metadata.create_timestamp)
           : null;
       if ("invitable" in metadata) this.invitable = Boolean(metadata.invitable);
       if ("locked" in metadata) this.locked = Boolean(metadata.locked);
@@ -553,6 +622,35 @@ export class ThreadChannel extends TextBasedChannel {
 
     super._update(data);
     return this;
+  }
+
+  toJSON() {
+    return Base.toJSON(this as ThreadChannel, [
+      "appliedTags",
+      "archiveTimestamp",
+      "archived",
+      "autoArchiveDuration",
+      "channel",
+      "createTimestamp",
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "invitable",
+      "autoArchiveDuration",
+      "leave",
+      "locked",
+      "member",
+      "memberCount",
+      "members",
+      "messages",
+      "name",
+      "ownerId",
+      "rawData",
+      "totalMessageSent",
+      "type",
+    ]);
   }
 }
 
@@ -571,6 +669,22 @@ export class DMChannel extends TextBasedChannel {
     this.user = this._client.cache.users.add(data.recipients?.[0]!);
     this.userId = this.user.id;
   }
+
+  toJSON() {
+    return Base.toJSON(this as DMChannel, [
+      "createdAt",
+      "flags",
+      "id",
+      "messages",
+      "lastMessageId",
+      "lastPinTimestamp",
+      "name",
+      "type",
+      "rawData",
+      "user",
+      "userId",
+    ]);
+  }
 }
 
 export class CategoryChannel extends GuildChannel {
@@ -586,6 +700,25 @@ export class CategoryChannel extends GuildChannel {
 
       return parentId === this.id;
     }) as GuildChannelCache;
+  }
+
+  toJSON() {
+    return Base.toJSON(this as CategoryChannel, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "name",
+      "nsfw",
+      "parentId",
+      "permissionOverwrites",
+      "position",
+      "rawData",
+      "threads",
+      "type",
+      "channels",
+    ]);
   }
 }
 
@@ -645,6 +778,31 @@ export class ForumChannel extends GuildChannel {
     super._update(data);
     return this;
   }
+
+  toJSON() {
+    return Base.toJSON(this as ForumChannel, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "name",
+      "nsfw",
+      "parentId",
+      "permissionOverwrites",
+      "position",
+      "rawData",
+      "threads",
+      "type",
+      "defaultAutoArchiveDuration",
+      "defaultForumLayout",
+      "defaultReactionEmoji",
+      "defaultSortOrder",
+      "defaultThreadRateLimitPerUser",
+      "availableTags",
+      "threads",
+    ]);
+  }
 }
 
 export class BaseVoiceChannel extends GuildChannel {
@@ -688,6 +846,28 @@ export class BaseVoiceChannel extends GuildChannel {
       this.userLimit = data.user_limit;
     return this;
   }
+
+  toJSON() {
+    return Base.toJSON(this as BaseVoiceChannel, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "name",
+      "nsfw",
+      "parentId",
+      "permissionOverwrites",
+      "position",
+      "rawData",
+      "threads",
+      "type",
+      "bitrate",
+      "userLimit",
+      "rtcRegion",
+      "members",
+    ]);
+  }
 }
 
 export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
@@ -703,7 +883,7 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
     this.messages = new ChannelMessageCache(
       this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
-      this
+      this as TextBasedChannel
     );
   }
 
@@ -724,6 +904,30 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
       ),
       this._client
     );
+  }
+
+  toJSON() {
+    return Base.toJSON(this as VoiceChannel, [
+      "createdAt",
+      "flags",
+      "guild",
+      "guildId",
+      "id",
+      "name",
+      "nsfw",
+      "parentId",
+      "permissionOverwrites",
+      "position",
+      "rawData",
+      "threads",
+      "type",
+      "bitrate",
+      "userLimit",
+      "rtcRegion",
+      "members",
+      "messages",
+      "videoQualityMode",
+    ]);
   }
 }
 
@@ -794,5 +998,16 @@ export class WelcomeChannel extends Base {
         name: this.emojiName,
       })
     );
+  }
+
+  toJSON() {
+    return Base.toJSON(this as WelcomeChannel, [
+      "channel",
+      "channelId",
+      "emoji",
+      "emojiId",
+      "description",
+      "emojiName",
+    ]);
   }
 }

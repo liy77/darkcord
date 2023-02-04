@@ -102,6 +102,18 @@ export class Interaction extends Base {
   isModalSubmit(): this is ModalSubmitInteraction {
     return this instanceof ModalSubmitInteraction;
   }
+
+  toJSON() {
+    return Base.toJSON(this as Interaction, [
+      "applicationId",
+      "createdAt",
+      "id",
+      "rawData",
+      "token",
+      "type",
+      "version",
+    ]);
+  }
 }
 
 export class ReplyableInteraction extends Interaction {
@@ -255,6 +267,19 @@ export class ReplyableInteraction extends Interaction {
 
     return Resolvable.resolveMessage(message, this._client);
   }
+
+  toJSON() {
+    return Base.toJSON(this as ReplyableInteraction, [
+      "applicationId",
+      "createdAt",
+      "id",
+      "rawData",
+      "token",
+      "type",
+      "version",
+      "acknowledged",
+    ]);
+  }
 }
 
 export class ComponentInteraction extends ReplyableInteraction {
@@ -347,6 +372,26 @@ export class ComponentInteraction extends ReplyableInteraction {
       );
     }
   }
+
+  toJSON() {
+    return Base.toJSON(this as ComponentInteraction, [
+      "applicationId",
+      "createdAt",
+      "id",
+      "rawData",
+      "token",
+      "type",
+      "version",
+      "channel",
+      "channelId",
+      "locale",
+      "guildLocale",
+      "message",
+      "componentType",
+      "acknowledged",
+      "customId",
+    ]);
+  }
 }
 
 export class ModalSubmitInteraction extends ReplyableInteraction {
@@ -384,7 +429,9 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
         )
       : null;
     this.channelId = data.channel_id;
-    this.channel = data.client.cache.channels.get(this.channelId as string) as Channel;
+    this.channel = data.client.cache.channels.get(
+      this.channelId as string
+    ) as Channel;
   }
 
   async deferUpdate() {
@@ -425,6 +472,24 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
         InteractionResponseType.UpdateMessage
       );
     }
+  }
+
+  toJSON() {
+    return Base.toJSON(this as ModalSubmitInteraction, [
+      "applicationId",
+      "createdAt",
+      "id",
+      "rawData",
+      "token",
+      "type",
+      "version",
+      "acknowledged",
+      "channel",
+      "channelId",
+      "locale",
+      "guildLocale",
+      "message",
+    ]);
   }
 }
 
@@ -742,6 +807,30 @@ export class CommandInteraction extends ReplyableInteraction {
       );
     }
   }
+
+  toJSON() {
+    return Base.toJSON(this as CommandInteraction, [
+      "applicationId",
+      "createdAt",
+      "id",
+      "rawData",
+      "token",
+      "type",
+      "version",
+      "acknowledged",
+      "channel",
+      "channelId",
+      "commandName",
+      "data",
+      "guild",
+      "guildId",
+      "guildLocale",
+      "message",
+      "member",
+      "user",
+      "locale",
+    ]);
+  }
 }
 
 export class AutocompleteInteraction extends Interaction {
@@ -765,6 +854,7 @@ export class AutocompleteInteraction extends Interaction {
     this.isHTTP = Boolean(httpResponse);
     this.acknowledged = false;
   }
+
   async result(choices: APIApplicationCommandOptionChoice[]) {
     if (this.acknowledged) {
       throw MakeError({

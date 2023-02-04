@@ -1,5 +1,9 @@
 import { DataWithClient, KeysToCamelCase } from "@typings/index";
-import { APIRole, APIRoleTags, RESTPatchAPIGuildRoleJSONBody } from "discord-api-types/v10";
+import {
+  APIRole,
+  APIRoleTags,
+  RESTPatchAPIGuildRoleJSONBody,
+} from "discord-api-types/v10";
 
 import { Base } from "./Base";
 import { Guild } from "./Guild";
@@ -66,6 +70,25 @@ export class Role extends Base {
   }
 
   toString() {
-    return roleMention(this.id)
+    return roleMention(this.id);
+  }
+
+  toJSON() {
+    return Base.toJSON(this as Role, [
+      "color",
+      "createdAt",
+      "guild",
+      "hoist",
+      "icon",
+      "id",
+      "managed",
+      "mentionable",
+      "name",
+      "permissions",
+      "position",
+      "rawData",
+      "tags",
+      "unicodeEmoji",
+    ]);
   }
 }

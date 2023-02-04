@@ -64,4 +64,22 @@ export class Sticker extends Base {
       : null;
     this.sortValue = data.sort_value;
   }
+
+  toJSON() {
+    return Base.toJSON(this as Sticker, [
+      "available",
+      "createdAt",
+      "description",
+      "formatType",
+      "guildId",
+      "id",
+      "name",
+      "packId",
+      "rawData",
+      "sortValue",
+      "tags",
+      "type",
+      "user",
+    ]);
+  }
 }
