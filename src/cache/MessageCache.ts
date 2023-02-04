@@ -26,6 +26,8 @@ export class ChannelMessageCache extends Cache<Message> {
     if (!(message instanceof Message)) {
       const guild =
         "guild" in this.channel
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           ? (this.channel as GuildTextChannel).guild
           : undefined;
 

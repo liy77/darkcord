@@ -24,7 +24,7 @@ export class ChannelCache extends Cache<Channel> {
     return channel && this._resolve(channel, guild, true);
   }
 
-  _resolve(channel: APIChannel | Channel, guild?: Guild, addInCache = false) {
+  _resolve(channel: APIChannel | Channel, guild?: Guild, addInCache = false): Channel {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       channel &&
@@ -50,6 +50,8 @@ export class ChannelCache extends Cache<Channel> {
       if (addInCache) this.add(channel);
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return channel;
   }
 
