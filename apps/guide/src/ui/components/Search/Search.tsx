@@ -12,7 +12,7 @@ interface SearchProps {
 export function Search({ open, setOpen, visibleOnMobile, pages }: SearchProps) {
 	return (
 		<>
-			<CommandMenu open={open} pages={pages} setOpen={setOpen} />
+			<CommandMenu visibleOnMobile={visibleOnMobile} open={open} pages={pages} setOpen={setOpen} />
 			<CommandMenuTrigger setOpen={setOpen} visibleOnMobile={visibleOnMobile} />
 		</>
 	);

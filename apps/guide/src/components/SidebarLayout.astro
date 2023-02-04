@@ -40,7 +40,7 @@ const { headings, frontmatter, url } = Astro.props;
 	});
 </script>
 
-<Header client:load searchPages={pages}>
+<Header url={url} client:load searchPages={pages}>
 	<div class="flex flex-col gap-3 p-3 pb-32 lg:pb-12" slot="pages">
 		<SidebarItems client:load pages={pages} />
 	</div>
