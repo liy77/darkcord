@@ -38,10 +38,8 @@ export function CommandMenuTrigger({ setOpen, visibleOnMobile }: CommandMenuTrig
 			onClick={() => setOpen(true)}
 		>
 			<div className="flex flex-row place-items-center gap-4">
-
-					<SearchIcon color="#787f85" size={iconSize.sm} />
-					<span className="opacity-65">Search</span>
-
+				<SearchIcon color="#787f85" size={iconSize.sm} />
+				<span className="opacity-65">Search</span>
 
 				<div className="opacity-65 flex flex-row place-items-center gap-2">
 					{isMac !== null && <div>{isMac ? '⌘' : 'Ctrl'} + K</div>}
