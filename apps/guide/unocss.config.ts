@@ -48,7 +48,8 @@ export default defineConfig({
 				},
 				a: {
 					color: '#60a5fa',
-					'text-decoration': 'none',
+					'font-weight': '600',
+					'text-decoration': 'underline',
 				},
 				'a > img': {
 					display: 'inline-block',

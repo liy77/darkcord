@@ -6,8 +6,7 @@ category: Test
 ---
 
 import { CH } from '@code-hike/mdx/components';
-import { DiscordMessages } from '../ui';
-import { DiscordMessage } from '../ui';
+import { DiscordMessages, DiscordMessage, Warning, Tip, Image, Note, Info } from '../ui';
 
 ## Test Shell Block
 
@@ -108,3 +107,28 @@ client.connect();
     </DiscordMessage>
 
 </DiscordMessages>
+
+### Test Warning Component
+
+<Warning>This is a warning</Warning>
+
+### Test Tip Component
+
+<Tip>This is a tip</Tip>
+
+### Test Note Component
+
+<Note>This is a note</Note>
+
+### Test Info Component
+
+<Info>This is a info</Info>
+
+## Test Image
+
+<Image
+	width={839}
+	height={274}
+	alt="Test Image"
+	src="https://media.discordapp.net/attachments/850497247925895239/1071216211993559060/Screenshot_20230203-205020.png"
+/>

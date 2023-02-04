@@ -2,8 +2,12 @@ export * from './CommandMenu';
 export * from './Discord';
 export * from './ExternalLink.jsx';
 export * from './Header';
+export * from './Image.jsx';
+export * from './Info.jsx';
+export * from './Note.jsx';
 export * from './Outline.jsx';
 export * from './Search';
 export * from './Section.jsx';
 export * from './Sidebar';
-
+export * from './Tip.jsx';
+export * from './Warning.jsx';
