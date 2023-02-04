@@ -288,7 +288,7 @@ export class Rest extends EventEmitter {
     data: RESTPatchAPIWebhookJSONBody
   ) {
     return this.patch(
-      Routes.webhook(id, this.token),
+      Routes.webhook(id, token),
       data
     ) as Promise<APIWebhook>;
   }
