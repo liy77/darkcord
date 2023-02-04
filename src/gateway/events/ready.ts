@@ -21,7 +21,7 @@ export class Ready extends Event {
       );
     }
 
-    this.gatewayShard.uptime = new Date();
+    this.gatewayShard.uptime = Date.now();
     this.gatewayShard.sessionId = data.session_id;
     this.gatewayShard.status = GatewayStatus.WaitingGuilds;
     this.gatewayShard.resumeURL = `${data.resume_gateway_url}?v=10&encoding=${this.gatewayShard.options.encoding}`;

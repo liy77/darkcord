@@ -60,7 +60,7 @@ export class Integration extends Base {
   /**
    * When this integration was last synced
    */
-  syncedAt: Date | null;
+  syncedAt: number | null;
   /**
    * Integration type
    */
@@ -87,7 +87,7 @@ export class Integration extends Base {
     this.roleId = data.role_id as string;
     this.scopes = data.scopes as OAuth2Scopes[];
     this.subscriberCount = data.subscriber_count as number;
-    this.syncedAt = data.synced_at ? new Date(data.synced_at) : null;
+    this.syncedAt = data.synced_at ? Date.parse(data.synced_at) : null;
     this.type = data.type;
     this.user = data.user ? this._client.cache.users.add(data.user) : null;
     this.guild = guild;

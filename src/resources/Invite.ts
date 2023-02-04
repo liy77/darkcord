@@ -58,7 +58,7 @@ export class Invite {
       : null;
 
     this.expiresAt = data.expires_at
-      ? new Date(data.expires_at).getTime()
+      ? Date.parse(data.expires_at)
       : null;
 
     this.inviter = data.inviter

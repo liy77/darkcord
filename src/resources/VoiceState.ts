@@ -35,7 +35,7 @@ export class VoiceState extends Base {
   /**
    * The time at which the user requested to speak
    */
-  requestToSpeakTimestamp: Date | null;
+  requestToSpeakTimestamp: number | null;
   /**
    * Whether this user is locally deafened
    */
@@ -74,7 +74,7 @@ export class VoiceState extends Base {
     this.member = data.member ? guild.members.get(data.user_id) ?? null : null;
     this.mute = data.mute;
     this.requestToSpeakTimestamp = data.request_to_speak_timestamp
-      ? new Date(data.request_to_speak_timestamp)
+      ? Date.parse(data.request_to_speak_timestamp)
       : null;
 
     this.selfDeaf = data.self_deaf;

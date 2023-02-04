@@ -132,7 +132,7 @@ export class GatewayShard extends EventEmitter {
   /**
    * The time of shard is online
    */
-  uptime?: Date;
+  uptime?: number;
   _inflate: import("zlib-sync").Inflate | null;
   /**
    * Source of gateway events
