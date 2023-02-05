@@ -384,7 +384,7 @@ export class GatewayShard extends EventEmitter {
           this.sendHeartbeat();
         }
 
-        if (!this.client.options.gateway.disabledEvents.includes(eventName)) {
+        if (!this.client.options.gateway.disabledEvents?.includes(eventName)) {
           this.events.get(eventName)?.(data.d);
         }
         break;
