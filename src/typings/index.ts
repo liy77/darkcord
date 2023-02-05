@@ -131,7 +131,7 @@ export interface ClientOptions extends BaseClientOptions {
       device: string;
     };
     totalShards?: number;
-    disabledEvents: (keyof ClientEvents)[];
+    disabledEvents?: (keyof ClientEvents)[];
   };
   cache?: {
     adapter?: CacheAdapter<any>;
