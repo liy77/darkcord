@@ -120,9 +120,9 @@ export class Message extends Base {
               ...data.referenced_message,
               client: this._client,
             },
-            this.guild!
+            this.guild!,
           ),
-          this._client
+          this._client,
         )
       : null;
     this.webhookId = data.webhook_id;
@@ -145,7 +145,7 @@ export class Message extends Base {
         this.reactions._add(
           resolved,
           true,
-          (resolved.emoji.id ?? resolved.emoji.name) as string
+          (resolved.emoji.id ?? resolved.emoji.name) as string,
         );
       }
     }
@@ -184,7 +184,7 @@ export class Message extends Base {
     let reaction = await this._client.rest.createReaction(
       this.channelId,
       this.id,
-      emoji
+      emoji,
     );
 
     if (!this._client.cache._partial(Partials.Reaction)) {
@@ -194,7 +194,7 @@ export class Message extends Base {
     return this.reactions._add(
       reaction,
       true,
-      (reaction.emoji.id ?? reaction.emoji.name) as string
+      (reaction.emoji.id ?? reaction.emoji.name) as string,
     );
   }
 
@@ -210,7 +210,7 @@ export class Message extends Base {
     const data = await this._client.rest.editMessage(
       this.channelId,
       this.id,
-      content
+      content,
     );
 
     return this._update(data);
@@ -257,7 +257,7 @@ export class Message extends Base {
       "editedTimestamp",
       "type",
       "user",
-      "webhookId"
-    ])
+      "webhookId",
+    ]);
   }
 }

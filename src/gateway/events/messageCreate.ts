@@ -18,12 +18,12 @@ export class MessageCreate extends Event {
         ...data,
         client: this.client,
       },
-      guild
+      guild,
     );
 
     this.client.emit(
       Events.MessageCreate,
-      Resolvable.resolveMessage(message, this.client)
+      Resolvable.resolveMessage(message, this.client),
     );
   }
 }

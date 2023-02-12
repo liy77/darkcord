@@ -64,7 +64,7 @@ export class Role extends Base {
 
   edit(
     options: KeysToCamelCase<RESTPatchAPIGuildRoleJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     return this.guild.editRole(this.id, options, reason);
   }

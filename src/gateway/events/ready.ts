@@ -17,7 +17,7 @@ export class Ready extends Event {
     for (const unavailableGuild of data.guilds) {
       this.gatewayShard.pendingGuildsMap.set(
         unavailableGuild.id,
-        unavailableGuild
+        unavailableGuild,
       );
     }
 

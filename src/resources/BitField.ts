@@ -1,6 +1,6 @@
 export class BitField<
   T extends number | bigint = number,
-  FLAGS = Record<string, number | bigint>
+  FLAGS = Record<string, number | bigint>,
 > {
   constructor(public raw: T, public flags: FLAGS) {}
   has(bits: T) {
@@ -9,7 +9,7 @@ export class BitField<
 
   toArray() {
     return Object.keys(this.flags as unknown as object).filter((bit) =>
-      this.has((this.flags as Record<string, unknown>)[bit] as T)
+      this.has((this.flags as Record<string, unknown>)[bit] as T),
     );
   }
 }

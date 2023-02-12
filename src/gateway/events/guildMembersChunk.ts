@@ -18,7 +18,7 @@ export class GuildMembersChunk extends Event {
 
     if (members) {
       members = members.map(
-        (member) => new Member(member as APIGuildMember, guild as Guild)
+        (member) => new Member(member as APIGuildMember, guild as Guild),
       );
 
       for (const member of members) {

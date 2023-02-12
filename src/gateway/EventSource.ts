@@ -135,9 +135,7 @@ export class EventSource {
   add(event: new (gatewayShard: GatewayShard) => Event) {
     const name = camelCase(event.name) as keyof ClientEvents;
 
-    if (
-      this.gatewayShard.client.options.gateway.disabledEvents?.includes(name)
-    )
+    if (this.gatewayShard.client.options.gateway.disabledEvents?.includes(name))
       return;
 
     this.events.set(name, new event(this.gatewayShard));

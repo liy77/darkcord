@@ -67,12 +67,12 @@ export type BodyInit = FormData | Record<string, any> | string;
 export declare interface Rest {
   on<T extends keyof RestEvents>(
     event: T,
-    listener: (...args: RestEvents[T]) => any
+    listener: (...args: RestEvents[T]) => any,
   ): this;
   on(event: string, listener: (...args: any[]) => any): this;
   once<T extends keyof RestEvents>(
     event: T,
-    listener: (...args: RestEvents[T]) => any
+    listener: (...args: RestEvents[T]) => any,
   ): this;
   once(event: string, listener: (...args: any[]) => any): this;
   emit<T extends keyof RestEvents>(event: T, ...args: RestEvents[T]): boolean;
@@ -86,21 +86,21 @@ export class Rest extends EventEmitter {
   post: (
     router: string,
     body?: BodyInit | undefined,
-    options?: Omit<RequestOptions, "body">
+    options?: Omit<RequestOptions, "body">,
   ) => Promise<unknown>;
   patch: (
     router: string,
     body?: BodyInit | undefined,
-    options?: Omit<RequestOptions, "body">
+    options?: Omit<RequestOptions, "body">,
   ) => Promise<unknown>;
   delete: (
     router: string,
-    options?: Omit<RequestOptions, "body">
+    options?: Omit<RequestOptions, "body">,
   ) => Promise<unknown>;
   put: (
     router: string,
     body?: BodyInit | undefined,
-    options?: Omit<RequestOptions, "body">
+    options?: Omit<RequestOptions, "body">,
   ) => Promise<unknown>;
 
   constructor(public token?: string, public requestTimeout = 15_000) {
@@ -116,6 +116,12 @@ export class Rest extends EventEmitter {
     this.patch = this.requestHandler.patch.bind(this.requestHandler);
     this.delete = this.requestHandler.delete.bind(this.requestHandler);
     this.put = this.requestHandler.put.bind(this.requestHandler);
+  }
+
+  setToken(token: string) {
+    this.token = token;
+    this.requestHandler.setToken(token);
+    return this;
   }
 
   /**
@@ -144,7 +150,7 @@ export class Rest extends EventEmitter {
 
   getMessage(channelId: string, messageId: string) {
     return this.get(
-      Routes.channelMessage(channelId, messageId)
+      Routes.channelMessage(channelId, messageId),
     ) as Promise<APIMessage>;
   }
 
@@ -157,7 +163,7 @@ export class Rest extends EventEmitter {
     if (options.limit) query.append("limit", options.limit.toString());
 
     return this.get(
-      Routes.channelMessages(channelId) + options ? "?" + query.toString() : ""
+      Routes.channelMessages(channelId) + options ? "?" + query.toString() : "",
     ) as Promise<APIMessage[]>;
   }
 
@@ -169,7 +175,7 @@ export class Rest extends EventEmitter {
       },
       {
         reason,
-      }
+      },
     ) as Promise<void>;
   }
 
@@ -180,14 +186,14 @@ export class Rest extends EventEmitter {
       | MessagePostData
       | APIInteractionResponseCallbackData
       | APICommandAutocompleteInteractionResponseCallbackData,
-    type: InteractionResponseType
+    type: InteractionResponseType,
   ) {
     let d: BodyInit, contentType: string | undefined;
     if ("choices" in data) d = data;
     else {
       const extracted = extractMessageData(
         { data: data as MessagePostData, type },
-        true
+        true,
       );
 
       contentType = extracted.contentType;
@@ -197,17 +203,17 @@ export class Rest extends EventEmitter {
     return this.post(
       Routes.interactionCallback(interactionId, interactionToken),
       d,
-      { contentType }
+      { contentType },
     ) as Promise<void>;
   }
 
   getWebhookMessage(
     webhookId: string,
     webhookToken: string,
-    messageId: string
+    messageId: string,
   ) {
     return this.get(
-      Routes.webhookMessage(webhookId, webhookToken, messageId)
+      Routes.webhookMessage(webhookId, webhookToken, messageId),
     ) as Promise<APIMessage>;
   }
 
@@ -229,14 +235,14 @@ export class Rest extends EventEmitter {
 
   getCurrentApplication() {
     return this.get(
-      Routes.oauth2CurrentApplication()
+      Routes.oauth2CurrentApplication(),
     ) as Promise<APIApplication>;
   }
 
   createWebhook(
     channelId: string,
     data: RESTPostAPIChannelWebhookJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.channelWebhooks(channelId), data, {
       reason,
@@ -246,7 +252,7 @@ export class Rest extends EventEmitter {
   executeWebhook(
     webhookId: string,
     webhookToken: string,
-    data: MessagePostData
+    data: MessagePostData,
   ) {
     const { d, contentType } = extractMessageData(data);
 
@@ -260,21 +266,21 @@ export class Rest extends EventEmitter {
   }
 
   getWebhook(webhookId: string) {
-    return this.get(Routes.webhook(webhookId)) as Promise<APIWebhook>
+    return this.get(Routes.webhook(webhookId)) as Promise<APIWebhook>;
   }
 
   editWebhookMessage(
     webhookId: string,
     webhookToken: string,
     messageId: string,
-    data: MessagePostData
+    data: MessagePostData,
   ) {
     const { d, contentType } = extractMessageData(data);
 
     return this.patch(
       Routes.webhookMessage(webhookId, webhookToken, messageId),
       d,
-      { contentType }
+      { contentType },
     ) as Promise<APIMessage>;
   }
 
@@ -285,17 +291,14 @@ export class Rest extends EventEmitter {
   modifyWebhookWithToken(
     id: string,
     token: string,
-    data: RESTPatchAPIWebhookJSONBody
+    data: RESTPatchAPIWebhookJSONBody,
   ) {
-    return this.patch(
-      Routes.webhook(id, token),
-      data
-    ) as Promise<APIWebhook>;
+    return this.patch(Routes.webhook(id, token), data) as Promise<APIWebhook>;
   }
 
   createReaction(channelId: string, messageId: string, reaction: string) {
     return this.put(
-      Routes.channelMessageReaction(channelId, messageId, reaction)
+      Routes.channelMessageReaction(channelId, messageId, reaction),
     ) as Promise<APIReaction>;
   }
 
@@ -303,12 +306,12 @@ export class Rest extends EventEmitter {
     channelId: string,
     overwriteId: string,
     overwrite: APIOverwrite,
-    reason?: string
+    reason?: string,
   ) {
     return this.put(
       Routes.channelPermission(channelId, overwriteId),
       overwrite,
-      { reason }
+      { reason },
     ) as Promise<void>;
   }
 
@@ -324,7 +327,7 @@ export class Rest extends EventEmitter {
     guildId: string,
     userId: string,
     options: RESTPutAPIGuildBanJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.put(Routes.guildBan(guildId, userId), options, {
       reason,
@@ -349,13 +352,13 @@ export class Rest extends EventEmitter {
     if (options?.limit) query.append("limit", options.limit.toString());
 
     return this.get(
-      Routes.guildBans(guildId) + options ? "?" + query.toString() : ""
+      Routes.guildBans(guildId) + options ? "?" + query.toString() : "",
     ) as Promise<APIBan[]>;
   }
 
   getGuildSticker(guildId: string, stickerId: string) {
     return this.get(
-      Routes.guildSticker(guildId, stickerId)
+      Routes.guildSticker(guildId, stickerId),
     ) as Promise<APISticker>;
   }
 
@@ -363,7 +366,7 @@ export class Rest extends EventEmitter {
     guildId: string,
     roleId: string,
     newPosition: number,
-    reason?: string
+    reason?: string,
   ) {
     return this.patch(
       Routes.guildRoles(guildId),
@@ -371,20 +374,20 @@ export class Rest extends EventEmitter {
         id: roleId,
         position: newPosition,
       },
-      { reason }
+      { reason },
     ) as Promise<APIRole[]>;
   }
 
   getGuildMember(guildId: string, userId: string) {
     return this.get(
-      Routes.guildMember(guildId, userId)
+      Routes.guildMember(guildId, userId),
     ) as Promise<APIGuildMember>;
   }
 
   beginGuildPrune(
     guildId: string,
     options: RESTPostAPIGuildPruneJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.guildPrune(guildId), options, {
       reason,
@@ -395,7 +398,7 @@ export class Rest extends EventEmitter {
     guildId: string,
     roleId: string,
     options: RESTPatchAPIGuildRoleJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.patch(Routes.guildRole(guildId, roleId), options, {
       reason,
@@ -412,12 +415,12 @@ export class Rest extends EventEmitter {
     guildId: string,
     userId: string,
     roleId: string,
-    reason?: string
+    reason?: string,
   ) {
     return this.put(
       Routes.guildMemberRole(guildId, userId, roleId),
       undefined,
-      { reason }
+      { reason },
     ) as Promise<void>;
   }
 
@@ -425,7 +428,7 @@ export class Rest extends EventEmitter {
     guildId: string,
     userId: string,
     roleId: string,
-    reason?: string
+    reason?: string,
   ) {
     return this.delete(Routes.guildMemberRole(guildId, userId, roleId), {
       reason,
@@ -436,7 +439,7 @@ export class Rest extends EventEmitter {
     guildId: string,
     userId: string,
     options: RESTPatchAPIGuildMemberJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.patch(Routes.guildMember(guildId, userId), options, {
       reason,
@@ -451,14 +454,14 @@ export class Rest extends EventEmitter {
 
   getGuildIntegrations(guildId: string) {
     return this.get(
-      Routes.guildIntegrations(guildId)
+      Routes.guildIntegrations(guildId),
     ) as Promise<APIGuildIntegration>;
   }
 
   deleteGuildIntegration(
     guildId: string,
     integrationId: string,
-    reason?: string
+    reason?: string,
   ) {
     return this.delete(Routes.guildIntegration(guildId, integrationId), {
       reason,
@@ -468,7 +471,7 @@ export class Rest extends EventEmitter {
   createGuildRole(
     guildId: string,
     options: RESTPostAPIGuildRoleJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.guildRoles(guildId), options, {
       reason,
@@ -499,14 +502,14 @@ export class Rest extends EventEmitter {
 
   getThreadMember(threadId: string, userId: string, withMember = false) {
     return this.get(
-      Routes.threadMembers(threadId, userId) + `?with_member=${withMember}`
+      Routes.threadMembers(threadId, userId) + `?with_member=${withMember}`,
     ) as Promise<APIThreadMember>;
   }
 
   startThread(
     channelId: string,
     data: RESTPostAPIChannelThreadsJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.threads(channelId), data, {
       reason,
@@ -516,7 +519,7 @@ export class Rest extends EventEmitter {
   startThreadInForum(
     channelId: string,
     data: RESTPostAPIGuildForumThreadsJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.threads(channelId), data, {
       reason,
@@ -527,7 +530,7 @@ export class Rest extends EventEmitter {
     channelId: string,
     messageId: string,
     data: RESTPostAPIChannelMessagesThreadsJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.threads(channelId, messageId), data, {
       reason,
@@ -547,7 +550,7 @@ export class Rest extends EventEmitter {
   modifyChannel(
     channelId: string,
     options: RESTPatchAPIChannelJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.patch(Routes.channel(channelId), options, {
       reason,
@@ -556,7 +559,7 @@ export class Rest extends EventEmitter {
 
   createStageInstance(
     options: RESTPostAPIStageInstanceJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.stageInstances(), options, {
       reason,
@@ -566,18 +569,18 @@ export class Rest extends EventEmitter {
   modifyGuildVoiceState(
     guildId: string,
     userId: string,
-    options: RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody
+    options: RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
   ) {
     return this.patch(
       Routes.guildVoiceState(guildId, userId),
-      options
+      options,
     ) as Promise<void>;
   }
 
   createGuildScheduledEvent(
     guildId: string,
     options: RESTPostAPIGuildScheduledEventJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.guildScheduledEvents(guildId), options, {
       reason,
@@ -588,19 +591,19 @@ export class Rest extends EventEmitter {
     webhookId: string,
     webhookToken: string,
     messageId: string,
-    threadId?: string
+    threadId?: string,
   ) {
     return this.delete(
       Routes.webhookMessage(webhookId, webhookToken, messageId) + threadId
         ? `?thread_id=${threadId}`
-        : ""
+        : "",
     ) as Promise<void>;
   }
 
   createGuildAutoModerationRule(
     guildId: string,
     options: RESTPostAPIAutoModerationRuleJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.guildAutoModerationRules(guildId), options, {
       reason,
@@ -610,11 +613,11 @@ export class Rest extends EventEmitter {
   deleteGuildAutoModerationRule(
     guildId: string,
     autoModerationRuleId: string,
-    reason?: string
+    reason?: string,
   ) {
     return this.delete(
       Routes.guildAutoModerationRule(guildId, autoModerationRuleId),
-      { reason }
+      { reason },
     ) as Promise<void>;
   }
 
@@ -622,70 +625,70 @@ export class Rest extends EventEmitter {
     guildId: string,
     autoModerationRuleId: string,
     options: RESTPatchAPIAutoModerationRuleJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.patch(
       Routes.guildAutoModerationRule(guildId, autoModerationRuleId),
       options,
-      { reason }
+      { reason },
     ) as Promise<APIAutoModerationRule>;
   }
 
   createApplicationCommand(
     applicationId: string,
-    options: RESTPostAPIApplicationCommandsJSONBody
+    options: RESTPostAPIApplicationCommandsJSONBody,
   ) {
     return this.post(
       Routes.applicationCommands(applicationId),
-      options
+      options,
     ) as Promise<APIApplicationCommand>;
   }
 
   deleteApplicationCommand(applicationId: string, commandId: string) {
     return this.delete(
-      Routes.applicationCommand(applicationId, commandId)
+      Routes.applicationCommand(applicationId, commandId),
     ) as Promise<void>;
   }
 
   editApplicationCommand(
     applicationId: string,
     commandId: string,
-    options: RESTPatchAPIApplicationCommandJSONBody
+    options: RESTPatchAPIApplicationCommandJSONBody,
   ) {
     return this.patch(
       Routes.applicationCommand(applicationId, commandId),
-      options
+      options,
     ) as Promise<APIApplication>;
   }
 
   bulkOverwriteApplicationCommands(
     applicationId: string,
-    options: RESTPutAPIApplicationCommandsJSONBody
+    options: RESTPutAPIApplicationCommandsJSONBody,
   ) {
     return this.put(
       Routes.applicationCommands(applicationId),
-      options
+      options,
     ) as Promise<APIApplication[]>;
   }
 
   createGuildApplicationCommand(
     applicationId: string,
     guildId: string,
-    options: RESTPostAPIApplicationCommandsJSONBody
+    options: RESTPostAPIApplicationCommandsJSONBody,
   ) {
     return this.post(
       Routes.applicationGuildCommands(applicationId, guildId),
-      options
+      options,
     ) as Promise<APIApplicationCommand>;
   }
 
   deleteGuildApplicationCommand(
     applicationId: string,
     guildId: string,
-    commandId: string
+    commandId: string,
   ) {
     return this.delete(
-      Routes.applicationGuildCommand(applicationId, guildId, commandId)
+      Routes.applicationGuildCommand(applicationId, guildId, commandId),
     ) as Promise<void>;
   }
 
@@ -693,29 +696,29 @@ export class Rest extends EventEmitter {
     applicationId: string,
     guildId: string,
     commandId: string,
-    options: RESTPatchAPIApplicationCommandJSONBody
+    options: RESTPatchAPIApplicationCommandJSONBody,
   ) {
     return this.patch(
       Routes.applicationGuildCommand(applicationId, guildId, commandId),
-      options
+      options,
     ) as Promise<APIApplication>;
   }
 
   bulkOverwriteGuildApplicationCommands(
     applicationId: string,
     guildId: string,
-    options: RESTPutAPIApplicationCommandsJSONBody
+    options: RESTPutAPIApplicationCommandsJSONBody,
   ) {
     return this.put(
       Routes.applicationGuildCommands(applicationId, guildId),
-      options
+      options,
     ) as Promise<APIApplication[]>;
   }
 
   createGuildChannel(
     guildId: string,
     options: RESTPostAPIGuildChannelJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.post(Routes.guildChannels(guildId), options, {
       reason,
@@ -725,7 +728,7 @@ export class Rest extends EventEmitter {
   modifyGuild(
     guildId: string,
     options: RESTPatchAPIGuildJSONBody,
-    reason?: string
+    reason?: string,
   ) {
     return this.patch(Routes.guild(guildId), options, {
       reason,

@@ -95,12 +95,12 @@ export class VoiceState extends Base {
   }
 
   edit(
-    options: KeysToCamelCase<RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody>
+    options: KeysToCamelCase<RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody>,
   ) {
     return this._client.rest.modifyGuildVoiceState(
       this.guildId,
       this.userId === this._client.user?.id ? "@me" : this.userId,
-      options
+      options,
     );
   }
 }

@@ -8,7 +8,7 @@ export class UserUpdate extends Event {
     const old = structuredClone(
       data.id === this.client.user?.id
         ? this.client.user
-        : this.client.cache.users.get(data.id)
+        : this.client.cache.users.get(data.id),
     );
 
     const updated = this.client.cache.users.add(data);

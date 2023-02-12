@@ -57,9 +57,7 @@ export class Invite {
         new InviteGuild({ ...data.guild, client: data.client })
       : null;
 
-    this.expiresAt = data.expires_at
-      ? Date.parse(data.expires_at)
-      : null;
+    this.expiresAt = data.expires_at ? Date.parse(data.expires_at) : null;
 
     this.inviter = data.inviter
       ? data.client.cache.users.add(data.inviter)
@@ -78,14 +76,15 @@ export class Invite {
 
     this.approximateMemberCount = data.approximate_member_count || 0;
     this.approximatePresenceCount = data.approximate_presence_count || 0;
-    this.guildScheduledEvent = data.guild_scheduled_event && this.guild
-      ? new ScheduledEvent(data.guild_scheduled_event, this.guild)
-      : null;
+    this.guildScheduledEvent =
+      data.guild_scheduled_event && this.guild
+        ? new ScheduledEvent(data.guild_scheduled_event, this.guild)
+        : null;
 
     if (this.guildScheduledEvent && this.guild instanceof Guild) {
       this.guild.scheduledEvents.set(
         this.guildScheduledEvent.id,
-        this.guildScheduledEvent
+        this.guildScheduledEvent,
       );
     }
   }

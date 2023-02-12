@@ -2,7 +2,7 @@ import { GuildChannelCache } from "@cache/ChannelCache";
 import { GuildEmojiCache } from "@cache/EmojiCache";
 import { MemberCache } from "@cache/MemberCache";
 import { GuildRoleCache } from "@cache/RoleCache";
-import { GuildStickerCache } from "@cache/StickerCache";
+import { GuildStickerDataManager } from "@manager/StickerDataManager";
 import {
   APIGuildWithShard,
   CreateChannelOptions,
@@ -110,7 +110,7 @@ export class BaseGuild extends Base {
           this.icon,
           format ?? this.icon.startsWith("a_")
             ? ImageFormat.GIF
-            : ImageFormat.PNG
+            : ImageFormat.PNG,
         )
     );
   }
@@ -124,7 +124,7 @@ export class BaseGuild extends Base {
           this.banner,
           format ?? this.icon!.startsWith("a_")
             ? ImageFormat.GIF
-            : ImageFormat.PNG
+            : ImageFormat.PNG,
         )
     );
   }
@@ -188,7 +188,7 @@ export class InviteGuild extends BaseGuild {
    */
   welcomeScreen: WelcomeScreen | null;
   constructor(
-    data: DataWithClient<APIInviteGuild & Pick<APIGuild, "welcome_screen">>
+    data: DataWithClient<APIInviteGuild & Pick<APIGuild, "welcome_screen">>,
   ) {
     super(data);
 
@@ -316,7 +316,7 @@ export class Guild extends BaseGuild {
   /**
    * Custom guild stickers
    */
-  stickers: GuildStickerCache;
+  stickers: GuildStickerDataManager;
   /**
    * Whether the guild has the boost progress bar enabled
    */
@@ -368,27 +368,27 @@ export class Guild extends BaseGuild {
     this.channels = new GuildChannelCache(
       this._client.cache._cacheLimit("channels"),
       this._client.cache,
-      this
+      this,
     );
     this.roles = new GuildRoleCache(
       this._client.cache._cacheLimit("roles"),
       this._client.cache,
-      this
+      this,
     );
     this.emojis = new GuildEmojiCache(
       this._client.cache._cacheLimit("emojis"),
       this._client.cache,
-      this
+      this,
     );
-    this.stickers = new GuildStickerCache(
+    this.stickers = new GuildStickerDataManager(
       this._client.cache._cacheLimit("stickers"),
       this._client.cache,
-      this
+      this,
     );
     this.members = new MemberCache(
       this._client.cache._cacheLimit("members"),
       this._client.cache,
-      this
+      this,
     );
     this.voiceStates = new Map();
     this.scheduledEvents = new Map();
@@ -442,7 +442,7 @@ export class Guild extends BaseGuild {
   createMemberBan(
     userId: string,
     options: KeysToCamelCase<RESTPutAPIGuildBanJSONBody> = {},
-    reason?: string
+    reason?: string,
   ) {
     if (
       options.deleteMessageDays &&
@@ -479,20 +479,20 @@ export class Guild extends BaseGuild {
       this.id,
       roleId,
       ~~newPosition,
-      reason
+      reason,
     );
   }
 
   async editRole(
     roleId: string,
     options: KeysToCamelCase<RESTPatchAPIGuildRoleJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     const role = await this._client.rest.modifyGuildRole(
       this.id,
       roleId,
       options,
-      reason
+      reason,
     );
 
     this._client.cache.roles.add(role);
@@ -504,7 +504,7 @@ export class Guild extends BaseGuild {
       KeysToCamelCase<RESTPostAPIGuildRoleJSONBody>,
       "permissions"
     > & { permissions: Permissions | bigint },
-    reason?: string
+    reason?: string,
   ) {
     const opts: RESTPostAPIGuildRoleJSONBody = {};
 
@@ -531,7 +531,7 @@ export class Guild extends BaseGuild {
 
   pruneMembers(
     options: KeysToCamelCase<RESTPostAPIGuildPruneJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     return this._client.rest.beginGuildPrune(
       this.id,
@@ -540,7 +540,7 @@ export class Guild extends BaseGuild {
         include_roles: options.includeRoles,
         compute_prune_count: options.computePruneCount,
       },
-      reason
+      reason,
     );
   }
 
@@ -553,7 +553,7 @@ export class Guild extends BaseGuild {
       this.id,
       userId,
       roleId,
-      reason
+      reason,
     );
   }
 
@@ -562,24 +562,24 @@ export class Guild extends BaseGuild {
       this.id,
       userId,
       roleId,
-      reason
+      reason,
     );
   }
 
   editMember(
     userId: "@me",
     options: RESTPatchAPICurrentGuildMemberJSONBody,
-    reason?: string
+    reason?: string,
   ): Promise<Member>;
   editMember(
     userId: string,
     options: KeysToCamelCase<RESTPatchAPIGuildMemberJSONBody>,
-    reason?: string
+    reason?: string,
   ): Promise<Member>;
   async editMember(
     userId: string | "@me",
     options: KeysToCamelCase<RESTPatchAPIGuildMemberJSONBody>,
-    reason?: string
+    reason?: string,
   ): Promise<Member> {
     const opts: RESTPatchAPIGuildMemberJSONBody = {};
 
@@ -597,7 +597,7 @@ export class Guild extends BaseGuild {
       this.id,
       userId,
       opts,
-      reason
+      reason,
     );
 
     return this.members.add(new Member(member, this));
@@ -617,7 +617,7 @@ export class Guild extends BaseGuild {
 
   createScheduledEvent(
     options: KeysToCamelCase<RESTPostAPIGuildScheduledEventJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     return this._client.rest.createGuildScheduledEvent(
       this.id,
@@ -632,7 +632,7 @@ export class Guild extends BaseGuild {
         scheduled_end_time: options.scheduledEndTime,
         privacy_level: options.privacyLevel,
       },
-      reason
+      reason,
     );
   }
 
@@ -643,7 +643,7 @@ export class Guild extends BaseGuild {
     > & {
       triggerMetadata?: KeysToCamelCase<APIAutoModerationRuleTriggerMetadata>;
     },
-    reason?: string
+    reason?: string,
   ) {
     return this._client.rest.createGuildAutoModerationRule(
       this.id,
@@ -663,7 +663,7 @@ export class Guild extends BaseGuild {
           regex_patterns: options.triggerMetadata.regexPatterns,
         },
       },
-      reason
+      reason,
     );
   }
 
@@ -671,7 +671,7 @@ export class Guild extends BaseGuild {
     return this._client.rest.deleteGuildAutoModerationRule(
       this.id,
       autoModerationRuleId,
-      reason
+      reason,
     );
   }
 
@@ -683,7 +683,7 @@ export class Guild extends BaseGuild {
     > & {
       triggerMetadata?: KeysToCamelCase<APIAutoModerationRuleTriggerMetadata>;
     },
-    reason?: string
+    reason?: string,
   ) {
     return this._client.rest.modifyGuildModerationRule(
       this.id,
@@ -702,7 +702,7 @@ export class Guild extends BaseGuild {
           presets: options.triggerMetadata.presets,
           regex_patterns: options.triggerMetadata.regexPatterns,
         },
-      }
+      },
     );
   }
 
@@ -729,13 +729,13 @@ export class Guild extends BaseGuild {
     const data = await this._client.rest.createGuildChannel(
       this.id,
       opts,
-      reason
+      reason,
     );
 
     return Resolvable.resolveChannel(
       Channel.from({ ...data, client: this._client }, this),
       this._client,
-      this
+      this,
     );
   }
 
@@ -783,12 +783,12 @@ export class Guild extends BaseGuild {
 
   editApplicationCommand(
     commandId: string,
-    options: RESTPatchAPIApplicationCommandJSONBody
+    options: RESTPatchAPIApplicationCommandJSONBody,
   ) {
     return this._client.application!.editGuildCommand(
       this.id,
       commandId,
-      options
+      options,
     );
   }
 
@@ -797,17 +797,17 @@ export class Guild extends BaseGuild {
   }
 
   bulkOverwriteApplicationCommands(
-    commands: RESTPutAPIApplicationCommandsJSONBody
+    commands: RESTPutAPIApplicationCommandsJSONBody,
   ) {
     return this._client.application!.bulkOverwriteGuildCommands(
       this.id,
-      commands
+      commands,
     );
   }
 
   async edit(
     options: KeysToCamelCase<RESTPatchAPIGuildJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     const data = await this._client.rest.modifyGuild(this.id, options, reason);
 

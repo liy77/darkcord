@@ -22,7 +22,7 @@ export class TypingStart extends Event {
     const guildId = data.guild_id;
     const userId = data.user_id;
     const channel = this.client.cache.channels.get(
-      channelId
+      channelId,
     ) as TextBasedChannel;
 
     this.client.emit(Events.TypingStart, {

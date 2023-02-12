@@ -85,7 +85,7 @@ export class Application extends Base {
         (string | undefined)?,
         (string | undefined)?,
         (string | undefined)?,
-        (string | undefined)?
+        (string | undefined)?,
       ]
     | undefined;
   /**
@@ -139,12 +139,12 @@ export class ClientApplication extends Application {
 
   createGuildCommand(
     guildId: string,
-    options: RESTPostAPIApplicationCommandsJSONBody
+    options: RESTPostAPIApplicationCommandsJSONBody,
   ) {
     return this._client.rest.createGuildApplicationCommand(
       this.id,
       guildId,
-      options
+      options,
     );
   }
 
@@ -156,49 +156,49 @@ export class ClientApplication extends Application {
     return this._client.rest.deleteGuildApplicationCommand(
       this.id,
       guildId,
-      commandId
+      commandId,
     );
   }
 
   editCommand(
     commandId: string,
-    options: RESTPatchAPIApplicationCommandJSONBody
+    options: RESTPatchAPIApplicationCommandJSONBody,
   ) {
     return this._client.rest.editApplicationCommand(
       this.id,
       commandId,
-      options
+      options,
     );
   }
 
   editGuildCommand(
     guildId: string,
     commandId: string,
-    options: RESTPatchAPIApplicationCommandJSONBody
+    options: RESTPatchAPIApplicationCommandJSONBody,
   ) {
     return this._client.rest.editGuildApplicationCommand(
       this.id,
       guildId,
       commandId,
-      options
+      options,
     );
   }
 
   bulkOverwriteCommands(commands: RESTPutAPIApplicationCommandsJSONBody) {
     return this._client.rest.bulkOverwriteApplicationCommands(
       this.id,
-      commands
+      commands,
     );
   }
 
   bulkOverwriteGuildCommands(
     guildId: string,
-    commands: RESTPutAPIApplicationCommandsJSONBody
+    commands: RESTPutAPIApplicationCommandsJSONBody,
   ) {
     return this._client.rest.bulkOverwriteGuildApplicationCommands(
       this.id,
       guildId,
-      commands
+      commands,
     );
   }
 }

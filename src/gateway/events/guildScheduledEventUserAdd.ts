@@ -8,7 +8,7 @@ export class GuildScheduledEventUserAdd extends Event {
 
     if (!guild) return;
     const event = guild.scheduledEvents.get(data.guild_scheduled_event_id);
-    const user = await this.getUser(data.user_id)
+    const user = await this.getUser(data.user_id);
 
     this.client.emit(Events.GuildScheduledEventUserAdd, event, user);
   }

@@ -6,10 +6,7 @@ import {
 } from "../typings";
 import { FormData, fetch } from "undici";
 import { Blob } from "node:buffer";
-import {
-  APIInteractionResponse,
-  Utils,
-} from "discord-api-types/v10";
+import { APIInteractionResponse, Utils } from "discord-api-types/v10";
 import { readFileSync } from "node:fs";
 import {
   Channel,
@@ -42,7 +39,7 @@ export function MakeError(
     | ErrorConstructor
     | TypeErrorConstructor
     | RangeErrorConstructor
-    | SyntaxErrorConstructor = Error
+    | SyntaxErrorConstructor = Error,
 ): Error | TypeError | RangeError | SyntaxError {
   return new (class extends (type as ErrorConstructor) {
     [x: string]: any;
@@ -63,7 +60,7 @@ export function extractMessageData(
   data:
     | MessagePostData
     | (Omit<APIInteractionResponse, "data"> & { data: MessagePostData }),
-  isInteraction = false
+  isInteraction = false,
 ) {
   let d: FormData | string;
   let contentType: string | undefined;
@@ -84,7 +81,7 @@ export function extractMessageData(
       form.append(
         `files[${index}]`,
         file.file instanceof Blob ? file.file : new Blob([file.file]),
-        file.name
+        file.name,
       );
       index++;
     }
@@ -103,7 +100,7 @@ export function extractMessageData(
 
     form.append(
       "payload_json",
-      JSON.stringify(isInteraction ? data : postData)
+      JSON.stringify(isInteraction ? data : postData),
     );
     d = form;
   } else {
@@ -118,7 +115,7 @@ export function extractMessageData(
 }
 
 export async function buildAttachment(
-  attachment: MessageAttachment & { file: URL | string }
+  attachment: MessageAttachment & { file: URL | string },
 ): Promise<MessageAttachment> {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof attachment !== "object" || !attachment.file || !attachment.name) {
@@ -147,7 +144,7 @@ export async function buildAttachment(
     }
 
     const blob = await fetch(attachment.file.toString()).then((res) =>
-      res.blob()
+      res.blob(),
     );
 
     return {
@@ -207,7 +204,7 @@ export function bitsArrayToBits(arr: number[], init = 0) {
 }
 
 export function objectSnakeKeysToCamelKeys<T extends Record<string, any>>(
-  o: T
+  o: T,
 ): KeysToCamelCase<T> {
   const camelized = {};
   Object.entries(o).forEach(([key, value]) => {
@@ -219,7 +216,7 @@ export function objectSnakeKeysToCamelKeys<T extends Record<string, any>>(
 
 export function isEqual<_1 extends any, _2 extends any>(
   o1: _1,
-  o2: _2
+  o2: _2,
 ): boolean {
   const equalObject =
     (t: any) =>
@@ -284,7 +281,7 @@ export function isTextBasedChannel(c: Channel): c is TextBasedChannel {
 }
 
 export function transformMessagePostData(
-  data: string | MessagePostData
+  data: string | MessagePostData,
 ): MessagePostData {
   if (typeof data === "string") {
     return {
@@ -302,4 +299,3 @@ export function transformMessagePostData(
 
   return data;
 }
-

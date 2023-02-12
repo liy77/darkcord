@@ -16,15 +16,15 @@ export class GuildMemberUpdate extends Event {
     const oldMember = structuredClone(guild.members.get(data.user.id));
     const updatedData = oldMember
       ? (Object.assign(oldMember.rawData, data) as APIGuildMember)
-      : { ...data, deaf: null, mute: null } as unknown as APIGuildMember;
+      : ({ ...data, deaf: null, mute: null } as unknown as APIGuildMember);
 
     const updated = guild.members.add(
       new Member(
         {
           ...updatedData,
         },
-        guild
-      )
+        guild,
+      ),
     );
 
     this.client.emit(Events.GuildMemberUpdate, oldMember, updated);

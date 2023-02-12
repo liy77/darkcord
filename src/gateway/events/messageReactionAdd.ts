@@ -18,10 +18,10 @@ export class MessageReactionAdd extends Event {
 
     const channel = this.client.cache.channels.get(
       data.channel_id,
-      this.getGuild(data.guild_id as string)
+      this.getGuild(data.guild_id as string),
     );
 
-    const user = await this.getUser(data.user_id)
+    const user = await this.getUser(data.user_id);
 
     if (isTextBasedChannel(channel!)) {
       if (reaction instanceof Reaction) reaction.users.add(user);
@@ -30,7 +30,11 @@ export class MessageReactionAdd extends Event {
         channel.messages.get(data.message_id) ||
         (await channel.messages.fetch(data.message_id));
 
-      message.reactions._add(reaction, true, (reaction.emoji.id ?? reaction.emoji.name) as string);
+      message.reactions._add(
+        reaction,
+        true,
+        (reaction.emoji.id ?? reaction.emoji.name) as string,
+      );
 
       this.client.emit(Events.MessageReactionAdd, reaction, user, message);
     }

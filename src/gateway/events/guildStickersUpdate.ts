@@ -9,11 +9,16 @@ export class GuildStickersUpdate extends Event {
 
     if (!guild) return;
 
-    const oldStickers = structuredClone(guild.stickers);
+    const oldStickers = structuredClone(guild.stickers.cache);
     for (const sticker of data.stickers) {
       guild.stickers.add(sticker);
     }
 
-    this.client.emit(Events.GuildStickersUpdate, oldStickers, guild.stickers, guild);
+    this.client.emit(
+      Events.GuildStickersUpdate,
+      oldStickers,
+      guild.stickers.cache,
+      guild,
+    );
   }
 }

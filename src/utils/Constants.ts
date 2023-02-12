@@ -34,7 +34,7 @@ export enum ShardEvents {
   PreReady = "preReady",
   Error = "error",
   Dispatch = "dispatch",
-  Ready = "ready"
+  Ready = "ready",
 }
 
 export enum Events {
@@ -110,10 +110,10 @@ export enum Events {
   ChannelDelete = "channelDelete",
   ChannelUpdate = "channelUpdate",
   ChannelPinsUpdate = "channelPinsUpdate",
-  
+
   // User
   UserUpdate = "userUpdate",
-  
+
   // Voice
   VoiceChannelSwitch = "voiceChannelSwitch",
   VoiceChannelLeave = "voiceChannelLeave",
@@ -130,7 +130,7 @@ export enum Events {
 
   // Invite
   InviteCreate = "inviteCreate",
-  InviteDelete = "inviteDelete"
+  InviteDelete = "inviteDelete",
 }
 
 export const InvitePattern =
@@ -138,7 +138,7 @@ export const InvitePattern =
 
 export function timestampFormat<S extends MessageTimestampStyle>(
   time: number | string,
-  style?: S
+  style?: S,
 ): `<t:${string}:${S}>` | `<t:${string}>` {
   return `<t:${time}${style ? `:${style}` : ""}>`;
 }

@@ -8,7 +8,7 @@ export class InviteDelete extends Event {
     const guild = this.getGuild(data.guild_id!);
 
     if (!guild) return;
-      
+
     const deleted = guild.invites.get(data.code);
     this.client.emit(Events.InviteDelete, deleted);
   }

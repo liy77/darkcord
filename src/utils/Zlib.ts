@@ -4,9 +4,7 @@ import path from "node:path";
 export class Zlib {
   _wasm: any;
   constructor() {
-    this._wasm = createWebAssemblyModule(
-      path.join(__dirname, "zlib.wasm")
-    );
+    this._wasm = createWebAssemblyModule(path.join(__dirname, "zlib.wasm"));
   }
 
   length() {
@@ -36,7 +34,7 @@ export class Zlib {
 
     return this.#copyAndFree(
       this._wasm.compress(bytes, buffer.length, level),
-      this.length()
+      this.length(),
     );
   }
 

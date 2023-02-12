@@ -1,5 +1,9 @@
 import { DataWithClient } from "@typings/index";
-import { APITeam, APITeamMember, TeamMemberMembershipState } from "discord-api-types/v10";
+import {
+  APITeam,
+  APITeamMember,
+  TeamMemberMembershipState,
+} from "discord-api-types/v10";
 
 import { User } from "./User";
 
@@ -40,7 +44,7 @@ export class Team {
     this.icon = data.icon;
     this.id = data.id;
     this.members = data.members.map(
-      (member) => new TeamMember({ ...member, client: data.client })
+      (member) => new TeamMember({ ...member, client: data.client }),
     );
     this.name = data.name;
     this.ownerUserId = data.owner_user_id;

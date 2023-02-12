@@ -10,7 +10,8 @@ export class ThreadMembersUpdate extends Event {
 
     if (thread) {
       const addedMembers = data.added_members?.map(
-        (member) => new ThreadMember({ ...member, client: this.client }, thread)
+        (member) =>
+          new ThreadMember({ ...member, client: this.client }, thread),
       );
 
       if (addedMembers) {
@@ -26,7 +27,7 @@ export class ThreadMembersUpdate extends Event {
       }
 
       const channel = this.client.cache.channels.get(
-        thread.channel!.id
+        thread.channel!.id,
       ) as GuildChannel | null;
 
       if (channel) channel.threads._add(thread);
@@ -35,7 +36,7 @@ export class ThreadMembersUpdate extends Event {
       this.client.emit(
         Events.ThreadMembersUpdate,
         addedMembers,
-        data.removed_member_ids
+        data.removed_member_ids,
       );
     }
   }

@@ -6,7 +6,13 @@
     "sourceType": "script"
   },
   "plugins": ["@typescript-eslint"],
-  "ignorePatterns": ["**/dist/*", "**/typing/*", "**/apps/*", "**/*.js"],
+  "ignorePatterns": [
+    "**/dist/*",
+    "**/typing/*",
+    "**/apps/*",
+    "**/*.js",
+    "**/*.wasm"
+  ],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "error",
     "@typescript-eslint/ban-types": "error",

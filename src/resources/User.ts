@@ -97,7 +97,7 @@ export class User extends Base {
     return (
       RouteBases.cdn +
       CDNRoutes.defaultUserAvatar(
-        (Number(this.discriminator) % 5) as DefaultUserAvatarAssets
+        (Number(this.discriminator) % 5) as DefaultUserAvatarAssets,
       )
     );
   }
@@ -119,7 +119,7 @@ export class User extends Base {
         this.avatar,
         options?.format ?? this.avatar.startsWith("a_")
           ? ImageFormat.GIF
-          : ImageFormat.PNG
+          : ImageFormat.PNG,
       );
 
     if (options?.size) {

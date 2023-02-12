@@ -66,7 +66,7 @@ export class Interaction extends Base {
 
   static from(
     data: DataWithClient<APIInteraction>,
-    res?: WebServerInteractionResponse
+    res?: WebServerInteractionResponse,
   ) {
     switch (data.type) {
       case InteractionType.ApplicationCommand: {
@@ -129,7 +129,7 @@ export class ReplyableInteraction extends Interaction {
   acknowledged: boolean;
   constructor(
     data: DataWithClient<APIInteraction>,
-    httpResponse?: WebServerInteractionResponse
+    httpResponse?: WebServerInteractionResponse,
   ) {
     super(data);
     this._http = httpResponse;
@@ -150,7 +150,7 @@ export class ReplyableInteraction extends Interaction {
         {
           flags: flags || 0,
         },
-        InteractionResponseType.DeferredChannelMessageWithSource
+        InteractionResponseType.DeferredChannelMessageWithSource,
       );
 
       this.acknowledged = true;
@@ -161,7 +161,7 @@ export class ReplyableInteraction extends Interaction {
         {
           flags: flags || 0,
         },
-        InteractionResponseType.DeferredChannelMessageWithSource
+        InteractionResponseType.DeferredChannelMessageWithSource,
       );
 
       this.acknowledged = true;
@@ -179,7 +179,7 @@ export class ReplyableInteraction extends Interaction {
     return this._client.rest.deleteWebhookMessage(
       this.applicationId,
       this.token,
-      messageId
+      messageId,
     );
   }
 
@@ -200,14 +200,14 @@ export class ReplyableInteraction extends Interaction {
     if (this.isHTTP) {
       await this._http?.respond(
         content,
-        InteractionResponseType.ChannelMessageWithSource
+        InteractionResponseType.ChannelMessageWithSource,
       );
     } else {
       await this._client.rest.respondInteraction(
         this.id,
         this.token,
         content,
-        InteractionResponseType.ChannelMessageWithSource
+        InteractionResponseType.ChannelMessageWithSource,
       );
     }
 
@@ -219,7 +219,7 @@ export class ReplyableInteraction extends Interaction {
       this.applicationId,
       this.token,
       messageId,
-      transformMessagePostData(content)
+      transformMessagePostData(content),
     );
   }
 
@@ -238,7 +238,7 @@ export class ReplyableInteraction extends Interaction {
     return this._client.rest.executeWebhook(
       this.applicationId,
       this.token,
-      transformMessagePostData(content)
+      transformMessagePostData(content),
     );
   }
 
@@ -253,16 +253,16 @@ export class ReplyableInteraction extends Interaction {
     const rawMessage = await this._client.rest.getWebhookMessage(
       this.applicationId,
       this.token,
-      "@original"
+      "@original",
     );
     const channel = this._client.cache.channels.get(
-      rawMessage.channel_id
+      rawMessage.channel_id,
     ) as Channel;
     const guildId = channel.isGuildChannel() ? channel.guildId : undefined;
 
     const message = new Message(
       { ...rawMessage, client: this._client },
-      guildId ? Resolvable.resolveGuild(guildId, this._client) : undefined
+      guildId ? Resolvable.resolveGuild(guildId, this._client) : undefined,
     );
 
     return Resolvable.resolveMessage(message, this._client);
@@ -313,7 +313,7 @@ export class ComponentInteraction extends ReplyableInteraction {
   channel: Channel;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
-    httpResponse?: WebServerInteractionResponse
+    httpResponse?: WebServerInteractionResponse,
   ) {
     super(data, httpResponse);
     this.componentType = data.data.component_type;
@@ -326,7 +326,7 @@ export class ComponentInteraction extends ReplyableInteraction {
         ...data.message,
         client: data.client,
       }),
-      data.client
+      data.client,
     );
     this.channel = data.client.cache.channels.get(data.channel_id) as Channel;
   }
@@ -342,14 +342,14 @@ export class ComponentInteraction extends ReplyableInteraction {
     if (this.isHTTP) {
       await this._http?.respond(
         {},
-        InteractionResponseType.DeferredMessageUpdate
+        InteractionResponseType.DeferredMessageUpdate,
       );
     } else {
       await this._client.rest.respondInteraction(
         this.id,
         this.token,
         {},
-        InteractionResponseType.DeferredMessageUpdate
+        InteractionResponseType.DeferredMessageUpdate,
       );
     }
   }
@@ -368,7 +368,7 @@ export class ComponentInteraction extends ReplyableInteraction {
         this.id,
         this.token,
         content,
-        InteractionResponseType.UpdateMessage
+        InteractionResponseType.UpdateMessage,
       );
     }
   }
@@ -417,7 +417,7 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
   channel: Channel | null;
   constructor(
     data: DataWithClient<APIModalSubmitInteraction>,
-    httpResponse?: WebServerInteractionResponse
+    httpResponse?: WebServerInteractionResponse,
   ) {
     super(data, httpResponse);
     this.locale = data.locale;
@@ -425,12 +425,12 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
     this.message = data.message
       ? Resolvable.resolveMessage(
           new Message({ ...data.message, client: data.client }),
-          data.client
+          data.client,
         )
       : null;
     this.channelId = data.channel_id;
     this.channel = data.client.cache.channels.get(
-      this.channelId as string
+      this.channelId as string,
     ) as Channel;
   }
 
@@ -445,14 +445,14 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
     if (this.isHTTP) {
       await this._http?.respond(
         {},
-        InteractionResponseType.DeferredMessageUpdate
+        InteractionResponseType.DeferredMessageUpdate,
       );
     } else {
       await this._client.rest.respondInteraction(
         this.id,
         this.token,
         {},
-        InteractionResponseType.DeferredMessageUpdate
+        InteractionResponseType.DeferredMessageUpdate,
       );
     }
   }
@@ -469,7 +469,7 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
         this.id,
         this.token,
         data,
-        InteractionResponseType.UpdateMessage
+        InteractionResponseType.UpdateMessage,
       );
     }
   }
@@ -502,7 +502,7 @@ export class CommandInteractionOptions {
     options: APIApplicationCommandInteractionDataOption[],
     resolved: APIInteractionDataResolved,
     public _client: AnyClient,
-    public guild?: Guild
+    public guild?: Guild,
   ) {
     this.#resolved = resolved;
 
@@ -641,7 +641,7 @@ export class ChatInputApplicationCommandInteractionData extends Base {
   options: CommandInteractionOptions | null;
   constructor(
     data: DataWithClient<APIChatInputApplicationCommandInteractionData>,
-    guild?: Guild
+    guild?: Guild,
   ) {
     super(data, guild?._client);
 
@@ -652,7 +652,7 @@ export class ChatInputApplicationCommandInteractionData extends Base {
           data.options,
           data.resolved as APIInteractionDataResolved,
           data.client,
-          guild
+          guild,
         )
       : null;
     data.resolved;
@@ -662,7 +662,7 @@ export class ChatInputApplicationCommandInteractionData extends Base {
 export class MessageApplicationCommandInteractionData extends Base {
   constructor(
     data: DataWithClient<APIMessageApplicationCommandInteractionData>,
-    guild?: Guild
+    guild?: Guild,
   ) {
     super(data, guild?._client);
   }
@@ -687,7 +687,7 @@ export class UserApplicationCommandInteractionData extends Base {
   targetMember?: APIInteractionDataResolvedGuildMember | Member;
   constructor(
     data: DataWithClient<APIUserApplicationCommandInteractionData>,
-    guild?: Guild
+    guild?: Guild,
   ) {
     super(data, guild?._client);
 
@@ -753,7 +753,7 @@ export class CommandInteraction extends ReplyableInteraction {
   channel: Channel | null;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
-    httpResponse?: WebServerInteractionResponse
+    httpResponse?: WebServerInteractionResponse,
   ) {
     super(data, httpResponse);
     this.guildId = data.guild_id;
@@ -768,7 +768,7 @@ export class CommandInteraction extends ReplyableInteraction {
     this.message = data.message
       ? Resolvable.resolveMessage(
           new Message({ ...data.message, client: data.client }),
-          data.client
+          data.client,
         )
       : null;
 
@@ -786,7 +786,7 @@ export class CommandInteraction extends ReplyableInteraction {
           ...data.data,
           client: this._client,
         },
-        this.guild
+        this.guild,
       );
     } else if (data.data.type === ApplicationCommandType.Message) {
       this.data = new MessageApplicationCommandInteractionData(
@@ -794,7 +794,7 @@ export class CommandInteraction extends ReplyableInteraction {
           ...data.data,
           client: this._client,
         },
-        this.guild
+        this.guild,
       );
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (data.data.type === ApplicationCommandType.User) {
@@ -803,7 +803,7 @@ export class CommandInteraction extends ReplyableInteraction {
           ...data.data,
           client: this._client,
         },
-        this.guild
+        this.guild,
       );
     }
   }
@@ -846,7 +846,7 @@ export class AutocompleteInteraction extends Interaction {
   acknowledged: boolean;
   constructor(
     data: DataWithClient<APIApplicationCommandAutocompleteInteraction>,
-    httpResponse?: WebServerInteractionResponse
+    httpResponse?: WebServerInteractionResponse,
   ) {
     super(data);
 
@@ -866,14 +866,14 @@ export class AutocompleteInteraction extends Interaction {
     if (this.isHTTP) {
       await this._http?.respond(
         { choices },
-        InteractionResponseType.ApplicationCommandAutocompleteResult
+        InteractionResponseType.ApplicationCommandAutocompleteResult,
       );
     } else {
       await this._client.rest.respondInteraction(
         this.id,
         this.token,
         { choices },
-        InteractionResponseType.ApplicationCommandAutocompleteResult
+        InteractionResponseType.ApplicationCommandAutocompleteResult,
       );
     }
 

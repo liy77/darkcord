@@ -110,7 +110,7 @@ export class Member extends Base {
         this.avatar,
         options?.format ?? this.avatar.startsWith("a_")
           ? ImageFormat.GIF
-          : ImageFormat.PNG
+          : ImageFormat.PNG,
       );
 
     if (options?.size) {
@@ -140,7 +140,7 @@ export class Member extends Base {
 
   edit(
     options: KeysToCamelCase<RESTPatchAPIGuildMemberJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     return this.guild.editMember(this.id, options, reason);
   }

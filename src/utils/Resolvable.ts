@@ -34,7 +34,7 @@ export type MessageResolvable = Message | (APIMessage & { guild_id?: string });
 export namespace Resolvable {
   export function resolveMessage(
     messageResolvable: MessageResolvable,
-    client: AnyClient
+    client: AnyClient,
   ) {
     let resolved: Message;
     if (!(messageResolvable instanceof Message)) {
@@ -52,7 +52,7 @@ export namespace Resolvable {
     const channel = Resolvable.resolveChannel(
       resolved.channelId,
       client,
-      resolved.guild!
+      resolved.guild!,
     ) as TextBasedChannel;
 
     resolved.channel = channel;
@@ -64,7 +64,7 @@ export namespace Resolvable {
 
   export function resolveGuild(
     guildResolvable: GuildResolvable,
-    client: AnyClient
+    client: AnyClient,
   ) {
     let resolved: Guild;
 
@@ -104,7 +104,7 @@ export namespace Resolvable {
   export function resolveChannel(
     channelResolvable: ChannelResolvable,
     client: AnyClient,
-    guildResolvable?: GuildResolvable
+    guildResolvable?: GuildResolvable,
   ) {
     let resolved: AnyChannel | undefined;
     let guild: Guild | undefined;
@@ -116,7 +116,7 @@ export namespace Resolvable {
     if (!(channelResolvable instanceof Channel)) {
       if (typeof channelResolvable === "string") {
         const c = client.cache.channels.get(channelResolvable);
-        resolved = c
+        resolved = c;
       } else {
         resolved = Channel.from({ ...channelResolvable, client }, guild!);
       }

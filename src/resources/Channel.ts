@@ -85,7 +85,7 @@ export class Channel extends Base {
 
   async edit(
     options: KeysToCamelCase<RESTPatchAPIChannelJSONBody>,
-    reason?: string
+    reason?: string,
   ) {
     const data = await this._client.rest.modifyChannel(
       this.id,
@@ -108,7 +108,7 @@ export class Channel extends Base {
         user_limit: options.userLimit,
         position: options.position,
       },
-      reason
+      reason,
     );
 
     return this._update(data);
@@ -130,7 +130,7 @@ export class Channel extends Base {
   }
 
   _update(
-    data: APIChannel
+    data: APIChannel,
   ):
     | GuildChannel
     | GuildTextChannel
@@ -241,7 +241,7 @@ export class TextBasedChannel extends Channel {
     this.messages = new ChannelMessageCache(
       this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
-      this
+      this,
     );
 
     this.lastMessageId = data.last_message_id;
@@ -251,7 +251,7 @@ export class TextBasedChannel extends Channel {
   async createMessage(content: MessagePostData | string) {
     const message = await this._client.rest.createMessage(
       this.id,
-      transformMessagePostData(content)
+      transformMessagePostData(content),
     );
 
     return Resolvable.resolveMessage(
@@ -259,7 +259,7 @@ export class TextBasedChannel extends Channel {
         client: this._client,
         ...message,
       }),
-      this._client
+      this._client,
     );
   }
 
@@ -278,7 +278,7 @@ export class TextBasedChannel extends Channel {
 
     // Resolving message array
     messages = (messages as [Message | string]).map((message) =>
-      typeof message === "string" ? message : message.id
+      typeof message === "string" ? message : message.id,
     );
 
     return this._client.rest.bulkDeleteMessages(this.id, messages);
@@ -338,7 +338,7 @@ export class GuildChannel extends Channel {
     this.guildId = data.guild_id as string;
     this.permissionOverwrites = new Cache();
     this.threads = new Cache<ThreadChannel>(
-      this._client.cache._cacheLimit("threads")
+      this._client.cache._cacheLimit("threads"),
     );
 
     this._update(data);
@@ -351,8 +351,8 @@ export class GuildChannel extends Channel {
               ...perm,
               client: this._client,
             },
-            this
-          )
+            this,
+          ),
         );
       }
     }
@@ -368,7 +368,7 @@ export class GuildChannel extends Channel {
       this.id,
       overwriteId,
       options,
-      reason
+      reason,
     );
   }
 
@@ -417,7 +417,7 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
     this.messages = new ChannelMessageCache(
       this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
-      this as TextBasedChannel
+      this as TextBasedChannel,
     );
   }
 
@@ -425,7 +425,7 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
   async createMessage(content: MessagePostData) {
     const message = await this._client.rest.createMessage(
       this.id,
-      transformMessagePostData(content)
+      transformMessagePostData(content),
     );
 
     return Resolvable.resolveMessage(
@@ -434,9 +434,9 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
           client: this._client,
           ...message,
         },
-        this.guild
+        this.guild,
       ),
-      this._client
+      this._client,
     );
   }
 
@@ -753,7 +753,7 @@ export class ForumChannel extends GuildChannel {
     this._update(data);
 
     this.threads = new Cache<ThreadChannel>(
-      this._client.cache._cacheLimit("threads")
+      this._client.cache._cacheLimit("threads"),
     );
   }
 
@@ -826,7 +826,7 @@ export class BaseVoiceChannel extends GuildChannel {
     data: DataWithClient<
       APIVoiceChannelBase<ChannelType.GuildVoice | ChannelType.GuildStageVoice>
     >,
-    guild: Guild
+    guild: Guild,
   ) {
     super(data, guild);
 
@@ -837,7 +837,7 @@ export class BaseVoiceChannel extends GuildChannel {
   _update(
     data: APIVoiceChannelBase<
       ChannelType.GuildVoice | ChannelType.GuildStageVoice
-    >
+    >,
   ) {
     if ("bitrate" in data && data.bitrate) this.bitrate = data.bitrate;
     if ("rtc_region" in data && data.rtc_region)
@@ -883,7 +883,7 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
     this.messages = new ChannelMessageCache(
       this._client.options.cache?.messageCacheLimitPerChannel || Infinity,
       this._client.cache,
-      this as TextBasedChannel
+      this as TextBasedChannel,
     );
   }
 
@@ -891,7 +891,7 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
   async createMessage(content: MessagePostData) {
     const message = await this._client.rest.createMessage(
       this.id,
-      transformMessagePostData(content)
+      transformMessagePostData(content),
     );
 
     return Resolvable.resolveMessage(
@@ -900,9 +900,9 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
           client: this._client,
           ...message,
         },
-        this.guild
+        this.guild,
       ),
-      this._client
+      this._client,
     );
   }
 
@@ -945,7 +945,7 @@ export class StageChannel extends BaseVoiceChannel {
   }
 
   async createStageInstance(
-    options: KeysToCamelCase<RESTPostAPIStageInstanceJSONBody>
+    options: KeysToCamelCase<RESTPostAPIStageInstanceJSONBody>,
   ) {
     const instance = await this._client.rest.createStageInstance({
       channel_id: options.channelId,

@@ -19,7 +19,7 @@ export class MessageReactionRemove extends Event {
 
     const channel = this.client.cache.channels.get(
       data.channel_id,
-      this.getGuild(data.guild_id!)
+      this.getGuild(data.guild_id!),
     );
 
     const user = this.client.cache.users.get(data.user_id);

@@ -92,7 +92,7 @@ export class Webhook extends Base {
     const updated = await this.rest.modifyWebhookWithToken(
       this.id,
       this.token,
-      data
+      data,
     );
 
     return this._update(updated);

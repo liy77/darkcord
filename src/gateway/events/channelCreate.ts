@@ -15,9 +15,9 @@ export class ChannelCreate extends Event {
     }
 
     if (!existing) {
-        const channel = Channel.from({ ...data, client: this.client }, guild!);
-        
-        this.client.emit(Events.ChannelCreate, channel)
+      const channel = Channel.from({ ...data, client: this.client }, guild!);
+
+      this.client.emit(Events.ChannelCreate, channel);
     }
   }
 }

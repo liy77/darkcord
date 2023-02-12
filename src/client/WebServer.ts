@@ -31,11 +31,11 @@ export const LOCAL_HOST = "127.0.0.1";
 export declare interface WebServer {
   on<T extends keyof WebServerEvents>(
     event: T,
-    listener: (...args: WebServerEvents[T]) => any
+    listener: (...args: WebServerEvents[T]) => any,
   ): this;
   once<T extends keyof WebServerEvents>(
     event: T,
-    listener: (...args: WebServerEvents[T]) => any
+    listener: (...args: WebServerEvents[T]) => any,
   ): this;
   emit<T extends keyof WebServerEvents>(
     event: T,
@@ -83,7 +83,7 @@ export class WebServer extends EventEmitter {
       return NACL!.sign.detached.verify(
         Buffer.from(timestamp + body),
         Buffer.from(signature, "hex"),
-        Buffer.from(this._publicKey, "hex")
+        Buffer.from(this._publicKey, "hex"),
       );
     } catch {
       return false;
@@ -94,7 +94,7 @@ export class WebServer extends EventEmitter {
     request: http.IncomingMessage,
     response: http.ServerResponse<http.IncomingMessage> & {
       req: http.IncomingMessage;
-    }
+    },
   ) {
     this.emit("data", request, response);
 
@@ -122,7 +122,7 @@ export class WebServer extends EventEmitter {
         response.end(
           JSON.stringify({
             type: InteractionResponseType.Pong,
-          })
+          }),
         );
 
         this.emit("interactionPingReceived");
@@ -130,7 +130,7 @@ export class WebServer extends EventEmitter {
         this.emit(
           "interactionDataReceived",
           body,
-          new WebServerInteractionResponse(body, response, this)
+          new WebServerInteractionResponse(body, response, this),
         );
       }
     });
@@ -142,7 +142,7 @@ export class WebServerInteractionResponse {
   constructor(
     public body: APIInteraction,
     rawResponse: RawWebServerResponse,
-    public webserver: WebServer
+    public webserver: WebServer,
   ) {
     this._res = rawResponse;
     this._res.setHeader("Content-Type", "application/json");
@@ -153,14 +153,14 @@ export class WebServerInteractionResponse {
       | MessagePostData
       | APIInteractionResponseCallbackData
       | APICommandAutocompleteInteractionResponseCallbackData,
-    type: InteractionResponseType
+    type: InteractionResponseType,
   ) {
     if ("files" in data && data.files?.length) {
       await this.webserver.client.rest.respondInteraction(
         this.body.id,
         this.body.token,
         data,
-        type
+        type,
       );
       return;
     }
@@ -169,7 +169,7 @@ export class WebServerInteractionResponse {
       JSON.stringify({
         type,
         data,
-      })
+      }),
     );
   }
 }

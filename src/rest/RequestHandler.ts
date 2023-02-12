@@ -76,7 +76,7 @@ export class RequestHandler {
   async #request(
     router: string,
     method = "GET",
-    options: RequestOptions = {}
+    options: RequestOptions = {},
   ): Promise<unknown | null> {
     const { body, contentType, headers: customHeaders, reason } = options;
 
@@ -208,7 +208,7 @@ export class RequestHandler {
             "warn",
             `Rate-Limit on route ${router}${
               sublimitTimeout !== undefined ? " for sublimit" : ""
-            }`
+            }`,
           );
 
           if (sublimitTimeout !== undefined) {
@@ -226,17 +226,11 @@ export class RequestHandler {
             method,
             _.message,
             _.constructor.name,
-            _.code
+            _.code,
           );
         }
 
-        throw new DiscordAPIError(
-          router,
-          method,
-          data?.code,
-          res.status,
-          data?.errors ?? data
-        );
+        throw new DiscordAPIError(router, method, data?.code, res.status, data);
       }
 
       if (res.status >= 500 && res.status < 600) {
@@ -246,7 +240,7 @@ export class RequestHandler {
             method,
             res.statusText,
             "APIRequest",
-            res.status
+            res.status,
           );
         }
 

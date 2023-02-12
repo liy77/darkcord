@@ -52,7 +52,7 @@ export class ThreadListSync extends Event {
       if (thread) {
         const member = new ThreadMember(
           { ...raw, client: this.client },
-          thread
+          thread,
         );
 
         thread.members._add(member);

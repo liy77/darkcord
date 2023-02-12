@@ -7,7 +7,7 @@ export class MessageReactionRemoveAll extends Event {
   run(data: GatewayMessageReactionRemoveAllDispatchData) {
     const channel = this.client.cache.channels.get(
       data.channel_id,
-      this.getGuild(data.guild_id!)
+      this.getGuild(data.guild_id!),
     );
 
     if (isTextBasedChannel(channel!)) {

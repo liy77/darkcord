@@ -13,7 +13,7 @@ export class ThreadCreate extends Event {
         ...data,
         client: this.client,
       },
-      guild!
+      guild!,
     );
 
     if (channel?.isGuildChannel()) channel.threads._add(thread);

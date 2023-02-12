@@ -83,7 +83,7 @@ export class PluginManager {
 
   getResourceInPack<T = any>(resourceName: string): T {
     const pack = this.resources.find((resource) =>
-      Object.keys(resource.exports).includes(resourceName)
+      Object.keys(resource.exports).includes(resourceName),
     );
 
     return pack && pack.exports[resourceName];
@@ -96,7 +96,7 @@ export class PluginManager {
    */
   extends<T>(resourceName: string, replacer: (x: T) => any) {
     const resource = this.resources.find((resource) =>
-      Object.keys(resource.exports).includes(resourceName)
+      Object.keys(resource.exports).includes(resourceName),
     );
 
     if (resource) {
@@ -111,26 +111,26 @@ export class PluginManager {
           prop,
           Object.getOwnPropertyDescriptor(
             modified.prototype,
-            prop
-          ) as PropertyDescriptor
+            prop,
+          ) as PropertyDescriptor,
         );
       }
 
       // Static methods
       for (const prop of Object.getOwnPropertyNames(modified).filter(
-        (prop) => !["prototype"].includes(prop)
+        (prop) => !["prototype"].includes(prop),
       )) {
         Object.defineProperty(
           toBeModified,
           prop,
-          Object.getOwnPropertyDescriptor(modified, prop) as PropertyDescriptor
+          Object.getOwnPropertyDescriptor(modified, prop) as PropertyDescriptor,
         );
       }
     }
   }
 
   /**
-   * 
+   *
    * @param resources resources names to be extended's
    * @param replacer replacer to extends resources
    */
@@ -141,7 +141,7 @@ export class PluginManager {
   }
 
   /**
-   * 
+   *
    * @param path Path of file to be override
    * @param replacer replacer function to replace file
    */
@@ -153,7 +153,7 @@ export class PluginManager {
     const original = require(fullPath);
 
     for (const prop of Object.getOwnPropertyNames(modified)) {
-      original[prop] = modified[prop]
+      original[prop] = modified[prop];
     }
   }
 
@@ -177,7 +177,7 @@ export class PluginManager {
 
     if (err) {
       const PluginError = new Error(
-        `Failed to load Plugin \x1b[37m${plugin.name}\x1b[0m: ${err.message}`
+        `Failed to load Plugin \x1b[37m${plugin.name}\x1b[0m: ${err.message}`,
       );
 
       PluginError.name = "PluginError";

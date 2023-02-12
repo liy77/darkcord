@@ -29,28 +29,28 @@ export class WebSocket {
     this.client.emit(Events.Debug, `Starting connecting Shard ${id}`);
 
     gatewayShard.on(ShardEvents.Connect, () =>
-      this.client.emit(Events.ShardConnect, id)
+      this.client.emit(Events.ShardConnect, id),
     );
     gatewayShard.on(ShardEvents.Ready, () =>
-      this.client.emit(Events.ShardReady, id)
+      this.client.emit(Events.ShardReady, id),
     );
     gatewayShard.on(ShardEvents.PreReady, () =>
-      this.client.emit(Events.ShardPreReady, id)
+      this.client.emit(Events.ShardPreReady, id),
     );
     gatewayShard.on(ShardEvents.Reconnecting, () =>
-      this.client.emit(Events.Reconnecting)
+      this.client.emit(Events.Reconnecting),
     );
     gatewayShard.on(ShardEvents.Ping, (ping) =>
-      this.client.emit(Events.ShardPing, ping, id)
+      this.client.emit(Events.ShardPing, ping, id),
     );
     gatewayShard.on(ShardEvents.Hello, () =>
-      this.client.emit(Events.ShardHello, id)
+      this.client.emit(Events.ShardHello, id),
     );
     gatewayShard.on(ShardEvents.ReconnectRequired, () =>
-      this.client.emit(Events.ShardReconnectRequired, id)
+      this.client.emit(Events.ShardReconnectRequired, id),
     );
     gatewayShard.on(ShardEvents.Debug, (message) =>
-      this.client.emit(Events.ShardDebug, message)
+      this.client.emit(Events.ShardDebug, message),
     );
 
     this.shards.set(id, gatewayShard);
@@ -74,7 +74,7 @@ export class WebSocket {
 
       this.client.emit(
         Events.Debug,
-        `Using recommend shards count provided by Discord: ${gateway.shards}`
+        `Using recommend shards count provided by Discord: ${gateway.shards}`,
       );
     }
 
@@ -126,7 +126,7 @@ export class WebSocket {
 
   allReady() {
     return [...this.shards.values()].every(
-      (shard) => shard.ready && shard.pendingGuilds === 0
+      (shard) => shard.ready && shard.pendingGuilds === 0,
     );
   }
 

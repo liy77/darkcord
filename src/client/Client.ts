@@ -20,6 +20,13 @@ import { WebServer } from "./WebServer";
 import { WebSocket } from "./WebSocket";
 import { PluginManager } from "@utils/PluginManager";
 import { ClientApplication } from "../resources/Application";
+import { ChannelCache } from "@cache/ChannelCache";
+import { RoleCache } from "@cache/RoleCache";
+import { EmojiCache } from "@cache/EmojiCache";
+import { Cache } from "@cache/Cache";
+import { Guild } from "@resources/Guild";
+import { ThreadChannel } from "@resources/Channel";
+import { UserDataManager } from "@manager/UserDataManager";
 
 export declare interface BaseClient<E extends Record<string, any>> {
   on<T extends keyof E>(event: T, listener: (...args: E[T]) => any): this;
@@ -114,10 +121,9 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
     }
 
     this.user = null;
-    this.rest.token = options.rest?.token?.replace(/^(Bot|Bearer)\s*/i, "");
-
-    if (this.rest.token) {
-      this.rest.requestHandler.setToken(this.rest.token);
+    const token = options.rest?.token?.replace(/^(Bot|Bearer)\s*/i, "");
+    if (token) {
+      this.rest.setToken(token);
     }
 
     this.webserver = new WebServer(this, options.webserver);
@@ -133,7 +139,7 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
     this.webserver.on("interactionDataReceived", (body, res) => {
       this.emit(
         "interactionCreate",
-        Interaction.from({ ...body, client: this }, res)
+        Interaction.from({ ...body, client: this }, res),
       );
     });
   }
@@ -179,6 +185,30 @@ export class Client extends BaseClient<ClientEvents> {
    * Plugin manager for library plugins
    */
   pluginManager: PluginManager;
+  /**
+   * Channels cache
+   */
+  channels: ChannelCache;
+  /**
+   * Client guilds
+   */
+  guilds: Cache<Guild>;
+  /**
+   * Client roles
+   */
+  roles: RoleCache;
+  /**
+   * Client emojis
+   */
+  emojis: EmojiCache;
+  /**
+   * Client threads
+   */
+  threads: Cache<ThreadChannel>;
+  /**
+   * Client users
+   */
+  users: UserDataManager;
   constructor(token: string, options: ClientOptions) {
     super(options);
 
@@ -236,7 +266,7 @@ export class Client extends BaseClient<ClientEvents> {
 
     this.options = Object.assign<Required<ClientOptions>, any>(
       options as Required<ClientOptions>,
-      super.options
+      super.options,
     );
 
     if (!token || typeof token !== "string")
@@ -245,10 +275,17 @@ export class Client extends BaseClient<ClientEvents> {
         message: "Invalid token was provided.",
       });
 
-    this.rest.token = this.token = token.replace(/^(Bot|Bearer)\s*/i, "");
-    this.rest.requestHandler.setToken(this.token);
+    this.rest.setToken((this.token = token.replace(/^(Bot|Bearer)\s*/i, "")));
 
-    this.cache = new CacheManager(this);
+    const cache = new CacheManager(this);
+    this.cache = cache;
+    this.channels = cache.channels;
+    this.guilds = cache.guilds;
+    this.roles = cache.roles;
+    this.emojis = cache.emojis;
+    this.threads = cache.threads;
+    this.users = cache.users;
+
     this.websocket = new WebSocket(this);
 
     // This is set in ready

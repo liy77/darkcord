@@ -1,5 +1,3 @@
-import { Cache } from "@cache/Cache";
-import { UserCache } from "@cache/UserCache";
 import { AnyClient, DataWithClient } from "@typings/index";
 import {
   APIEmoji,
@@ -8,8 +6,8 @@ import {
   ImageFormat,
   RouteBases,
 } from "discord-api-types/v10";
+import { UserDataManager } from "@manager/UserDataManager";
 import { Snowflake } from "./Base";
-import { User } from "./User";
 
 export class Emoji {
   /**
@@ -62,7 +60,7 @@ export class Emoji {
       RouteBases.cdn +
         CDNRoutes.emoji(
           this.id,
-          this.animated ? ImageFormat.GIF : ImageFormat.PNG
+          this.animated ? ImageFormat.GIF : ImageFormat.PNG,
         )
     );
   }
@@ -128,16 +126,16 @@ export class Reaction {
   /**
    * Users reacted
    */
-  users: UserCache;
+  users: UserDataManager;
   client: AnyClient;
   constructor(data: DataWithClient<APIReaction>) {
     this.me = data.me;
     this.emoji = new Emoji(data.emoji);
     this.count = data.count;
-    this.users = new UserCache(
+    this.users = new UserDataManager(
       data.client.cache._cacheLimit("users"),
-      data.client.cache
+      data.client.cache,
     );
-    this.client = data.client
+    this.client = data.client;
   }
 }

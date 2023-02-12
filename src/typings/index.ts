@@ -1,6 +1,5 @@
 import { Cache } from "@cache/Cache";
 import { EmojiCache } from "@cache/EmojiCache";
-import { GuildStickerCache } from "@cache/StickerCache";
 import { WebServer, WebServerInteractionResponse } from "@client/WebServer";
 import { Channel, TextBasedChannel, ThreadChannel } from "@resources/Channel";
 import { StageChannel, VoiceChannel } from "@resources/Channel";
@@ -45,6 +44,7 @@ import { Client, InteractionClient } from "@client/Client";
 
 import { Integration } from "@resources/Integration";
 import { PluginFn } from "@utils/PluginManager";
+import { Sticker } from "@resources/Sticker";
 
 export interface RateLimitEvent {
   global: boolean;
@@ -162,12 +162,12 @@ export interface WebServerEvents {
     request: IncomingMessage,
     response: http.ServerResponse<http.IncomingMessage> & {
       req: http.IncomingMessage;
-    }
+    },
   ];
   listen: [webserver: WebServer];
   interactionDataReceived: [
     body: APIInteraction,
-    response: WebServerInteractionResponse
+    response: WebServerInteractionResponse,
   ];
   interactionPingReceived: [];
 }
@@ -255,20 +255,20 @@ export interface ClientEvents {
   messageReactionAdd: [
     reaction: Reaction | APIReaction,
     user: User | APIUser,
-    message: Message
+    message: Message,
   ];
   messageReactionRemove: [
     reaction: Reaction | APIReaction,
     user: User | APIUser,
-    message: Message
+    message: Message,
   ];
   messageReactionRemoveAll: [
     message: Message,
-    removed: Cache<Reaction | APIReaction>
+    removed: Cache<Reaction | APIReaction>,
   ];
   messageReactionRemoveEmoji: [
     message: Message,
-    removed: Reaction | APIReaction
+    removed: Reaction | APIReaction,
   ];
   typingStart: [typing: Typing];
 
@@ -286,9 +286,9 @@ export interface ClientEvents {
   guildBanRemove: [guild: Guild, userUnbanned: User | APIUser];
   guildEmojisUpdate: [old: EmojiCache, updated: EmojiCache, guild: Guild];
   guildStickersUpdate: [
-    old: GuildStickerCache,
-    updated: GuildStickerCache,
-    guild: Guild
+    old: Cache<Sticker>,
+    updated: Cache<Sticker>,
+    guild: Guild,
   ];
   guildMemberAdd: [newMember: Member, guild: Guild];
   guildMemberRemove: [user: User | APIUser, guild: Guild];
@@ -320,7 +320,7 @@ export interface ClientEvents {
   channelDelete: [channel: Channel];
   channelUpdate: [old: Channel, updated: Channel];
   channelPinsUpdate: [
-    channel: TextBasedChannel | APITextBasedChannel<ChannelType>
+    channel: TextBasedChannel | APITextBasedChannel<ChannelType>,
   ];
 
   // User
@@ -330,7 +330,7 @@ export interface ClientEvents {
   voiceChannelSwitch: [
     member: Member,
     newChannel: VoiceChannel | StageChannel,
-    oldChannel: VoiceChannel | StageChannel
+    oldChannel: VoiceChannel | StageChannel,
   ];
   voiceChannelJoin: [member: Member, channel: VoiceChannel | StageChannel];
   voiceChannelLeave: [member: Member, channel: VoiceChannel | StageChannel];

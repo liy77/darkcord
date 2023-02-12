@@ -1,29 +1,24 @@
 {
-    "compilerOptions": {
-        "strictNullChecks": true,
-        "declaration": true,
-        "esModuleInterop": true,
-        "target": "ESNEXT",
-        "module": "NodeNext",
-        "outDir": "./dist",
-        "declarationDir": "./typing",
-        "resolveJsonModule": true,
-        "typeRoots": [
-            "./typings"
-        ],
-        "skipLibCheck": true,
-        "baseUrl": "./src",
-        "paths": {
-            "@utils/*": ["./utils/*"],
-            "@client/*": ["./client/*"],
-            "@resources/*": ["./resources/*"],
-            "@typings/*": ["./typings/*"],
-            "@cache/*": ["./cache/*"]
-        }
-    },
-    "exclude": [
-        "apps",
-        "dist",
-        "typing"
-    ]
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "target": "ESNEXT",
+    "module": "NodeNext",
+    "outDir": "./dist",
+    "declarationDir": "./typing",
+    "resolveJsonModule": true,
+    "typeRoots": ["./typings"],
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@utils/*": ["./utils/*"],
+      "@client/*": ["./client/*"],
+      "@resources/*": ["./resources/*"],
+      "@typings/*": ["./typings/*"],
+      "@cache/*": ["./cache/*"],
+      "@manager/*": ["./manager/*"]
+    }
+  },
+  "exclude": ["apps", "dist", "typing"]
 }

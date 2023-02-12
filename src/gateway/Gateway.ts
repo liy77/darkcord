@@ -51,7 +51,7 @@ const decoder = new TextDecoder();
 export const GatewayShardError = (
   message: string,
   code: GatewayCloseCodes,
-  shardId: string
+  shardId: string,
 ) =>
   MakeError({
     name: "GatewayShardError",
@@ -65,12 +65,12 @@ export const GatewayShardError = (
 export declare interface GatewayShard {
   on<T extends keyof GatewayShardEvents>(
     event: T,
-    listener: (...args: GatewayShardEvents[T]) => any
+    listener: (...args: GatewayShardEvents[T]) => any,
   ): this;
   on(event: string, listener: (...args: any[]) => any): this;
   once<T extends keyof GatewayShardEvents>(
     event: T,
-    listener: (...args: GatewayShardEvents[T]) => any
+    listener: (...args: GatewayShardEvents[T]) => any,
   ): this;
   once(event: string, listener: (...args: any[]) => any): this;
   emit<T extends keyof GatewayShardEvents>(
@@ -203,7 +203,7 @@ export class GatewayShard extends EventEmitter {
     }) as Readonly<Required<GatewayShardOptions>>;
     this.helloTimeout = null;
     this.shardId = this.options.shardId;
-    this.pendingGuilds = 0
+    this.pendingGuilds = 0;
     this.pendingGuildsMap = new Map();
     this.events = new EventSource(this);
     this.intents = this.client.options.gateway.intents as GatewayIntentBits;
@@ -292,7 +292,7 @@ export class GatewayShard extends EventEmitter {
 
   #onOpen() {
     this.debug(
-      `Connected to Discord Gateway in ${Date.now() - this.connectedAt}ms`
+      `Connected to Discord Gateway in ${Date.now() - this.connectedAt}ms`,
     );
     this.emit(ShardEvents.Connect);
   }
@@ -320,7 +320,7 @@ export class GatewayShard extends EventEmitter {
       case GatewayOpcodes.Hello: {
         this.heartbeatInterval = data.d.heartbeat_interval;
         this.debug(
-          `Received Hello, heartbeat interval: ${this.heartbeatInterval}`
+          `Received Hello, heartbeat interval: ${this.heartbeatInterval}`,
         );
 
         this.heartbeatSendInterval = setInterval(() => {
@@ -350,7 +350,7 @@ export class GatewayShard extends EventEmitter {
         this.debug(
           `Invalid Session received. Resumable: ${
             data.d === true ? "Yes" : "No"
-          }`
+          }`,
         );
 
         if (data.d === false) {
@@ -378,7 +378,7 @@ export class GatewayShard extends EventEmitter {
           this.debug(
             `Resumed session ${this.sessionId}. Replayed ${
               data.s - (this.closeSequenceId ?? 0)
-            }`
+            }`,
           );
 
           this.sendHeartbeat();
@@ -523,7 +523,7 @@ export class GatewayShard extends EventEmitter {
         op: GatewayOpcodes.Heartbeat,
         d: this.sequenceId ?? null,
       },
-      true
+      true,
     );
   }
 
@@ -563,7 +563,7 @@ export class GatewayShard extends EventEmitter {
           seq: this.closeSequenceId as number,
         },
       },
-      true
+      true,
     );
   }
 
@@ -599,7 +599,7 @@ export class GatewayShard extends EventEmitter {
           ],
         },
       },
-      true
+      true,
     );
   }
 
@@ -607,7 +607,7 @@ export class GatewayShard extends EventEmitter {
     options: KeysToCamelCase<
       | Optional<GatewayRequestGuildMembersDataWithQuery, "query" | "limit"> &
           Optional<GatewayRequestGuildMembersDataWithUserIds, "user_ids">
-    >
+    >,
   ) {
     if (options.query && !options.limit) {
       throw MakeError({
@@ -710,7 +710,7 @@ export class GatewayShard extends EventEmitter {
     this.debug(
       `Closing Gateway with code ${code}${
         reason ? ` and reason ${reason}` : ""
-      } `
+      } `,
     );
     this.ws?.close(code, reason);
 

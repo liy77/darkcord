@@ -97,7 +97,7 @@ export class Integration extends Base {
     return this._client.rest.deleteGuildIntegration(
       this.guild.id,
       this.id,
-      reason
+      reason,
     );
   }
 }

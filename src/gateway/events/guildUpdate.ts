@@ -10,7 +10,7 @@ export class GuildUpdate extends Event {
 
     if (old) {
       const updated = this.client.cache.guilds._add(
-        new Guild({ ...data, client: this.client })
+        new Guild({ ...data, client: this.client }),
       );
 
       this.client.emit(Events.GuildUpdate, old, updated);

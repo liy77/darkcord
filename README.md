@@ -10,10 +10,12 @@
 </div>
 
 ## About
+
 Darkcord is a [Node.js](https://nodejs.org) module to easily interact with
 [Discord API](https://discord.com/developers/docs/intro).
 
 ## Installation
+
 **Node.js 16.9.0 or newer is required to installation.**
 
 ```sh-session
@@ -25,64 +27,66 @@ pnpm add darkcord
 ## Example Usage
 
 ### Gateway Example
-```js
-import {
-    Client,
-    Constants,
-} from "darkcord"
 
-const GatewayIntentBits = Constants.GatewayIntentBits
-const ClientIntents = GatewayIntentBits.Guilds | GatewayIntentBits.GuildMessage | GatewayIntentBits.MessageContent
+```js
+import { Client, Constants } from "darkcord";
+
+const GatewayIntentBits = Constants.GatewayIntentBits;
+const ClientIntents =
+  GatewayIntentBits.Guilds |
+  GatewayIntentBits.GuildMessage |
+  GatewayIntentBits.MessageContent;
 
 const client = new Client("token", {
-    gateway: {
-        intents: ClientIntents
-    }
-})
+  gateway: {
+    intents: ClientIntents,
+  },
+});
 
 client.on("ready", () => {
-    console.log(`Connected to Discord Gateway`)
-})
+  console.log(`Connected to Discord Gateway`);
+});
 
-client.on("interactionCreate", async interaction => {
-    if (interaction.isCommand()) {
-        await interaction.reply({ content: "Pong!" })
-    }
-})
+client.on("interactionCreate", async (interaction) => {
+  if (interaction.isCommand()) {
+    await interaction.reply({ content: "Pong!" });
+  }
+});
 
-client.connect()
+client.connect();
 ```
+
 ### HTTP Interactions Example
+
 ```js
-import {
-    InteractionClient
-} from "darkcord"
+import { InteractionClient } from "darkcord";
 
 const client = new InteractionClient("public key", {
-    rest: {
-        token: "token"
-    },
-    webserver: {
-        port: 8080
-    }
-})
+  rest: {
+    token: "token",
+  },
+  webserver: {
+    port: 8080,
+  },
+});
 
 client.on("connect", () => {
-    console.log("Listening on port 8080")
-})
+  console.log("Listening on port 8080");
+});
 
-client.on("interactionCreate", async interaction => {
-    if (interaction.isCommand()) {
-        await interaction.reply({ content: "Pong!" })
-    }
-})
+client.on("interactionCreate", async (interaction) => {
+  if (interaction.isCommand()) {
+    await interaction.reply({ content: "Pong!" });
+  }
+});
 
-client.connect()
+client.connect();
 ```
 
 ### Voice
 
 #### Install voice packages
+
 ```sh-session
 npm install shoukaku
 yarn add shoukaku
@@ -94,6 +98,7 @@ pnpm add kazagumo
 ```
 
 ##### Spotify
+
 ```sh-session
 npm install kazagumo-spotify
 yarn add kazagumo-spotify
@@ -101,41 +106,44 @@ pnpm add kazagumo-spotify
 ```
 
 ```js
-import { Client } from "darkcord"
-import Voice from "darkcord/voice"
+import { Client } from "darkcord";
+import Voice from "darkcord/voice";
 
-const Nodes = [{
-    name: 'darkcord-player',
-    url: 'localhost:2333',
-    auth: 'youshallnotpass',
-    secure: false
-}];
+const Nodes = [
+  {
+    name: "darkcord-player",
+    url: "localhost:2333",
+    auth: "youshallnotpass",
+    secure: false,
+  },
+];
 
 const voicePlugin = Voice(Nodes, {
-    defaultSearchEngine: "youtube"
-})
+  defaultSearchEngine: "youtube",
+});
 
 const client = new Client("token", {
-    gateway: {
-        intents: YOUR_INTENTS
-    },
-    plugins: [voicePlugin]
-})
+  gateway: {
+    intents: YOUR_INTENTS,
+  },
+  plugins: [voicePlugin],
+});
 
-client.voice.lavalink.on("ready", () => console.log("Lavalink is Ready"))
+client.voice.lavalink.on("ready", () => console.log("Lavalink is Ready"));
 
 client.on("playerStart", (player) => {
-    client.cache.channels.get(player.textId).createMessage({
-        content: `Now playing **${track.title}** by **${track.author}**`
-    })
-})
+  client.cache.channels.get(player.textId).createMessage({
+    content: `Now playing **${track.title}** by **${track.author}**`,
+  });
+});
 
-client.on("ready", () => console.log("Client is Ready"))
+client.on("ready", () => console.log("Client is Ready"));
 
-client.connect()
+client.connect();
 ```
 
 ## Useful Links
+
 - [Website](https://darkcord.denkylabs.com)
 - [GitHub](https://github.com/denkylabs/darkcord)
 - [npm](https://npmjs.com/package/darkcord)

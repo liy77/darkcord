@@ -13,7 +13,7 @@ import { Guild } from "@resources/Guild";
 export class MessageUpdate extends Event {
   async run(data: GatewayMessageUpdateDispatchData) {
     const channel = this.client.cache.channels.get(
-      data.channel_id
+      data.channel_id,
     ) as TextBasedChannel;
 
     const old = structuredClone(channel.messages.get(data.id));
@@ -29,13 +29,13 @@ export class MessageUpdate extends Event {
         ...(data as APIMessage),
         client: this.client,
       },
-      guild
+      guild,
     );
 
     this.client.emit(
       Events.MessageUpdate,
       old,
-      Resolvable.resolveMessage(updated, this.client)
+      Resolvable.resolveMessage(updated, this.client),
     );
   }
 }

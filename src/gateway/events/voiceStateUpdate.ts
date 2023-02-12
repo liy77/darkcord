@@ -13,15 +13,14 @@ export class VoiceStateUpdate extends Event {
 
     if (!guild) return;
 
-    const oldVoiceState =
-      structuredClone(guild.voiceStates.get(data.user_id))
+    const oldVoiceState = structuredClone(guild.voiceStates.get(data.user_id));
 
     const updated = new VoiceState(
       {
         ...data,
         client: this.client,
       },
-      guild
+      guild,
     );
 
     guild.voiceStates.set(data.user_id, updated);
@@ -29,15 +28,13 @@ export class VoiceStateUpdate extends Event {
     let member = guild.members.get(data.user_id);
 
     if (!member && data.member?.user && data.member.joined_at) {
-      member = guild.members.add(
-        new Member(data.member, guild)
-      );
+      member = guild.members.add(new Member(data.member, guild));
     }
 
     if (oldVoiceState?.channelId !== data.channel_id) {
       const channel = this.client.cache.channels.get(data.channel_id!);
       const oldChannel = this.client.cache.channels.get(
-        oldVoiceState?.channelId!
+        oldVoiceState?.channelId!,
       ) as VoiceChannel | StageChannel | null;
 
       if (

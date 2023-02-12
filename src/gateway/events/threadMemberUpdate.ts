@@ -15,7 +15,7 @@ export class ThreadMemberUpdate extends Event {
           ...data,
           client: this.client,
         },
-        thread
+        thread,
       );
 
       thread.member = member;

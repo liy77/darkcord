@@ -19,7 +19,7 @@ export class Permissions extends BitField<bigint, typeof PermissionFlagsBits> {
   static Default = BigInt(104324673);
   static All = Object.values(PermissionFlagsBits).reduce(
     (all, p) => all | p,
-    0n
+    0n,
   );
 }
 
@@ -28,12 +28,12 @@ export class PermissionOverwrite extends Base {
   type: OverwriteType;
   constructor(
     data: DataWithClient<APIOverwrite>,
-    public channel: GuildChannel
+    public channel: GuildChannel,
   ) {
     super(data, data.client);
 
     this.permissions = Object.freeze(
-      new Permissions(BigInt(data.allow), BigInt(data.deny))
+      new Permissions(BigInt(data.allow), BigInt(data.deny)),
     );
 
     this.type = data.type;
