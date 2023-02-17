@@ -1,7 +1,6 @@
 {
   "name": "darkcord-project",
   "description": "darkcord workspace",
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
@@ -18,7 +17,7 @@
     "prettier": "^2.8.4",
     "tscpaths": "^0.0.9",
     "typescript": "^4.9.5",
-    "darkcord": "workspace:darkcord"
+    "darkcord": "workspace:^"
   },
   "dependencies": {
     "tsup": "^6.6.3"

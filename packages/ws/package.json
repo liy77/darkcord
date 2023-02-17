@@ -1,6 +1,7 @@
 {
   "name": "@darkcord/ws",
   "description": "Package to handle darkcord websocket for discord gateway",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
@@ -17,8 +18,8 @@
     "directory": "packages/ws"
   },
   "dependencies": {
-    "darkcord": "workspace:darkcord",
-    "@darkcord/utils": "workspace:utils",
+    "darkcord": "workspace:^",
+    "@darkcord/utils": "workspace:^",
     "discord-api-types": "^0.37.33",
     "ws": "^8.12.0"
   },

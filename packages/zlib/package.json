@@ -1,6 +1,7 @@
 {
   "name": "@darkcord/zlib",
   "description": "Alternative to zlib-sync for @darkcord/ws",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "exports": {
@@ -11,6 +12,6 @@
     }
   },
   "dependencies": {
-    "@darkcord/utils": "workspace:utils"
+    "@darkcord/utils": "workspace:^"
   }
 }

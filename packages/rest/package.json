@@ -1,7 +1,7 @@
 {
   "name": "@darkcord/rest",
   "description": "Rest library used to make requests to discord api in darkcord",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
@@ -25,7 +25,7 @@
     "routes"
   ],
   "dependencies": {
-    "@darkcord/utils": "workspace:utils",
+    "@darkcord/utils": "workspace:^",
     "discord-api-types": "^0.37.33",
     "undici": "^5.19.1"
   }
