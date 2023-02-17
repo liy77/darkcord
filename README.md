@@ -132,7 +132,7 @@ const client = new Client("token", {
 client.voice.lavalink.on("ready", () => console.log("Lavalink is Ready"));
 
 client.on("playerStart", (player) => {
-  client.cache.channels.get(player.textId).createMessage({
+  client.channels.cache.get(player.textId).createMessage({
     content: `Now playing **${track.title}** by **${track.author}**`,
   });
 });

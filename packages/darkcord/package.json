@@ -1,0 +1,71 @@
+{
+  "name": "darkcord",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JustAWaifuHunter/darkcord.git",
+    "directory": "packages/darkcord"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "typings": "./typings/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./typings/index.d.ts"
+    }
+  },
+  "scripts": {
+    "c:declare": "tsc --emitDeclarationOnly",
+    "c": "tsup && pnpm c:declare && tscpaths -p tspaths.config.json -s ./src -o ./typings",
+    "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
+    "prepublish": "pnpm c && pnpm copy_wasm",
+    "lint": "pnpm eslint --ext .ts --fix **/src/**"
+  },
+  "dependencies": {
+    "@darkcord/rest": "workspace:rest",
+    "@darkcord/utils": "workspace:utils",
+    "@darkcord/ws": "workspace:ws",
+    "@darkcord/interactions": "workspace:interactions",
+    "discord-api-types": "^0.37.33",
+    "ts-mixer": "^6.0.3",
+    "undici": "^5.19.1",
+    "ws": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.4",
+    "@resources": "link:src/resources",
+    "@client": "link:src/client",
+    "@typings": "link:src/types",
+    "@cache": "link:src/cache",
+    "@utils": "link:src/utils",
+    "@manager": "link:src/manager"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7",
+    "erlpack": "^0.1.4",
+    "tweetnacl": "^1.0.3",
+    "zlib-sync": "^0.1.8"
+  },
+  "keywords": [
+    "discord",
+    "ws",
+    "websocket",
+    "gateway",
+    "eris",
+    "discord.js",
+    "typescript",
+    "ts",
+    "javascript",
+    "js",
+    "http",
+    "interactions",
+    "zlib",
+    "erlpack",
+    "tweetnacl",
+    "api",
+    "wrapper",
+    "undici"
+  ]
+}

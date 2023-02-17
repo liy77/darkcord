@@ -1,59 +1,26 @@
 {
-  "name": "darkcord",
-  "version": "0.2.5-dev-10.1",
+  "name": "darkcord-project",
+  "description": "darkcord workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./dist && tscpaths -p tsconfig.json -s ./src -o ./typing",
-    "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
-    "prepublish": "pnpm c && pnpm copy_wasm",
-    "pretty": "pnpm lint && pnpm prettier --write .",
-    "lint": "pnpm eslint **/src/**"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/JustAWaifuHunter/darkcord.git"
-  },
-  "main": "./dist/index.js",
-  "typings": "./typing",
-  "dependencies": {
-    "discord-api-types": "^0.37.25",
-    "ts-mixer": "^6.0.2",
-    "undici": "^5.14.0",
-    "ws": "^8.12.0"
+    "pretty": "pnpm prettier --write ."
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "@types/ws": "^8.5.4",
-    "@typescript-eslint/eslint-plugin": "^5.50.0",
-    "@typescript-eslint/parser": "^5.50.0",
-    "eslint": "^8.33.0",
+    "@types/node": "^18.13.0",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "eslint-plugin-import": "^2.27.5",
+    "interactions": "^0.0.1",
     "prettier": "^2.8.4",
-    "tsconfig-paths": "^4.1.2",
     "tscpaths": "^0.0.9",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "darkcord": "workspace:darkcord"
   },
-  "optionalDependencies": {
-    "erlpack": "^0.1.4",
-    "tweetnacl": "^1.0.3",
-    "zlib-sync": "^0.1.7"
-  },
-  "keywords": [
-    "discord",
-    "ws",
-    "websocket",
-    "gateway",
-    "eris",
-    "discord.js",
-    "typescript",
-    "ts",
-    "javascript",
-    "js",
-    "http",
-    "interactions",
-    "zlib",
-    "erlpack",
-    "tweetnacl",
-    "api",
-    "wrapper",
-    "undici"
-  ]
+  "dependencies": {
+    "tsup": "^6.6.3"
+  }
 }

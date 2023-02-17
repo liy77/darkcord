@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declarationDir": "typings",
+    "paths": {
+      "@utils/*": ["./utils/*"],
+      "@client/*": ["./client/*"],
+      "@resources/*": ["./resources/*"],
+      "@typings/*": ["./types/*"],
+      "@cache/*": ["./cache/*"],
+      "@manager/*": ["./manager/*"]
+    }
+  },
+  "exclude": ["dist"],
+  "include": ["./src/**/*"]
+}

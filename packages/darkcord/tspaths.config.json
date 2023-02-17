@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@utils/*": ["./utils/*"],
+      "@client/*": ["./client/*"],
+      "@resources/*": ["./resources/*"],
+      "@typings/*": ["./types/*"],
+      "@cache/*": ["./cache/*"],
+      "@manager/*": ["./manager/*"]
+    }
+  }
+}

@@ -3,22 +3,13 @@
     "strictNullChecks": true,
     "declaration": true,
     "esModuleInterop": true,
-    "target": "ESNEXT",
+    "target": "ESNext",
     "module": "NodeNext",
-    "outDir": "./dist",
-    "declarationDir": "./typing",
-    "resolveJsonModule": true,
-    "typeRoots": ["./typings"],
     "skipLibCheck": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@utils/*": ["./utils/*"],
-      "@client/*": ["./client/*"],
-      "@resources/*": ["./resources/*"],
-      "@typings/*": ["./typings/*"],
-      "@cache/*": ["./cache/*"],
-      "@manager/*": ["./manager/*"]
-    }
+    "allowJs": false,
+    "removeComments": false,
+    "declarationMap": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["apps", "dist", "typing"]
+  "exclude": ["apps"]
 }

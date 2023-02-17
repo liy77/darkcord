@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "tsconfig.json": false
+    },
+    "workspace.isHidden": false
+}

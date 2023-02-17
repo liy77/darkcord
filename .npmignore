@@ -1,4 +1,5 @@
 /src
+/packages/**/src
 /.vscode
 /test.js
 /apps
