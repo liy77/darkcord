@@ -1,0 +1,32 @@
+{
+  "name": "@darkcord/rest",
+  "description": "Rest library used to make requests to discord api in darkcord",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JustAWaifuHunter/darkcord.git",
+    "directory": "packages/rest"
+  },
+  "keywords": [
+    "discord",
+    "api",
+    "request",
+    "rest",
+    "routes"
+  ],
+  "dependencies": {
+    "@darkcord/utils": "workspace:utils",
+    "discord-api-types": "^0.37.33",
+    "undici": "^5.19.1"
+  }
+}

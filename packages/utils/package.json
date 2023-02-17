@@ -1,0 +1,23 @@
+{
+  "name": "@darkcord/utils",
+  "description": "util functions for darkcord library",
+  "version": "0.1.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JustAWaifuHunter/darkcord.git",
+    "directory": "packages/utils"
+  },
+  "dependencies": {
+    "discord-api-types": "^0.37.33"
+  }
+}
