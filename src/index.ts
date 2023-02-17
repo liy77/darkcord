@@ -11,8 +11,9 @@ export * from "@cache/EmojiCache";
 export * from "@cache/MemberCache";
 export * from "@cache/MessageCache";
 export * from "@cache/RoleCache";
-export * from "@cache/StickerCache";
-export * from "@cache/UserCache";
+export * from "@manager/UserDataManager";
+export * from "@manager/StickerDataManager"
+export * from "@manager/DataManager";
 
 // Resources
 export * from "@resources/Application";

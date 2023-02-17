@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Client, InteractionClient } from "@client/Client";
+import { UserDataManager } from "@manager/UserDataManager";
 import { ThreadChannel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
 import { CacheAdapter, ClientOptions } from "@typings/index";
@@ -9,13 +10,12 @@ import { Cache } from "./Cache";
 import { ChannelCache } from "./ChannelCache";
 import { EmojiCache } from "./EmojiCache";
 import { RoleCache } from "./RoleCache";
-import { UserCache } from "./UserCache";
 
 export class CacheManager {
   channels: ChannelCache;
   guilds: Cache<Guild>;
   emojis: EmojiCache;
-  users: UserCache;
+  users: UserDataManager;
   roles: RoleCache;
   adapter?: CacheAdapter<any> | Map<string, any>;
   threads: Cache<ThreadChannel>;
@@ -40,7 +40,7 @@ export class CacheManager {
         if (this._cacheLimit("guilds")) {
           (this.client as Client).emit(
             "warn",
-            "Limiting guild cache can cause problems"
+            "Limiting guild cache can cause problems",
           );
         }
         return new Cache(this.client.options.cache?.guilds, new Map());
@@ -54,7 +54,7 @@ export class CacheManager {
         break;
       }
       case "users": {
-        cache = UserCache;
+        cache = UserDataManager;
         break;
       }
       case "emojis": {
@@ -74,7 +74,7 @@ export class CacheManager {
     return this.client.options.partials?.includes(p);
   }
 
-  _cacheInstance(o: any): o is Cache {
+  _cacheInstance(o: any): o is Cache<any> {
     return o instanceof Cache;
   }
 

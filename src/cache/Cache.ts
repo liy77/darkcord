@@ -1,197 +1,222 @@
-import {
-  Awaitable,
-  BaseCacheOptions,
-  BaseCacheSweeper,
-  CacheAdapter,
-} from "@typings/index";
-import { CacheManager } from "./CacheManager";
+import { BaseCacheOptions } from "@typings/index";
 
-export class Cache<T = any> {
-  #sweeper?: BaseCacheSweeper<T>;
-  adapter: CacheAdapter<T>;
+export type CacheEntries<K, V> =
+  | Readonly<Array<Readonly<[K, V]>>>
+  | Iterable<Readonly<[K, V]>>;
 
-  constructor(limit?: BaseCacheOptions<T> | number, adapter?: CacheAdapter<T>);
-  constructor(limit: number);
-  constructor(options: BaseCacheOptions<T>, adapter?: CacheAdapter<T>);
+export class Cache<V> extends Map<string, V> {
+  limit: Readonly<number>;
+  #sweeper: null | {
+    lifetime: number | undefined;
+    keep: ((value: V) => boolean) | undefined;
+    filter: ((value: V) => boolean) | undefined;
+  };
+
+  constructor(entries?: CacheEntries<string, V>);
+  constructor(entries?: Readonly<Array<Readonly<[string, V]>>>);
+  constructor(entries?: Iterable<Readonly<[string, V]>>);
+  constructor(limit?: number, entries?: Readonly<Array<Readonly<[string, V]>>>);
+  constructor(limit?: number, entries?: Readonly<Array<Readonly<[string, V]>>>);
+  constructor(limit?: number, entries?: Iterable<Readonly<[string, V]>>);
   constructor(
-    public limit: number | BaseCacheOptions = Infinity,
-    adapter?: CacheAdapter<T>
+    limit?: BaseCacheOptions<V> | number | CacheEntries<string, V>,
+    entries?: CacheEntries<string, V>,
+  );
+  constructor(limit?: BaseCacheOptions<V>, entries?: CacheEntries<string, V>);
+  constructor(
+    limit?: BaseCacheOptions<V>,
+    entries?: Readonly<Array<Readonly<[string, V]>>>,
+  );
+  constructor(
+    limit?: BaseCacheOptions<V>,
+    entries?: Iterable<Readonly<[string, V]>>,
+  );
+  constructor(
+    limit?: number | CacheEntries<string, V> | BaseCacheOptions<V>,
+    entries?: CacheEntries<string, V>,
   ) {
-    if (typeof limit === "object") {
-      this.limit = limit.maxSize;
-      this.#sweeper = limit.sweeper;
-    } else {
-      this.limit = limit;
-    }
-
-    // Configuring adapter
-    if (adapter instanceof CacheManager) {
-      this.adapter = adapter.adapter ?? new Map();
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!this.adapter) {
-      this.adapter = new Map<string, T>();
-    }
-  }
-
-  delete(key: string) {
-    return this.adapter.delete(key);
-  }
-
-  entries() {
-    return this.adapter.entries();
-  }
-
-  values() {
-    return this.adapter.values();
-  }
-
-  keys() {
-    return this.adapter.keys();
-  }
-
-  has(key: string) {
-    return this.adapter.has(key);
-  }
-
-  get(key: string) {
-    return this.adapter.get(key);
-  }
-
-  get size(): number {
-    return this.adapter.size;
-  }
-
-  get extender(): new () => Cache<T> {
-    return (
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      (
-        this.constructor as unknown as {
-          [Symbol.species]: typeof Cache;
-        }
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      )?.[Symbol.species] ?? Cache
-    );
-  }
-
-  filter(filter: (value: T, key: string) => boolean) {
-    const cache = new this.extender() as Cache<T>;
-
-    this.forEach((value, key) => {
-      if (filter(value, key) === true) {
-        cache.set(key, value);
-      }
-    });
-
-    return cache;
-  }
-
-  forEach(fn: (value: T, key: string) => void) {
-    for (const [key, value] of this.entries()) {
-      fn(value, key);
-    }
-  }
-
-  find(findFn: (value: T, key: string) => boolean) {
-    for (const [key, value] of this.entries()) {
-      if (findFn(value, key) === true) {
-        return value;
-      }
-    }
-
-    return null;
-  }
-
-  reduce<I>(
-    reduceFn: (accumulator: I, value: T, key: string) => I,
-    initialValue?: I
-  ) {
-    let accumulator = initialValue as I;
-    let first = false;
-
-    if (accumulator === undefined) {
-      if (this.size === 0) {
-        throw new TypeError("Reduce of empty cache with no initial value");
-      }
-
-      first = true;
-    }
-
-    this.forEach((value, key) => {
-      if (first === true) {
-        accumulator = value as unknown as I;
-        first = false;
-      }
-
-      accumulator = reduceFn(accumulator, value, key);
-    });
-
-    return accumulator;
-  }
-
-  set(key: string, value: T) {
+    super(entries);
+    this.#sweeper = null;
     if (
-      this.#sweeper?.filter !== undefined &&
-      this.#sweeper.filter(value) === false
+      Number.isNaN(Number(limit)) &&
+      (Array.isArray(limit) ||
+        (typeof limit === "object" && Symbol.iterator in limit))
     ) {
-      return this;
+      entries = limit as CacheEntries<string, V>;
+      limit = Infinity;
+    } else if (typeof limit === "object" && "maxSize" in limit) {
+      const options = limit;
+      this.#sweeper = {
+        lifetime: options.sweeper?.lifetime,
+        keep: options.sweeper?.keepFilter,
+        filter: options.sweeper?.filter,
+      };
+
+      limit = limit.maxSize;
     }
 
-    this.adapter.set(key, value);
+    this.limit = Number(limit);
+  }
 
-    if (this.#sweeper?.lifetime) {
-      setTimeout(() => this.delete(key), this.#sweeper.lifetime);
+  set(key: string, value: V) {
+    super.set(key, value);
+
+    if (this.size > this.limit) {
+      while (this.size > this.limit) {
+        this.delete(this.keys().next().value);
+      }
     }
 
-    if (this.size >= this.limit && !this.#sweeper?.keepFilter?.(value)) {
-      this.#removeToLimit();
+    if (this.#sweeper && this.#sweeper.filter && !this.#sweeper.keep?.(value)) {
+      setTimeout(
+        () => this.sweep(this.#sweeper!.filter!),
+        this.#sweeper.lifetime || 120_000,
+      );
     }
 
     return this;
   }
 
-  _add(item: any, replace = false, id?: string): T {
-    if (!id) {
-      id = item.id;
+  forEach(fn: (value: V, key: string, cache: Cache<V>) => void) {
+    for (const [key, value] of this.entries()) {
+      fn(value, key, this);
     }
-
-    if (!id || (this.has(id) === true && replace === false)) {
-      return item;
-    }
-
-    this.set(id, item);
-    return item;
   }
 
-  map<R>(mapFn: (value: T, key: string) => R) {
-    const mapped: R[] = [];
+  filter(fn: (value: V, key: string, cache: Cache<V>) => boolean) {
+    const filteredCache = new Cache<V>(this.limit);
 
     for (const [key, value] of this.entries()) {
-      mapped.push(mapFn(value, key));
+      if (fn(value, key, this)) {
+        filteredCache.set(key, value);
+      }
     }
 
-    return mapped;
+    return filteredCache;
   }
 
-  clear() {
-    return this.adapter.clear();
-  }
-
-  #removeToLimit() {
-    const keys = this.keys();
-
-    while (this.size <= this.limit) {
-      const key = keys.next().value as string;
-      try {
-        const value = this.get(key);
-
-        if (this.#sweeper?.keepFilter?.(value as T)) {
-          continue;
-        }
-      } catch {}
-
-      this.delete(key);
+  find(
+    fn: (value: V, key: string, cache: Cache<V>) => boolean,
+  ): [string, V] | undefined {
+    for (const [key, value] of this) {
+      if (fn(value, key, this)) {
+        return [key, value];
+      }
     }
+
+    return undefined;
+  }
+
+  every(fn: (value: V, key: string, cache: Cache<V>) => boolean): boolean {
+    return [...this.entries()].every(([key, value]) => fn(value, key, this));
+  }
+
+  some(fn: (value: V, key: string, cache: Cache<V>) => boolean): boolean {
+    return [...this.entries()].some(([key, value]) => fn(value, key, this));
+  }
+
+  map<MV>(
+    fn: (value: V, key: string, cache: Cache<V>) => { key: string; value: MV },
+  ): Cache<MV> {
+    const mappedCachedMap = new Cache<MV>(this.limit);
+
+    for (const [key, value] of this) {
+      const e = fn(value, key, this);
+
+      if (typeof e === "object" && "key" in e && "value" in e) {
+        mappedCachedMap.set(e.key, e.value);
+      }
+    }
+
+    return mappedCachedMap;
+  }
+
+  first(): V;
+  first(amount?: number): V[];
+  first(amount?: number) {
+    if (amount && amount > 0) {
+      amount = Math.min(this.size, amount);
+
+      const arr = Array.from(
+        { length: amount },
+        () => this.values().next().value,
+      );
+
+      return amount > this.limit ? arr.splice(this.limit, amount) : arr;
+    } else if (amount && amount < 0) {
+      return this.last(amount * -1);
+    }
+
+    return this.values().next().value;
+  }
+
+  last(): V;
+  last(amount?: number): V[];
+  last(amount?: number): V | V[] {
+    const arr = [...this.values()];
+
+    if (amount && amount < 0) {
+      return this.first(amount * -1);
+    } else if (amount || amount === 0) {
+      return arr.slice(-amount);
+    }
+
+    return arr[arr.length - 1];
+  }
+
+  at(index: number) {
+    index = Math.floor(index);
+
+    const arr = [...this.values()];
+
+    return arr.at(index);
+  }
+
+  reverse() {
+    return new Cache(this.limit, [...this.entries()].reverse());
+  }
+
+  indexOf(value: V) {
+    const arr = [...this.values()];
+    return arr.indexOf(value);
+  }
+
+  reduce(fn: (previous: [string, V], current: [string, V]) => [string, V], currentIndex: number) {
+    return [...this.entries()].reduce(fn)
+  }
+
+  keyOf(value: V) {
+    const indexOf = this.indexOf(value);
+    const arr = [...this.keys()];
+
+    return arr[indexOf];
+  }
+
+  sweep(fn: (value: V, key: string, cache: Cache<V>) => boolean) {
+    const previousSize = this.size;
+
+    for (const [key, value] of this) {
+      if (fn(value, key, this)) {
+        this.delete(key);
+      }
+    }
+
+    return previousSize - this.size;
+  }
+
+  partition(
+    fn: (value: V, key: string, cache: Cache<V>) => boolean,
+  ): [Cache<V>, Cache<V>] {
+    const [cachedTrue, cachedFalse] = [new Cache<V>(), new Cache<V>()];
+
+    for (const [key, value] of this) {
+      if (fn(value, key, this)) {
+        cachedTrue.set(key, value);
+      } else {
+        cachedFalse.set(key, value);
+      }
+    }
+
+    return [cachedTrue, cachedFalse];
   }
 }

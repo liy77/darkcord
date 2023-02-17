@@ -14,7 +14,7 @@ import { CacheManager } from "./CacheManager";
 export class ChannelCache extends Cache<Channel> {
   constructor(
     options: number | BaseCacheOptions,
-    public manager: CacheManager
+    public manager: CacheManager,
   ) {
     super(options, manager.adapter);
   }
@@ -24,7 +24,11 @@ export class ChannelCache extends Cache<Channel> {
     return channel && this._resolve(channel, guild, true);
   }
 
-  _resolve(channel: APIChannel | Channel, guild?: Guild, addInCache = false): Channel {
+  _resolve(
+    channel: APIChannel | Channel,
+    guild?: Guild,
+    addInCache = false,
+  ): Channel {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       channel &&
@@ -35,7 +39,7 @@ export class ChannelCache extends Cache<Channel> {
         !guild
       ) {
         guild = this.manager.guilds.get(
-          (channel as APIGuildChannel<ChannelType>).guild_id!
+          (channel as APIGuildChannel<ChannelType>).guild_id!,
         ) as Guild;
       }
 
@@ -44,7 +48,7 @@ export class ChannelCache extends Cache<Channel> {
           ...channel,
           client: this.manager.client,
         },
-        guild
+        guild,
       );
 
       if (addInCache) this.add(channel);
@@ -75,7 +79,7 @@ export class GuildChannelCache extends ChannelCache {
   constructor(
     options: number | BaseCacheOptions,
     manager: CacheManager,
-    public guild: Guild
+    public guild: Guild,
   ) {
     super(options, manager);
   }

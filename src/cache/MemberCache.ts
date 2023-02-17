@@ -10,7 +10,7 @@ export class MemberCache extends Cache<Member> {
   constructor(
     options: number | BaseCacheOptions,
     public manager: CacheManager,
-    public guild: Guild
+    public guild: Guild,
   ) {
     super(options, manager.adapter);
   }
@@ -30,7 +30,7 @@ export class MemberCache extends Cache<Member> {
   async fetch(id: string) {
     const member = await this.manager.client.rest.getGuildMember(
       this.guild.id,
-      id
+      id,
     );
 
     return this.add(new Member(member, this.guild));

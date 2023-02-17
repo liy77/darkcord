@@ -10,14 +10,14 @@ import { CacheManager } from "./CacheManager";
 export class EmojiCache extends Cache<Emoji | APIEmoji> {
   constructor(
     options: number | BaseCacheOptions,
-    public manager: CacheManager
+    public manager: CacheManager,
   ) {
     super(options, manager.adapter);
   }
 
   get(id: string) {
     const emoji = super.get(id);
-    return emoji && this.#resolve(emoji)
+    return emoji && this.#resolve(emoji);
   }
 
   #resolve(emoji: APIEmoji | Emoji, addInCache = false) {
@@ -31,11 +31,15 @@ export class EmojiCache extends Cache<Emoji | APIEmoji> {
       if (addInCache) this.add(emoji);
     }
 
-    return emoji
+    return emoji;
   }
 
   add(emoji: Emoji | APIEmoji, replace = true) {
-    return super._add(this.#resolve(emoji), replace, (emoji.id || emoji.name) as string);
+    return super._add(
+      this.#resolve(emoji),
+      replace,
+      (emoji.id || emoji.name) as string,
+    );
   }
 
   /**
@@ -46,7 +50,7 @@ export class EmojiCache extends Cache<Emoji | APIEmoji> {
   async fetch(id: string, guild: APIGuild | Guild | string) {
     const emoji = await this.manager.client.rest.getEmoji(
       typeof guild === "string" ? guild : guild.id,
-      id
+      id,
     );
 
     return this.add(emoji);
@@ -57,7 +61,7 @@ export class GuildEmojiCache extends EmojiCache {
   constructor(
     options: number | BaseCacheOptions,
     public manager: CacheManager,
-    public guild: Guild
+    public guild: Guild,
   ) {
     super(options, manager);
   }

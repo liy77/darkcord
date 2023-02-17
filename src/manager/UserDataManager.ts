@@ -2,24 +2,24 @@ import { User } from "@resources/User";
 import { BaseCacheOptions } from "@typings/index";
 import { Partials } from "@utils/Constants";
 import { APIUser } from "discord-api-types/v10";
-import { Cache } from "./Cache";
-import { CacheManager } from "./CacheManager";
+import { CacheManager } from "@cache/CacheManager";
+import { DataManager } from "./DataManager";
 
-export class UserCache extends Cache<APIUser | User> {
+export class UserDataManager extends DataManager<APIUser | User> {
   constructor(
-    options: number | BaseCacheOptions,
-    public manager: CacheManager
+    options: number | BaseCacheOptions<APIUser | User>,
+    public manager: CacheManager,
   ) {
-    super(options, manager.adapter);
+    super(options);
   }
 
   get(id: string) {
-    const user = super.get(id);
+    const user = super.cache.get(id);
     return user && this.#resolve(user, true);
   }
 
   add(user: User | APIUser, replace = true) {
-    return super._add(this.#resolve(user), replace, user.id);
+    return super.add(this.#resolve(user), replace, user.id);
   }
 
   #resolve(user: User | APIUser, addInCache = false) {
@@ -31,10 +31,10 @@ export class UserCache extends Cache<APIUser | User> {
     ) {
       user = new User({ ...user, client: this.manager.client });
 
-      if (addInCache) this.add(user)
+      if (addInCache) this.add(user);
     }
 
-    return user
+    return user;
   }
 
   async fetch(id: string) {

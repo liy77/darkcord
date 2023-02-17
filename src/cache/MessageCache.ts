@@ -13,7 +13,7 @@ export class ChannelMessageCache extends Cache<Message> {
   constructor(
     options: number | BaseCacheOptions,
     public manager: CacheManager,
-    public channel: TextBasedChannel
+    public channel: TextBasedChannel,
   ) {
     super(options, manager.adapter);
   }
@@ -26,9 +26,9 @@ export class ChannelMessageCache extends Cache<Message> {
     if (!(message instanceof Message)) {
       const guild =
         "guild" in this.channel
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          ? (this.channel as GuildTextChannel).guild
+          ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            (this.channel as GuildTextChannel).guild
           : undefined;
 
       message = new Message(
@@ -36,7 +36,7 @@ export class ChannelMessageCache extends Cache<Message> {
           ...message,
           client: this.manager.client,
         },
-        guild
+        guild,
       );
     }
 
@@ -50,12 +50,12 @@ export class ChannelMessageCache extends Cache<Message> {
   fetch(id: string): Promise<Message>;
   fetch(options: RESTGetAPIChannelMessagesQuery): Promise<Message[]>;
   async fetch(
-    options: string | RESTGetAPIChannelMessagesQuery
+    options: string | RESTGetAPIChannelMessagesQuery,
   ): Promise<Message | Message[]> {
     if (typeof options === "string") {
       const message = await this.manager.client.rest.getMessage(
         this.channel.id,
-        options
+        options,
       );
 
       return Resolvable.resolveMessage(
@@ -63,13 +63,13 @@ export class ChannelMessageCache extends Cache<Message> {
           ...message,
           client: this.manager.client,
         }),
-        this.manager.client
+        this.manager.client,
       );
     }
 
     const messageArr = await this.manager.client.rest.getMessages(
       this.channel.id,
-      options
+      options,
     );
 
     return Promise.all(
@@ -79,9 +79,9 @@ export class ChannelMessageCache extends Cache<Message> {
             ...message_1,
             client: this.manager.client,
           }),
-          this.manager.client
-        )
-      )
+          this.manager.client,
+        ),
+      ),
     );
   }
 }

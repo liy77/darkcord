@@ -11,7 +11,7 @@ import { CacheManager } from "./CacheManager";
 export class RoleCache extends Cache<Role | APIRole> {
   constructor(
     options: number | BaseCacheOptions,
-    public manager: CacheManager
+    public manager: CacheManager,
   ) {
     super(options, manager.adapter);
   }
@@ -28,7 +28,7 @@ export class RoleCache extends Cache<Role | APIRole> {
   _resolve(
     role: (APIRole & { guildId?: string }) | Role,
     guild?: Guild,
-    addInCache = false
+    addInCache = false,
   ) {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -67,7 +67,7 @@ export class RoleCache extends Cache<Role | APIRole> {
     }
 
     const rolesArr = await this.manager.client.rest.getRoles(
-      typeof guild === "string" ? guild : guild.id
+      typeof guild === "string" ? guild : guild.id,
     );
 
     const resolvedRolesArr = Promise.all(
@@ -75,7 +75,7 @@ export class RoleCache extends Cache<Role | APIRole> {
         if (!this.manager._partial(Partials.Role)) {
           if (!(guild instanceof Guild)) {
             guild = this.manager.guilds.get(
-              typeof guild === "string" ? guild : guild.id
+              typeof guild === "string" ? guild : guild.id,
             ) as Guild;
           }
 
@@ -85,13 +85,13 @@ export class RoleCache extends Cache<Role | APIRole> {
                 ...role,
                 client: this.manager.client,
               },
-              guild
-            )
+              guild,
+            ),
           );
         }
 
         return this.add(role);
-      })
+      }),
     );
 
     return (await resolvedRolesArr).find((role) => role.id === id);
@@ -102,7 +102,7 @@ export class GuildRoleCache extends RoleCache {
   constructor(
     options: number | BaseCacheOptions,
     public manager: CacheManager,
-    public guild: Guild
+    public guild: Guild,
   ) {
     super(options, manager);
   }
