@@ -5,20 +5,41 @@
     "ecmaVersion": "latest",
     "sourceType": "script"
   },
-  "plugins": ["@typescript-eslint"],
-  "ignorePatterns": [
-    "**/dist/*",
-    "**/typing/*",
-    "**/apps/*",
-    "**/*.js",
-    "**/*.wasm"
-  ],
+  "plugins": ["@typescript-eslint", "import/typescript"],
+  "ignorePatterns": ["**/dist/*", "**/typing/*", "**/apps/*", "**/*.wasm"],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "error",
     "@typescript-eslint/ban-types": "error",
     "@typescript-eslint/await-thenable": "error",
     "@typescript-eslint/no-for-in-array": "error",
     "@typescript-eslint/no-extraneous-class": "error",
-    "@typescript-eslint/no-unnecessary-condition": "error"
+    "@typescript-eslint/no-unnecessary-condition": "error",
+    "@typescript-eslint/array-type": "error",
+    "capitalized-comments": "error",
+    "@typescript-eslint/non-nullable-type-assertion-style": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "index",
+          "sibling",
+          "parent"
+        ],
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ],
+    "import/no-relative-parent-imports": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": true,
+      "node": true
+    }
   }
 }
