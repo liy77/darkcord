@@ -1,7 +1,7 @@
 ---
 layout: '../layouts/SidebarLayout.astro'
 title: Introduction
-description: Test
+description: Get started using darkcord!
 category: Getting Started
 ---
 
@@ -39,3 +39,43 @@ pnpm add darkcord
  - `darkcord/zlib` - Compression package (faster)
  - `zlib-sync` - Compression package (faster than `darkcord/zlib`)
  - `erlpack` - Erlang term format encoder/decoder (faster)
+
+
+## Get Discord Bot token
+
+1. [Login to Discord in Browser](https://discord.com/)
+2. [Open Discord Developer Portal](https://discord.com/developers/applications)
+3. Create an applications
+4. Create Bot user for application
+5. Copy the token shown on the application page
+
+## Ping Pong Example
+
+```js index.js 6:10
+import { Client, Constants } from 'darkcord';
+
+const GatewayIntentBits = Constants.GatewayIntentBits;
+const ClientIntents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessage, GatewayIntentBits.MessageContent];
+
+// Create darkcord client instance
+const client = new Client('BOT_TOKEN', {
+	gateway: {
+		intents: ClientIntents,
+	},
+});
+
+client.once('ready', () => {
+	console.log(`Connected to Discord Gateway`);
+});
+
+client.on('interactionCreate', async (interaction) => {
+	if (interaction.isCommand() && interaction.commandName === "ping") {
+		await interaction.reply({ content: 'Pong!' });
+	}
+});
+
+// Connect to Discord Gateway
+client.connect();
+```
+
+</CH.Code>
