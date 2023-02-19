@@ -99,20 +99,6 @@ export default defineConfig({
 				'ariakit/disclosure': fileURLToPath(new URL('node_modules/ariakit/esm/disclosure/index.js', rootDir)),
 				'ariakit/separator': fileURLToPath(new URL('node_modules/ariakit/esm/separator/index.js', rootDir)),
 				'ariakit/dialog': fileURLToPath(new URL('node_modules/ariakit/esm/dialog/index.js', rootDir)),
-				'ariakit-utils/dom': fileURLToPath(new URL('node_modules/ariakit-utils/esm/dom.js', rootDir)),
-				'ariakit-utils/events': fileURLToPath(new URL('node_modules/ariakit-utils/esm/events.js', rootDir)),
-				'ariakit-utils/focus': fileURLToPath(new URL('node_modules/ariakit-utils/esm/focus.js', rootDir)),
-				'ariakit-utils/misc': fileURLToPath(new URL('node_modules/ariakit-utils/esm/misc.js', rootDir)),
-				'ariakit-utils/platform': fileURLToPath(new URL('node_modules/ariakit-utils/esm/platform.js', rootDir)),
-				'ariakit-react-utils/hooks': fileURLToPath(
-					new URL('node_modules/ariakit-react-utils/esm/hooks.js', rootDir),
-				),
-				'ariakit-react-utils/misc': fileURLToPath(
-					new URL('node_modules/ariakit-react-utils/esm/misc.js', rootDir),
-				),
-				'ariakit-react-utils/system': fileURLToPath(
-					new URL('node_modules/ariakit-react-utils/esm/system.js', rootDir),
-				),
 				'react-use': fileURLToPath(new URL('node_modules/react-use/esm/index.js', rootDir)),
 			},
 		},

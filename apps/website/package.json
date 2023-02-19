@@ -2,16 +2,27 @@
   "name": "@darkcord/website",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "pnpm --top-level generate:css && concurrently \"pnpm dev:css\" \"pnpm dev:next\"",
     "build:next": "next build",
-		"build:css": "yarn generate:css",
+		"build:css": "pnpm generate:css",
     "dev:next": "next dev",
     "dev:css": "pnpm generate:css --watch",
     "generate:css": "unocss src/**/*.tsx --out-file ./src/styles/unocss.css --config ../../unocss.config.ts",
     "lint": "pnpm eslint --ext .mjs,.js,.cjs,.ts,.tsx --fix **/src/**"
   },
+  "type": "module",
+  "contributors": [
+		"Nicolas Ribeiro <business@niskii.dev>"
+	],
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JustAWaifuHunter/darkcord.git"
+	},
+	"bugs": {
+		"url": "https://github.com/JustAWaifuHunter/darkcord/issues"
+	},
   "dependencies": {
     "@vercel/og": "^0.1.0",
     "ariakit": "2.0.0-next.43",
