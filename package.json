@@ -22,8 +22,6 @@
     "unocss": "^0.49.7"
   },
   "dependencies": {
-    "ariakit": "2.0.0-next.43",
-    "react-use": "^17.4.0",
     "tsup": "^6.6.3"
   }
 }
