@@ -1,0 +1,10 @@
+{
+	"recommendations": [
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"antfu.unocss",
+		"astro-build.astro-vscode",
+		"unifiedjs.vscode-mdx",
+		"folke.vscode-monorepo-workspace"
+	]
+}

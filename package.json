@@ -1,8 +1,9 @@
 {
-  "name": "darkcord-project",
+  "name": "@darkcord/darkcord",
   "description": "darkcord workspace",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "pretty": "pnpm prettier --write ."
@@ -11,13 +12,14 @@
     "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
+    "darkcord": "workspace:^",
     "eslint": "^8.34.0",
     "eslint-plugin-import": "^2.27.5",
     "interactions": "^0.0.1",
     "prettier": "^2.8.4",
     "tscpaths": "^0.0.9",
     "typescript": "^4.9.5",
-    "darkcord": "workspace:^"
+    "unocss": "^0.49.7"
   },
   "dependencies": {
     "tsup": "^6.6.3"
