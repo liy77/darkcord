@@ -39,7 +39,7 @@ const createSROnlyLabel = (text: string) => {
 	return node;
 };
 
-const rootDir = new URL('../../', rootDir);
+const rootDir = new URL('../../', import.meta.url);
 
 export default defineConfig({
 	integrations: [
