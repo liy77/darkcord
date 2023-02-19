@@ -1,0 +1,116 @@
+[cmdk-overlay] {
+	background-color: rgba(0, 0, 0, 0.33);
+	height: 100vh;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	z-index: 200;
+
+	@media screen and (max-width: 900px) {
+		.[cmdk-overlay] {
+			display: none;
+		}
+	}
+}
+
+[cmdk-root] {
+	position: fixed;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	min-height: 75vh;
+	max-height: 75vh;
+	border-radius: 10px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.25);
+	width: 40vw;
+	min-width: 680px;
+	border: 1px solid #3a3f42;
+	z-index: 1001;
+
+	@media screen and (max-width: 900px) {
+		.[cmd-root] {
+			min-height: 100vh;
+			max-height: 100vh;
+			width: 100vw;
+			min-width: 100vw;
+			top: 50%;
+			border-radius: 0;
+		}
+	}
+}
+
+[cmdk-input] {
+	appearance: none;
+	background: transparent;
+	flex: 1;
+	font: inherit;
+	height: 100%;
+	outline: none;
+	padding: 12px 44px;
+	margin: 16px 16px 0;
+	border: 1px solid #3a3f42;
+	border-radius: 6px;
+	width: calc(100% - 32px);
+	box-sizing: border-box;
+	box-shadow: 0 1px 3pxrgba (0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[cmdk-item] {
+	content-visibility: auto;
+	cursor: pointer;
+	min-height: 52px;
+	border-radius: 6px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 4px 12px;
+	user-select: none;
+	will-change: background, color;
+	transition: all 150ms ease;
+	transition-property: none;
+}
+
+[cmdk-list] {
+	height: calc(75vh - 50px - 50px - 20px);
+	max-height: calc(75vh - 50px - 50px - 20px);
+	overflow: auto;
+	overscroll-behavior: contain;
+	border-top: 1px solid #3a3f42;
+	border-bottom: 1px solid #3a3f42;
+	padding: 0 16px;
+	margin: 12px 0 0;
+
+	@media screen and (max-width: 900px) {
+		.[cmdk-list] {
+			height: calc(100vh - 50px - 50px - 20px);
+			max-height: calc(100vh - 50px - 50px - 20px);
+		}
+	}
+}
+
+[cmdk-separator] {
+	height: 1px;
+	width: 100%;
+	background: #3a3f42;
+	margin: 4px 0;
+}
+
+[cmdk-group-heading] {
+	font-size: 0.75rem;
+	line-height: 1.5833333;
+	user-select: none;
+	padding: 16px 8px 8px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin: 0 2px;
+}
+
+[cmdk-empty] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	white-space: pre-wrap;
+	padding: 32px 0;
+}

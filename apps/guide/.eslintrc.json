@@ -1,16 +1,3 @@
 {
-	"extends": ["neon/node", "neon/typescript", "neon/prettier", "neon/react", "neon/astro", "neon/prettier"],
-	"parserOptions": {
-		"project": "./tsconfig.eslint.json"
-	},
-	"settings": {
-		"react": {
-			"version": "detect"
-		}
-	},
-	"ignorePatterns": ["**/dist/*"],
-	"rules": {
-		"react/jsx-filename-extension": [1, { "extensions": [".tsx", ".astro"] }],
-		"@typescript-eslint/consistent-type-definitions": ["error", "interface"]
-	}
+  "extends": ["../../.eslintrc.json"]
 }
