@@ -165,3 +165,122 @@ export interface Constructor extends Item {
 }
 
 export type ChildTypes = Constructor | Event | Member | Method;
+
+export type See = (string | undefined)[];
+export type Deprecated = string | boolean;
+
+export interface MetaJSON {
+  line: number;
+  file: string;
+  url: string;
+}
+
+export interface PropJSON {
+  name: string;
+  type: string[][][];
+  meta: MetaJSON;
+}
+
+export interface VarTypeJSON {
+  types?: string[][][];
+  description?: string;
+  nullable?: boolean;
+}
+
+export interface ParamJSON {
+  name: string;
+  description?: string;
+  default?: string;
+  variable: boolean;
+  type: VarTypeJSON[][][];
+  optional: boolean;
+}
+
+export interface MethodJSON {
+  name: string;
+  description?: string;
+  see?: See;
+  scope?: string;
+  access?: string;
+  examples?: string[];
+  abstract?: true;
+  deprecated?: Deprecated;
+  params?: ParamJSON[];
+  returns?: VarTypeJSON[][][];
+  meta: MetaJSON;
+  returnsDescription?: string;
+}
+
+export interface EventJSON {
+  name?: string;
+  description?: string;
+  see?: See;
+  access?: string;
+  examples?: string[];
+  deprecated?: Deprecated;
+  params?: ParamJSON[];
+  returns?: VarTypeJSON[][][];
+  returnsDescription?: string;
+  meta?: MetaJSON;
+}
+
+export interface ConstructorJSON {
+  see?: See;
+  name: string;
+  description?: string;
+  access?: string;
+  params?: ParamJSON[];
+}
+
+export interface ClassJSON {
+  name: string;
+  extends?: string[][][];
+  implements?: string[][][];
+  see?: See;
+  access?: string;
+  abstract?: true;
+  deprecated?: Deprecated;
+  construct: ConstructorJSON;
+  props?: PropJSON[];
+  methods?: MethodJSON[];
+  events?: EventJSON[];
+}
+
+export interface InterfaceJSON extends ClassJSON {
+  description: string;
+}
+
+export interface TypeDefJSON {
+  name: string;
+  description?: string;
+  see?: See;
+  access?: string;
+  deprecated?: Deprecated;
+  type?: VarTypeJSON;
+  meta: MetaJSON;
+}
+
+export interface ExternalJSON {
+  name: string;
+  description?: string;
+  see?: See;
+  meta: MetaJSON;
+}
+
+export interface DocsGeneratorMetaJSON {
+  generator: string;
+  format: number;
+  date: number;
+}
+
+export interface DocsJSON {
+  classes: ClassJSON[];
+  functions: MethodJSON[];
+  interfaces: InterfaceJSON[];
+  typedefs: TypeDefJSON[];
+  externals: ExternalJSON[];
+  custom?: Record<string, CustomDocs>;
+  meta: DocsGeneratorMetaJSON;
+}
+
+export type ChildJSONTypes = ConstructorJSON | EventJSON | MethodJSON;

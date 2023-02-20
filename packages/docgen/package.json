@@ -1,8 +1,14 @@
 {
   "name": "@darkcord/docgen",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./dist/docs.js",
+  "typings": "./dist/docs.d.ts",
   "bin": "./dist/cli.js",
+  "exports": {
+    ".": {
+      "import": "./dist/"
+    }
+  },
   "scripts": {
     "pretty": "pnpm prettier --write ."
   },

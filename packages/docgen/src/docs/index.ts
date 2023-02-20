@@ -28,11 +28,13 @@ export class DocumentedItem<T = DeclarationReflection | Item> {
 
   serialize() {
     try {
-      return this.serializer();
+      return this.serializer() as unknown as Record<string, any>;
     } catch (err: any) {
       err.message = `Error while serializing ${this.toString()}: ${
         err.message
       }`;
+
+      throw err;
     }
   }
 

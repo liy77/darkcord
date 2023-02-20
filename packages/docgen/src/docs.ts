@@ -10,7 +10,25 @@ import {
   DocumentedEvent,
   DocumentedMember,
 } from "./docs/index";
+
 import type { ChildTypes, Config, CustomDocs, RootTypes } from "./utils/types";
+
+export type {
+  DocsJSON,
+  MetaJSON,
+  ClassJSON,
+  PropJSON,
+  EventJSON,
+  ParamJSON,
+  MethodJSON,
+  ChildJSONTypes,
+  TypeDefJSON,
+  VarTypeJSON,
+  ExternalJSON,
+  InterfaceJSON,
+  ConstructorJSON,
+  DocsGeneratorMetaJSON,
+} from "./utils/types";
 
 export class Docs {
   readonly classes = new Map<string, DocumentedClass>();
