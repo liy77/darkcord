@@ -7,9 +7,7 @@
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"lint": "prettier --check . && eslint src --ext .mjs,.js,.cjs,.ts,.tsx,.astro --format=pretty",
-		"format": "prettier --write . && eslint src --ext .mjs,.js,.cjs,.ts,.tsx,.astro --fix --format=pretty",
-		"fmt": "yarn format"
+		"lint": "pnpm eslint --ext .mjs,.js,.cjs,.ts,.tsx,.astro --fix **/src/**"
 	},
 	"type": "module",
 	"contributors": [
@@ -25,7 +23,7 @@
 	},
 	"dependencies": {
 		"@code-hike/mdx": "^0.8.0",
-		"ariakit": "^2.0.0-next.43",
+		"ariakit": "2.0.0-next.43",
 		"cmdk": "^0.1.21",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
@@ -42,6 +40,8 @@
 		"@unocss/astro": "^0.49.1",
 		"@unocss/cli": "^0.49.1",
 		"@unocss/reset": "^0.49.1",
+		"ariakit-react-utils": "0.17.0-next.27",
+		"ariakit-utils": "0.17.0-next.27",
 		"astro": "^2.0.4",
 		"astro-compress": "^1.1.28",
 		"astro-critters": "^1.1.26",
@@ -52,15 +52,13 @@
 		"hastscript": "^7.2.0",
 		"html-escaper": "^3.0.3",
 		"prettier": "^2.8.3",
-		"prettier-plugin-astro": "^0.8.0",
-		"prettier-plugin-tailwindcss": "^0.2.2",
 		"react-custom-scrollbars-2": "^4.5.0",
 		"rehype-autolink-headings": "^6.1.1",
 		"rehype-slug": "^5.1.0",
 		"sass": "^1.58.0",
 		"sharp": "^0.31.3",
 		"shiki": "^0.14.0",
-		"unocss": "^0.49.1",
+		"unocss": "^0.49.7",
 		"vercel": "^28.14.1"
 	},
 	"engines": {

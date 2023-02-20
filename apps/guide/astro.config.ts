@@ -39,6 +39,8 @@ const createSROnlyLabel = (text: string) => {
 	return node;
 };
 
+const rootDir = new URL('../../', import.meta.url);
+
 export default defineConfig({
 	integrations: [
 		react(),
@@ -79,7 +81,7 @@ export default defineConfig({
 			throttle: 3,
 		}),
 		unocss({
-			configFile: 'unocss.config.ts',
+			configFile: fileURLToPath(new URL('unocss.config.ts', rootDir)),
 		}),
 		image({
 			serviceEntryPoint: '@astrojs/image/sharp',
