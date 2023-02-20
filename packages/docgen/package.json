@@ -1,6 +1,6 @@
 {
   "name": "@darkcord/docgen",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "./dist/docs.js",
   "bin": "./dist/cli.js",
   "scripts": {
