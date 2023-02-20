@@ -1,20 +1,30 @@
 import { Events } from "@utils/Constants";
-import { APIThreadChannel, ChannelType, GatewayThreadDeleteDispatchData } from "discord-api-types/v10";
+import {
+  APIThreadChannel,
+  ChannelType,
+  GatewayThreadDeleteDispatchData,
+} from "discord-api-types/v10";
 import { ThreadChannel } from "@resources/Channel";
 import { Event } from "./Event";
 
 export class ThreadDelete extends Event {
   run(data: GatewayThreadDeleteDispatchData) {
-    let thread = this.client.cache.threads.get(data.id)
+    let thread = this.client.cache.threads.get(data.id);
 
-    if (data.type === ChannelType.PublicThread || data.type === ChannelType.PrivateThread) {
-      const guild = this.getGuild(data.guild_id!)
+    if (
+      data.type === ChannelType.PublicThread ||
+      data.type === ChannelType.PrivateThread
+    ) {
+      const guild = this.getGuild(data.guild_id!);
 
       if (guild) {
-        thread = new ThreadChannel({
-          client: this.client,
-          ...data as APIThreadChannel
-        }, guild)
+        thread = new ThreadChannel(
+          {
+            client: this.client,
+            ...(data as APIThreadChannel),
+          },
+          guild,
+        );
       }
     }
 

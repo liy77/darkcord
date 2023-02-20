@@ -81,11 +81,15 @@ export class WebSocket {
     const compress = this.client.options.gateway.compress;
 
     for (let id = 0; id < totalShards; id++) {
-      const shard = new GatewayShard(this.client as any, new EventSource(), {
-        compress,
-        shardId: id.toString(),
-        encoding: this.client.options.gateway.encoding,
-      });
+      const shard = new GatewayShard(
+        this.client as any,
+        new EventSource() as any,
+        {
+          compress,
+          shardId: id.toString(),
+          encoding: this.client.options.gateway.encoding,
+        },
+      );
 
       // Handling shard
       await this.handleShard(shard);

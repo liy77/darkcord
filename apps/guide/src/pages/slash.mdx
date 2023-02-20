@@ -1,0 +1,49 @@
+---
+layout: '../layouts/SidebarLayout.astro'
+title: Creating application commands
+description: Get started with application commands
+category: Getting Started
+---
+
+import { CH } from '@code-hike/mdx/components';
+import { Warning } from "../ui";
+
+## Creating command
+<Warning>Creating a command with the same name as an existing command for your application will overwrite the old command.</Warning>
+
+<CH.Code client:load>
+
+```js
+import { Client, Constants, API } from 'darkcord';
+
+const GatewayIntentBits = Constants.GatewayIntentBits;
+const ClientIntents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessage, GatewayIntentBits.MessageContent];
+
+// Create darkcord client instance
+const client = new Client('BOT_TOKEN', {
+	gateway: {
+		intents: ClientIntents,
+	},
+});
+
+client.once('ready', async () => {
+    await client.application.createCommand({
+        name: "ping",
+        description: "pong!",
+        type: API.ApplicationCommandType.ChatInput
+    })
+
+	console.log(`Connected to Discord Gateway`);
+});
+
+client.on('interactionCreate', async (interaction) => {
+	if (interaction.isCommand() && interaction.commandName === "ping") {
+		await interaction.reply({ content: 'Pong!' });
+	}
+});
+
+// Connect to Discord Gateway
+client.connect();
+```
+
+</CH.Code>

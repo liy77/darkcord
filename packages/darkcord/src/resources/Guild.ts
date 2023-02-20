@@ -391,7 +391,7 @@ export class Guild extends BaseGuild {
       this._client.cache,
       this,
     );
-    this.invites = new Map()
+    this.invites = new Map();
     this.voiceStates = new Map();
     this.scheduledEvents = new Map();
     this.maxMembers = data.max_members;

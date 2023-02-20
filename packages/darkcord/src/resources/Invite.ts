@@ -3,7 +3,7 @@ import {
   APIInvite,
   APIPartialChannel,
   APIUser,
-  InviteTargetType
+  InviteTargetType,
 } from "discord-api-types/v10";
 
 import { GuildChannel } from "./Channel";
@@ -53,31 +53,30 @@ export class Invite {
   guildScheduledEvent: ScheduledEvent | null;
   _client: AnyClient;
   constructor(data: DataWithClient<Partial<APIInvite>>) {
-
-    this._client = data.client
-    this.guild = null
-    this.expiresAt = null
-    this.inviter = null
+    this._client = data.client;
+    this.guild = null;
+    this.expiresAt = null;
+    this.inviter = null;
 
     this.code = data.code as string;
 
-    this.approximateMemberCount = 0
-    this.approximatePresenceCount = 0
+    this.approximateMemberCount = 0;
+    this.approximatePresenceCount = 0;
     this.targetType = data.target_type!;
     this.targetUser = data.target_user
       ? data.client.cache.users.add(data.target_user)
       : null;
-    this.guildScheduledEvent = null
+    this.guildScheduledEvent = null;
 
-    this._update(data)
+    this._update(data);
   }
 
   _update(data: Partial<APIInvite>) {
     if (data.guild) {
       this.guild = data.guild
-      ? this._client.guilds.cache.get(data.guild.id) ??
-        new InviteGuild({ ...data.guild, client: this._client })
-      : null;
+        ? this._client.guilds.cache.get(data.guild.id) ??
+          new InviteGuild({ ...data.guild, client: this._client })
+        : null;
     }
 
     if ("expires_at" in data) {
@@ -86,12 +85,13 @@ export class Invite {
 
     if ("inviter" in data) {
       this.inviter = data.inviter
-      ? this._client.cache.users.add(data.inviter)
-      : null;
+        ? this._client.cache.users.add(data.inviter)
+        : null;
     }
 
     if ("channel" in data) {
-      this.channel = this._client.channels.cache.get(data.channel!.id) ?? data.channel;
+      this.channel =
+        this._client.channels.cache.get(data.channel!.id) ?? data.channel;
     }
 
     if ("approximate_member_count" in data) {
@@ -103,16 +103,17 @@ export class Invite {
     }
 
     if ("guild_scheduled_event" in data) {
-      this.guildScheduledEvent = data.guild_scheduled_event && this.guild
-        ? new ScheduledEvent(data.guild_scheduled_event, this.guild)
-        : null;
+      this.guildScheduledEvent =
+        data.guild_scheduled_event && this.guild
+          ? new ScheduledEvent(data.guild_scheduled_event, this.guild)
+          : null;
 
-        if (this.guildScheduledEvent && this.guild instanceof Guild) {
-          this.guild!.scheduledEvents.set(
-            this.guildScheduledEvent.id,
-            this.guildScheduledEvent,
-          );
-        }
+      if (this.guildScheduledEvent && this.guild instanceof Guild) {
+        this.guild!.scheduledEvents.set(
+          this.guildScheduledEvent.id,
+          this.guildScheduledEvent,
+        );
+      }
     }
   }
 }
