@@ -57,7 +57,7 @@ export class Cache<V> extends Map<string, V> {
 
     if (entries) {
       for (const [key, value] of entries) {
-        this.set(key, value)
+        this.set(key, value);
       }
     }
 

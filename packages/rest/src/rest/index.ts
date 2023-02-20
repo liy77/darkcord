@@ -489,11 +489,13 @@ export class Rest extends EventEmitter {
   }
 
   getGuildInvite(inviteCode: string) {
-    return this.get(Routes.invite(inviteCode)) as Promise<APIExtendedInvite>
+    return this.get(Routes.invite(inviteCode)) as Promise<APIExtendedInvite>;
   }
 
   getChannelInvites(channelId: string) {
-    return this.get(Routes.channelInvites(channelId)) as Promise<APIExtendedInvite[]>
+    return this.get(Routes.channelInvites(channelId)) as Promise<
+      APIExtendedInvite[]
+    >;
   }
 
   getGuildIntegrations(guildId: string) {

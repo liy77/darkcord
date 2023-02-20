@@ -110,7 +110,9 @@ export namespace Resolvable {
 
     if (!(channelResolvable instanceof Channel)) {
       if (typeof channelResolvable === "string") {
-        const c = client.channels.cache.get(channelResolvable) ?? client.threads.get(channelResolvable);
+        const c =
+          client.channels.cache.get(channelResolvable) ??
+          client.threads.get(channelResolvable);
         resolved = c;
       } else {
         resolved = Channel.from({ ...channelResolvable, client }, guild!);

@@ -56,7 +56,7 @@ export class VoiceStateUpdate extends Event {
       }
     }
 
-    if (!oldVoiceState && updated || !isEqual(oldVoiceState, updated)) {
+    if ((!oldVoiceState && updated) || !isEqual(oldVoiceState, updated)) {
       this.client.emit(Events.VoiceStateUpdate, member, updated);
     }
   }

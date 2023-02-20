@@ -153,9 +153,9 @@ export class Message extends Base {
 
   async reply(content: MessagePostData | string) {
     if (this.type !== MessageType.Reply && this.type !== MessageType.Default) {
-      return
+      return;
     }
-    
+
     if (typeof content === "string") {
       content = {
         content,

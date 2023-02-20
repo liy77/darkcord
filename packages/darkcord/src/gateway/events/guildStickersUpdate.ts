@@ -23,7 +23,10 @@ export class GuildStickersUpdate extends Event {
           guild.stickers.add(rawsticker),
         );
       } else {
-        this.client.emit(Events.GuildStickerCreate, guild.stickers.add(rawsticker));
+        this.client.emit(
+          Events.GuildStickerCreate,
+          guild.stickers.add(rawsticker),
+        );
       }
     }
 

@@ -6,7 +6,7 @@ import { InviteGuild } from "../../resources/Guild";
 
 export class InviteCreate extends Event {
   run(data: GatewayInviteCreateDispatchData) {
-    const guild = this.getGuild(data.guild_id!)
+    const guild = this.getGuild(data.guild_id!);
 
     const channel = this.client.channels.cache.get(data.channel_id);
 
@@ -14,13 +14,13 @@ export class InviteCreate extends Event {
       guild: guild?.rawData,
       channel: channel!.rawData,
       client: this.client,
-      ...data
+      ...data,
     });
 
     if (guild) {
       guild.invites.set(invite.code, invite);
     }
-    
+
     this.client.emit(Events.InviteCreate, invite);
   }
 }

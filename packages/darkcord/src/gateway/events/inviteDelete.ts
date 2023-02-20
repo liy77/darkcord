@@ -10,13 +10,15 @@ export class InviteDelete extends Event {
 
     if (!guild) return;
 
-    const deleted = guild.invites.get(data.code) || new Invite({
-      client: this.client,
-      channel: guild.channels.cache.get(data.channel_id),
-      code: data.code,
-      guild: guild.rawData,
-    });
-    
+    const deleted =
+      guild.invites.get(data.code) ||
+      new Invite({
+        client: this.client,
+        channel: guild.channels.cache.get(data.channel_id),
+        code: data.code,
+        guild: guild.rawData,
+      });
+
     this.client.emit(Events.InviteDelete, deleted);
   }
 }
