@@ -79,7 +79,7 @@ export function parseType(
 
   if (Types.isArray(t)) return `Array<${parseType(t.elementType)}>`;
 
-  if (Types.isLiteral(t)) t.value === "string" ? `"${t.value}"` : `${t.value}`;
+  if (Types.isLiteral(t)) return t.value === "string" ? `"${t.value}"` : `${t.value}`;
 
   if (Types.isConditional(t))
     return `${parseType(t.checkType)} extends ${parseType(
