@@ -1,24 +1,16 @@
 {
   "name": "darkcord",
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "description": "A NodeJS Package to interact with Discord API",
   "repository": {
     "type": "git",
     "url": "https://github.com/JustAWaifuHunter/darkcord.git",
     "directory": "packages/darkcord"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "typings": "./typings/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./typings/index.d.ts"
-    }
-  },
   "scripts": {
-    "c:declare": "tsc --emitDeclarationOnly",
-    "c": "tsup && pnpm c:declare && tscpaths -p tspaths.config.json -s ./src -o ./typings",
+    "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./typings && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
     "lint": "pnpm eslint --ext .ts --fix **/src/**"
   },
@@ -33,13 +25,7 @@
     "ws": "^8.12.0"
   },
   "devDependencies": {
-    "@darkcord/docgen": "workspace:^",
-    "@typings": "link:src/types",
-    "@resources": "link:src/resources",
-    "@utils": "link:src/utils",
-    "@manager": "link:src/manager",
-    "@cache": "link:src/cache",
-    "@client": "link:src/client"
+    "@darkcord/docgen": "workspace:^"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.7",
