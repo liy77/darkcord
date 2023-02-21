@@ -1,12 +1,14 @@
 {
   "name": "@darkcord/docgen",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./dist/docs.js",
   "typings": "./dist/docs.d.ts",
   "bin": "./dist/cli.js",
   "exports": {
     ".": {
-      "import": "./dist/"
+      "import": "./dist/docs.mjs",
+      "require": "./dist/docs.js",
+      "types": "./dist/docs.d.ts"
     }
   },
   "scripts": {
