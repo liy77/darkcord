@@ -1,16 +1,50 @@
+import { CmdKDialog } from "@/components/CmdK";
+import { Header } from "@/components/Header";
 import { Nav } from "@/components/Nav";
+import { createApiModel } from "@/utils/createApiModel";
+import { serializeIntoSidebarItemData } from "@/utils/serializeIntoSidebarItemData";
+import { ApiFunction } from "@microsoft/api-extractor-model";
+import { notFound } from "next/navigation";
 import { PropsWithChildren } from "react";
+import { fetchModelJSON } from "../docAPI";
+import { Providers } from "./providers";
 
-export default function DocsLayout({ children }: PropsWithChildren) {
+export default async function DocsLayout({ children }: PropsWithChildren) {
+  const modelJSON = await fetchModelJSON();
+  const model = createApiModel(modelJSON);
+
+	const pkg = model.tryGetPackageByName("darkcord");
+
+	if (!pkg) {
+		return notFound();
+	}
+
+	const entry = pkg.entryPoints[0];
+
+  if (!entry) {
+		return notFound();
+	}
+
+  const members = entry.members.filter((member) => {
+    if (member.kind !== "Function") {
+      return true;
+    }
+
+    return (member as ApiFunction).overloadIndex === 1;
+  });
+
   return (
-    <>
-      <Nav />
+    <Providers>
+      <Header />
+      <Nav
+        members={members.map((member) => serializeIntoSidebarItemData(member))}
+      />
       <article className="pt-18 lg:pl-76">
         <div className="relative z-10 min-h-[calc(100vh_-_70px)]">
           {children}
         </div>
-        <div className="h-76 md:h-52" />
       </article>
-    </>
+      <CmdKDialog />
+    </Providers>
   );
 }

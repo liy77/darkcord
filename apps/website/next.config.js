@@ -17,13 +17,14 @@ export default withBundleAnalyzer({
   cleanDistDir: true,
   outputFileTracing: true,
   experimental: {
+    asyncWebAssembly: true,
     appDir: true,
-    serverComponentsExternalPackages: ["jju", "shiki"],
+    serverComponentsExternalPackages: ["@microsoft/api-extractor-model", "jju", "shiki"],
     outputFileTracingRoot: fileURLToPath(new URL("../../", import.meta.url)),
     fallbackNodePolyfills: false,
   },
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
+  }
 });

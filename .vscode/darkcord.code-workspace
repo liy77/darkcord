@@ -1,64 +1,75 @@
 {
-	"folders": [
-		{
-			"name": "✨ darkcord-project",
-			"path": ".."
-		},
-		{
-			"name": "📦 darkcord",
-			"path": "../packages/darkcord"
-		},
-		{
-			"name": "📦 @darkcord/docgen",
-			"path": "../packages/docgen"
-		},
-		{
-			"name": "📦 @darkcord/interactions",
-			"path": "../packages/interactions"
-		},
-		{
-			"name": "📦 @darkcord/rest",
-			"path": "../packages/rest"
-		},
-		{
-			"name": "📦 @darkcord/utils",
-			"path": "../packages/utils"
-		},
-		{
-			"name": "📦 @darkcord/ws",
-			"path": "../packages/ws"
-		},
-		{
-			"name": "📦 @darkcord/zlib",
-			"path": "../packages/zlib"
-		}
-	],
-	"settings": {
-		"cSpell.words": [
-			"bufferutil",
-			"darkcord",
-			"docgen",
-			"esbuild",
-			"fnames",
-			"rawmoji",
-			"rawsticker",
-			"tscpaths",
-			"tsup",
-			"typedefs",
-			"undici",
-			"unocss"
-		],
-		"conventionalCommits.scopes": [
-			"Cache",
-			"lint",
-			"Interactions",
-			"Rest",
-			"Utils",
-			"WebSocket",
-			"Zlib",
-			"Package",
-			"Message",
+  "folders": [
+    {
+      "name": "✨ darkcord-project",
+      "path": ".."
+    },
+    {
+      "name": "🚀 @darkcord/guide",
+      "path": "../apps/guide"
+    },
+    {
+      "name": "🚀 @darkcord/website",
+      "path": "../apps/website"
+    },
+    {
+      "name": "📦 darkcord",
+      "path": "../packages/darkcord"
+    },
+    {
+      "name": "📦 @darkcord/docgen",
+      "path": "../packages/docgen"
+    },
+    {
+      "name": "📦 @darkcord/interactions",
+      "path": "../packages/interactions"
+    },
+    {
+      "name": "📦 @darkcord/rest",
+      "path": "../packages/rest"
+    },
+    {
+      "name": "📦 @darkcord/utils",
+      "path": "../packages/utils"
+    },
+    {
+      "name": "📦 @darkcord/ws",
+      "path": "../packages/ws"
+    },
+    {
+      "name": "📦 @darkcord/zlib",
+      "path": "../packages/zlib"
+    }
+  ],
+  "settings": {
+    "cSpell.words": [
+      "bufferutil",
+      "darkcord",
+      "docgen",
+      "esbuild",
+      "fnames",
+      "rawmoji",
+      "rawsticker",
+      "tscpaths",
+      "tsup",
+      "typedefs",
+      "undici",
+      "unocss"
+    ],
+    "conventionalCommits.scopes": [
+      "Cache",
+      "lint",
+      "Interactions",
+      "Rest",
+      "Utils",
+      "WebSocket",
+      "Zlib",
+      "Package",
+      "Message",
 			"VoiceChannel"
-		]
-	}
+    ],
+    "files.associations": {
+      "*.mdx": "markdown"
+    }
+  }
 }

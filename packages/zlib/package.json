@@ -4,6 +4,9 @@
   "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
+  "scripts": {
+    "build": "tsup"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.mjs",

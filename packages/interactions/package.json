@@ -5,6 +5,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.mjs",

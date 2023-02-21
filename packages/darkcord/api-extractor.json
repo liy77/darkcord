@@ -1,0 +1,6 @@
+{
+	"extends": "../../api-extractor.json",
+	"docModel": {
+		"projectFolderUrl": "https://github.com/JustAWaifuHunter/darkcord/tree/master/packages/darkcord"
+	}
+}

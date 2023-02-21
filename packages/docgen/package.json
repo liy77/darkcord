@@ -12,7 +12,8 @@
     }
   },
   "scripts": {
-    "pretty": "pnpm prettier --write ."
+    "pretty": "pnpm prettier --write .",
+    "build": "tsup"
   },
   "dependencies": {
     "colors": "^1.4.0",

@@ -19,8 +19,8 @@ export default async function handler() {
       </body>
     ),
     {
-      width: 2048,
-      height: 1170,
+      width: 1078,
+      height: 566,
       statusText: "OK",
       status: 200,
       headers: {

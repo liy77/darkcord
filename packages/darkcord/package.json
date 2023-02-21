@@ -13,7 +13,9 @@
   "scripts": {
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./typings && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
-    "lint": "pnpm eslint --ext .ts --fix **/src/**"
+    "lint": "pnpm eslint --ext .ts --fix **/src/**",
+    "build:docs": "tsc -p tsconfig.docs.json && tscpaths -p tsconfig.docs.json -s ./src -o ./typings-docs && pnpm downlevel-dts ./typings-docs ./typings-docs",
+    "docs": "pnpm build:docs && api-extractor run --local"
   },
   "dependencies": {
     "@darkcord/interactions": "workspace:^",
@@ -26,7 +28,8 @@
     "ws": "^8.12.0"
   },
   "devDependencies": {
-    "@darkcord/docgen": "workspace:^"
+    "@microsoft/api-extractor": "^7.34.4",
+    "downlevel-dts": "^0.11.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.7",

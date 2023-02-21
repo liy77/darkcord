@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist-docs",
+    "baseUrl": "./src",
+    "declarationDir": "./typings-docs",
+		"skipLibCheck": true,
+		"emitDeclarationOnly": true,
+		"exactOptionalPropertyTypes": false,
+    "paths": {
+      "@utils/*": ["./utils/*"],
+      "@client/*": ["./client/*"],
+      "@resources/*": ["./resources/*"],
+      "@typings/*": ["./types/*"],
+      "@cache/*": ["./cache/*"],
+      "@manager/*": ["./manager/*"]
+    }
+  },
+  "exclude": ["dist"],
+  "include": ["./src/**/*"]
+}

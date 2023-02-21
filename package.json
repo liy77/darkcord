@@ -6,7 +6,9 @@
     "apps/*"
   ],
   "scripts": {
-    "pretty": "pnpm prettier --write ."
+    "pretty": "pnpm prettier --write .",
+    "build": "pnpm --stream --r build",
+    "lint": "pnpm --stream --r lint"
   },
   "devDependencies": {
     "@types/node": "^18.13.0",

@@ -25,7 +25,7 @@ body {
   height: 100%;
 }
 
-#__next[aria-hidden] {
+#__next[aria-hidden="true"] {
 	filter: blur(3.33px);
 }
 
@@ -52,4 +52,38 @@ pre[data-theme="light"] {
 
 pre[data-theme="dark"] {
   background: #1e1e1e;
+}
+
+pre {
+	font-size: 13px !important;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	line-height: 1.5;
+	tab-size: 4;
+	hyphens: none;
+	padding: 1em;
+	margin: 0.5em 0;
+	overflow: auto;
+	border-radius: 4px;
+}
+
+code {
+	font-family: 'Inter', sans-serif !important;
+}
+
+.bar-animation {
+  animation: barLoader 1s linear infinite;
+}
+
+@keyframes barLoader {
+	from {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
 }

@@ -13,3 +13,4 @@
 /packages/**/test.cjs
 /yarn-error.log
 /packages/**/docs
+/packages/**/typings-docs
