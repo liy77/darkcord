@@ -107,18 +107,19 @@ pnpm add kazagumo-spotify
 
 ```js
 import { Client } from "darkcord";
-import Voice from "darkcord/voice";
+import { Lava } from "@darkcord/lava";
 
 const Nodes = [
   {
-    name: "darkcord-player",
+    name: "Node 1",
     url: "localhost:2333",
     auth: "youshallnotpass",
     secure: false,
   },
 ];
 
-const voicePlugin = Voice(Nodes, {
+const voicePlugin = Lava({
+  nodes: Nodes,
   defaultSearchEngine: "youtube",
 });
 
@@ -129,9 +130,9 @@ const client = new Client("token", {
   plugins: [voicePlugin],
 });
 
-client.voice.lavalink.on("ready", () => console.log("Lavalink is Ready"));
+client.lava.lavalink.on("ready", (node) => console.log(`Node ${node} is Ready`));
 
-client.on("playerStart", (player) => {
+client.lava.on("playerStart", (player) => {
   client.channels.cache.get(player.textId).createMessage({
     content: `Now playing **${track.title}** by **${track.author}**`,
   });
