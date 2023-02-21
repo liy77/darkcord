@@ -27,5 +27,21 @@
         "*.mdx": "markdown"
     },
     "files.insertFinalNewline": true,
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/node_modules": true,
+        "**/tsconfig.json": true
+    },
+    "workspace.isHidden": true,
+    "cSpell.words": [
+        "darkcord",
+        "docgen",
+        "tsup"
+    ]
 }

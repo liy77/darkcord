@@ -37,11 +37,16 @@
 		"cSpell.words": [
 			"bufferutil",
 			"darkcord",
+			"docgen",
 			"esbuild",
 			"fnames",
 			"rawmoji",
 			"rawsticker",
-			"undici"
+			"tscpaths",
+			"tsup",
+			"typedefs",
+			"undici",
+			"unocss"
 		],
 		"conventionalCommits.scopes": [
 			"Cache",
