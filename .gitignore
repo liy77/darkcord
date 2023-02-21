@@ -7,4 +7,8 @@
 /typing
 /test.mjs
 /test.cjs
+/packages/**/test.json
+/packages/**/test.js
+/packages/**/test.mjs
+/packages/**/test.cjs
 /yarn-error.log
