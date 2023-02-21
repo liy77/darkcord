@@ -17,6 +17,7 @@ import { TextBasedChannel } from "./Channel";
 import { Emoji, Reaction } from "./Emoji";
 import { Guild } from "./Guild";
 import { User } from "./User";
+import { Member } from "./Member";
 
 export class MessageFlags extends BitField<MFlags, typeof MFlags> {
   constructor(flags: MFlags) {
@@ -105,7 +106,14 @@ export class Message extends Base {
    * Reactions in this message
    */
   reactions: DataCache<Reaction | APIReaction>;
+  /**
+   * Id of guild was message has sent
+   */
   guildId?: string;
+  /**
+   * The member of this message (only received in guild)
+   */
+  member?: Member | null;
   constructor(data: DataWithClient<APIMessage>, guild?: Guild) {
     super(data, data.client);
 
@@ -128,6 +136,7 @@ export class Message extends Base {
     this.webhookId = data.webhook_id;
     this.nonce = data.nonce;
     this.user = new User({ ...data.author, client: this._client });
+    this.member = null
     this.type = data.type;
 
     this.channel = null;
@@ -136,18 +145,8 @@ export class Message extends Base {
     this.reactions = new DataCache();
     this._update(data);
 
-    if (Array.isArray(data.reactions)) {
-      for (const reaction of data.reactions) {
-        const resolved = this._client.cache._partial(Partials.Reaction)
-          ? reaction
-          : new Reaction({ ...reaction, client: this._client });
-
-        this.reactions._add(
-          resolved,
-          true,
-          resolved.emoji.id ?? resolved.emoji.name!,
-        );
-      }
+    if (this.guild) {
+      this.member = this.guild.members.cache.get(this.user.id)
     }
   }
 
@@ -232,6 +231,20 @@ export class Message extends Base {
     if ("edited_timestamp" in data && data.edited_timestamp)
       this.editedTimestamp = Date.parse(data.edited_timestamp);
     if ("sticker_items" in data) this.stickerItems = data.sticker_items;
+
+    if (Array.isArray(data.reactions)) {
+      for (const reaction of data.reactions) {
+        const resolved = this._client.cache._partial(Partials.Reaction)
+          ? reaction
+          : new Reaction({ ...reaction, client: this._client });
+
+        this.reactions._add(
+          resolved,
+          true,
+          resolved.emoji.id ?? resolved.emoji.name!,
+        );
+      }
+    }
 
     return this;
   }

@@ -56,7 +56,8 @@
 			"Utils",
 			"WebSocket",
 			"Zlib",
-			"Package"
+			"Package",
+			"Message"
 		]
 	}
 }
