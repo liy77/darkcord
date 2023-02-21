@@ -1,12 +1,13 @@
 {
   "name": "darkcord",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A NodeJS Package to interact with Discord API",
   "repository": {
     "type": "git",
     "url": "https://github.com/JustAWaifuHunter/darkcord.git",
     "directory": "packages/darkcord"
   },
+  "license": "MIT",
   "main": "./dist/index.js",
   "typings": "./typings/index.d.ts",
   "scripts": {
