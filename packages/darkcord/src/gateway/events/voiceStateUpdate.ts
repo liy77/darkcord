@@ -23,8 +23,6 @@ export class VoiceStateUpdate extends Event {
       guild,
     );
 
-    guild.voiceStates.set(data.user_id, updated);
-
     let member = guild.members.cache.get(data.user_id);
 
     if (!member && data.member?.user && data.member.joined_at) {
@@ -41,6 +39,8 @@ export class VoiceStateUpdate extends Event {
         data.channel_id &&
         (channel instanceof VoiceChannel || channel instanceof StageChannel)
       ) {
+        guild.voiceStates.set(data.user_id, updated);
+
         if (oldVoiceState && oldChannel) {
           oldChannel.members.cache.delete(member!.id);
           const m = channel.members.add(member!);
@@ -51,6 +51,8 @@ export class VoiceStateUpdate extends Event {
         }
       } else if (oldChannel) {
         oldChannel.members.cache.delete(member!.id);
+
+        guild.voiceStates.delete(data.user_id);
 
         this.client.emit(Events.VoiceChannelLeave, member, oldChannel);
       }

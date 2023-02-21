@@ -93,6 +93,13 @@ export class Member extends Base {
   }
 
   /**
+   * The current voice state of this member
+   */
+  get voiceState() {
+    return this.guild.voiceStates.get(this.id)
+  }
+
+  /**
    * The member's guild avatar url
    * @param options
    * @returns
@@ -126,6 +133,12 @@ export class Member extends Base {
     );
   }
 
+  /**
+   * Add a role to this member
+   * @param roleId Id of role to be added
+   * @param reason 
+   * @returns 
+   */
   addRole(roleId: string, reason?: string) {
     return this.guild.addMemberRole(this.id, roleId, reason);
   }
@@ -143,6 +156,12 @@ export class Member extends Base {
     reason?: string,
   ) {
     return this.guild.editMember(this.id, options, reason);
+  }
+
+  disableCommunicationUntil(timeout: number, reason?: string) {
+    return this.edit({
+      communicationDisabledUntil: String(Date.now() > timeout ? Date.now() + timeout : timeout),
+    }, reason)
   }
 
   toJSON() {
