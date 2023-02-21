@@ -57,7 +57,8 @@
 			"WebSocket",
 			"Zlib",
 			"Package",
-			"Message"
+			"Message",
+			"VoiceChannel"
 		]
 	}
 }
