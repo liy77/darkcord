@@ -12,3 +12,4 @@
 /packages/**/test.mjs
 /packages/**/test.cjs
 /yarn-error.log
+/packages/**/docs
