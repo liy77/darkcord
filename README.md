@@ -130,7 +130,9 @@ const client = new Client("token", {
   plugins: [voicePlugin],
 });
 
-client.lava.lavalink.on("ready", (node) => console.log(`Node ${node} is Ready`));
+client.lava.lavalink.on("ready", (node) =>
+  console.log(`Node ${node} is Ready`),
+);
 
 client.lava.on("playerStart", (player) => {
   client.channels.cache.get(player.textId).createMessage({
