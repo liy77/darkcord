@@ -5,6 +5,7 @@ import { GatewayGuildCreateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { Member } from "@resources/Member";
 import { Role } from "@resources/Role";
+import { VoiceState } from "@resources/VoiceState";
 
 export class GuildCreate extends Event {
   async run(data: GatewayGuildCreateDispatchData) {
@@ -13,6 +14,19 @@ export class GuildCreate extends Event {
       shard_id: this.shardId,
       client: this.client,
     });
+
+    for (const voiceState of data.voice_states) {
+      const resolved = new VoiceState(
+        {
+          client: this.client,
+          guild_id: guild.id,
+          ...voiceState,
+        },
+        guild,
+      );
+
+      guild.voiceStates.set(voiceState.user_id, resolved);
+    }
 
     for (const role of data.roles) {
       const resolved = new Role({ ...role, client: this.client }, guild);
