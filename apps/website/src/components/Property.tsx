@@ -32,7 +32,7 @@ export function Property({
           <div className="flex flex-row gap-1">
             {item.isReadonly && (
               <div className="bg-red flex h-5 flex-row place-content-center place-items-center rounded-full px-3 text-center text-xs font-semibold uppercase text-white dark:text-dark">
-                Readonly
+                Read-only
               </div>
             )}
             {item.isOptional && (

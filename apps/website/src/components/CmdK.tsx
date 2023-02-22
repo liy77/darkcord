@@ -36,17 +36,19 @@ export function CmdKDialog() {
 
   const searchDocsResultsItems = useMemo(
     () => (
-      <Command.Group
-        className="text-dark-4 dark:text-[#9ba1a6]"
-        heading="Darkcord Documentation"
-      >
+      <>
+        <Command.Group
+          className="text-dark-4 text-xs leading-6 select-none gap-1 pt-4 pr-2 pb-2 ml-2 dark:text-[#9ba1a6]"
+          heading="Darkcord Documentation"
+        />
+
         {darkcordDocsItems.map((item) => (
           <DarkcordDocsItems
             item={item}
             key={`hit-darkcord-docs-${item.objectID}`}
           />
         ))}
-      </Command.Group>
+      </>
     ),
     [darkcordDocsItems],
   );
@@ -79,7 +81,7 @@ export function CmdKDialog() {
     <Command.Dialog
       onOpenChange={() => setOpen(!opened)}
       open={opened}
-      className="border-base fixed min-h-screen max-h-screen max-h-screen w-full min-w-screen top-[50%] rounded-none z-1001 border border-solid border-1 border-white xl:top-[45%] xl:min-h-[75vh] xl:w-10 xl:min-w-[680px] xl:rounded-xl left-[50%] bg-white dark:bg-[#151718]"
+      className="border-base translate-x-[-50%] translate-y-[-50%] shadow-2xl fixed min-h-screen max-h-screen max-h-screen w-full min-w-screen top-[50%] rounded-none z-1001 border border-solid border-1 border-white xl:top-[45%] xl:min-h-[75vh] xl:w-10 xl:min-w-[680px] xl:rounded-xl left-[50%] bg-white dark:bg-[#151718]"
       label="Command Menu"
       shouldFilter={false}
     >
@@ -91,13 +93,13 @@ export function CmdKDialog() {
       />
 
       <Command.Input
-        className="rounded-md border font-400 border-1 border-solid border-base box-border outline-none h-full flex-1 bg-transparent appearance-none text-dark-400 dark:text-[#ecedee]"
+        className="rounded-md shadow-2xl pt-3 pb-3 pl-3 ml-4 mt-4 border w-[calc(100%_-_32px)] font-400 border-1 border-solid border-base box-border outline-none h-full flex-1 bg-transparent appearance-none text-dark-400 dark:text-[#ecedee]"
         onValueChange={setQuery}
         placeholder="search anything..."
         value={query}
       />
 
-      <Command.List className="overflow-auto overscroll-contain	border border-1 border-solid border-base">
+      <Command.List className="overflow-auto h-[calc(75vh_-_50px_-_50px_-_20px)] max-h-[calc(75vh_-_50px_-_50px_-_20px)] pl-4 mt-3 overscroll-contain border border-1 border-t border-b border-base">
         {initialized && (
           <>{query && darkcordDocsItems.length > 0 && searchDocsResultsItems}</>
         )}
@@ -109,14 +111,14 @@ export function CmdKDialog() {
         )}
 
         <Command.Group
-          className="text-dark-4 dark:text-[#9ba1a6]"
+          className="text-dark-4 text-xs leading-6 select-none flex place-items-center gap-1 pt-4 pr-2 pb-2 ml-2 dark:text-[#9ba1a6]"
           heading="Darkcord Utils"
         />
 
         <DarkcordUtilsItems />
 
         <Command.Group
-          className="text-dark-4 dark:text-[#9ba1a6]"
+          className="text-dark-4 text-xs leading-6 select-none flex place-items-center gap-1 pt-4 pr-2 pb-2 ml-2 dark:text-[#9ba1a6]"
           heading="Darkcord Plugins"
         />
 

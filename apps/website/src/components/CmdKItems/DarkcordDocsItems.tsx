@@ -18,7 +18,7 @@ export function DarkcordDocsItems({
   return (
     <Button as="a" href="/docs">
       <Command.Item
-        className="hover:bg-[#f1f3f5] dark:hover:bg-[#202425] place-content-center cursor-pointer min-h-[52px] rounded-3 flex flex-col pl-2 place-items-start pr-3 rounded-md select-none"
+        className="hover:bg-[#f1f3f5] transition-all ease-in mr-4 duration-150 dark:hover:bg-[#202425] place-content-center cursor-pointer min-h-[52px] rounded-3 flex flex-col pl-2 place-items-start pr-3 rounded-md select-none"
         onSelect={() => {
           setOpen(false);
         }}

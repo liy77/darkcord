@@ -20,14 +20,14 @@ export function GuideItem({
   return (
     <Button as="a" href={link}>
       <Command.Item
-        className="hover:bg-[#202425] place-content-center cursor-pointer min-h-[52px] rounded-3 flex flex-col pl-2 place-items-start pr-3 rounded-md select-none"
+        className="hover:bg-[#f1f3f5] transition-all ease-in mr-4 duration-150 dark:hover:bg-[#202425] place-content-center cursor-pointer min-h-[52px] rounded-3 flex flex-col pl-2 place-items-start pr-3 rounded-md select-none"
         onSelect={() => {
           setDialogOpen(false);
         }}
       >
         <div className="mt-1 inline-flex place-items-center place-content-between gap-3 break-words">
           <div className="shrink-0 place-content-center">
-            <Icon as={FiBook} size={19} />
+            <Icon as={FiBook} />
           </div>
 
           <div className="flex flex-col">

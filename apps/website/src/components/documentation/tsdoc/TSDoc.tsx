@@ -2,7 +2,8 @@ import { ItemLink } from "@/components/ItemLink";
 import { resolveItemURI } from "@/utils/resolveItemURI";
 import type { ApiItem } from "@microsoft/api-extractor-model";
 import type {
-  DocComment, DocLinkTag,
+  DocComment,
+  DocLinkTag,
   DocNode,
   DocNodeContainer,
   DocPlainText

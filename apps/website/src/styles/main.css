@@ -71,19 +71,3 @@ pre {
 code {
 	font-family: 'Inter', sans-serif !important;
 }
-
-.bar-animation {
-  animation: barLoader 1s linear infinite;
-}
-
-@keyframes barLoader {
-	from {
-		opacity: 0;
-	}
-	50% {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
-}

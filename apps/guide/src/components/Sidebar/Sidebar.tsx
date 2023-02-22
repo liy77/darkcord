@@ -18,7 +18,7 @@ export function Sidebar({ pages, sidebarOpen }: SidebarProps) {
       } lg:w-76 lg:max-w-76 lg:block`}
     >
       <div className="mt-5 flex flex-col">
-        <div className="text-dark flex-col gap-8 text-dark ml-6 flex min-h-[38px] rounded-md bg-transparent dark:text-white">
+        <div className="text-dark flex-col gap-8 text-dark ml-6 mr-auto flex min-h-[38px] rounded-md bg-transparent dark:text-white">
           <Button
             aria-label="Link to Darkcord Repository on GitHub"
             as="a"

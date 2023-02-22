@@ -2,7 +2,7 @@ import {
   defineConfig,
   presetTypography,
   presetUno,
-  presetWebFonts,
+  presetWebFonts
 } from "unocss";
 
 export default defineConfig({
@@ -93,28 +93,6 @@ export default defineConfig({
       },
     }),
   ],
-  rules: [
-    [
-      /^text-(.*)$/,
-      ([, c], { theme }) => {
-        if (theme.colors[c]) return { color: theme.colors[c] };
-      },
-    ],
-  ],
-  theme: {
-    animation: {
-      keyframes: {
-        search: {
-          "0%": { width: "0%" },
-          "80%": { width: "100%", opacity: 1 },
-          "100%": { width: "100%", opacity: 0 },
-        },
-      },
-    },
-    colors: {
-      "background-default": "#151718",
-    },
-  },
   include: [
     /.vue$/,
     /.vue?vue/,

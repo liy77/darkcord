@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm --top-level generate:css && concurrently \"pnpm dev:css\" \"pnpm dev:next\"",
+    "start:next": "next start",
+    "dev": "pnpm generate:css && concurrently \"pnpm dev:css\" \"pnpm dev:next\"",
     "build:prod": "yarn build:css && yarn build:next",
     "build:next": "next build",
     "build:css": "pnpm generate:css",
