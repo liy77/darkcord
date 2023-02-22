@@ -96,7 +96,7 @@ export class Member extends Base {
    * The current voice state of this member
    */
   get voiceState() {
-    return this.guild.voiceStates.get(this.id)
+    return this.guild.voiceStates.get(this.id);
   }
 
   /**
@@ -136,8 +136,8 @@ export class Member extends Base {
   /**
    * Add a role to this member
    * @param roleId Id of role to be added
-   * @param reason 
-   * @returns 
+   * @param reason
+   * @returns
    */
   addRole(roleId: string, reason?: string) {
     return this.guild.addMemberRole(this.id, roleId, reason);
@@ -159,9 +159,14 @@ export class Member extends Base {
   }
 
   disableCommunicationUntil(timeout: number, reason?: string) {
-    return this.edit({
-      communicationDisabledUntil: String(Date.now() > timeout ? Date.now() + timeout : timeout),
-    }, reason)
+    return this.edit(
+      {
+        communicationDisabledUntil: String(
+          Date.now() > timeout ? Date.now() + timeout : timeout,
+        ),
+      },
+      reason,
+    );
   }
 
   toJSON() {

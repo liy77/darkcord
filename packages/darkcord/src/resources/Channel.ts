@@ -850,9 +850,9 @@ export class BaseVoiceChannel extends GuildChannel {
   ) {
     super(data, guild);
 
-    this.guild = guild
-    this.guildId = guild.id
-    
+    this.guild = guild;
+    this.guildId = guild.id;
+
     this._update(data);
     this.members = new MemberDataManager(Infinity, this._client.cache, guild);
   }
