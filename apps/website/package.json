@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start:next": "next start",
-    "dev": "pnpm generate:css && concurrently \"pnpm dev:css\" \"pnpm dev:next\"",
+    "dev": "pnpm --stream --r docs && concurrently \"pnpm dev:css\" \"pnpm dev:next\"",
     "build:prod": "yarn build:css && yarn build:next",
     "build:next": "next build",
     "build:css": "pnpm generate:css",
@@ -40,16 +40,15 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "react-use": "^17.4.0",
-    "shiki": "^0.14.0"
+    "shiki": "^0.14.0",
+    "@unocss/cli": "^0.49.7",
+    "@unocss/reset": "^0.49.7"
   },
   "devDependencies": {
-    "@darkcord/docgen": "workspace:^",
     "@microsoft/tsdoc-config": "^0.16.2",
     "@types/node": "^18.14.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
-    "@unocss/cli": "^0.49.7",
-    "@unocss/reset": "^0.49.7",
     "concurrently": "^7.6.0",
     "eslint": "^8.34.0",
     "eslint-config-next": "13.1.6",
