@@ -4,10 +4,11 @@ import {
   APICommandAutocompleteInteractionResponseCallbackData,
   APIInteraction,
   APIInteractionResponseCallbackData,
+  APIModalInteractionResponseCallbackData,
   InteractionResponseType,
   InteractionType,
 } from "discord-api-types/v10";
-import { createServer, IncomingMessage, ServerResponse } from "node:http";
+import { IncomingMessage, ServerResponse, createServer } from "node:http";
 import { verifyKeyMiddleware } from "../middleware/index";
 
 export const LocalHost = "127.0.0.1";
@@ -49,7 +50,8 @@ export class InteractionResponse {
     data:
       | MessagePostData
       | APIInteractionResponseCallbackData
-      | APICommandAutocompleteInteractionResponseCallbackData,
+      | APICommandAutocompleteInteractionResponseCallbackData
+      | APIModalInteractionResponseCallbackData,
     type: InteractionResponseType,
   ) {
     if ("files" in data && data.files?.length) {
