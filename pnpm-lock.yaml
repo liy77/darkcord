@@ -154,17 +154,11 @@ importers:
 
   packages/darkcord:
     specifiers:
-      "@cache": link:src/cache
-      "@client": link:src/client
       "@darkcord/docgen": workspace:^
       "@darkcord/interactions": workspace:^
       "@darkcord/rest": workspace:^
       "@darkcord/utils": workspace:^
       "@darkcord/ws": workspace:^
-      "@manager": link:src/manager
-      "@resources": link:src/resources
-      "@typings": link:src/types
-      "@utils": link:src/utils
       bufferutil: ^4.0.7
       discord-api-types: ^0.37.33
       erlpack: ^0.1.4
@@ -188,13 +182,7 @@ importers:
       tweetnacl: 1.0.3
       zlib-sync: 0.1.8
     devDependencies:
-      "@cache": link:src/cache
-      "@client": link:src/client
       "@darkcord/docgen": link:../docgen
-      "@manager": link:src/manager
-      "@resources": link:src/resources
-      "@typings": link:src/types
-      "@utils": link:src/utils
 
   packages/docgen:
     specifiers:
