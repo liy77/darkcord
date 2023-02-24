@@ -14,34 +14,24 @@ export interface SidebarSectionItemData {
 
 interface GroupedMembers {
   Classes: SidebarSectionItemData[];
-  Interfaces: SidebarSectionItemData[];
-  Typedefs: SidebarSectionItemData[];
 }
 
 function groupMembers(
   members: readonly SidebarSectionItemData[],
 ): GroupedMembers {
   const Classes: SidebarSectionItemData[] = [];
-  const Interfaces: SidebarSectionItemData[] = [];
-  const Typedefs: SidebarSectionItemData[] = [];
 
   for (const member of members) {
     switch (member.kind) {
       case "Class":
         Classes.push(member);
         break;
-      case "Interface":
-        Interfaces.push(member);
-        break;
-      case "TypeAlias":
-        Typedefs.push(member);
-        break;
       default:
         break;
     }
   }
 
-  return { Classes, Interfaces, Typedefs };
+  return { Classes };
 }
 
 export function Sidebar({ members }: { members: SidebarSectionItemData[] }) {

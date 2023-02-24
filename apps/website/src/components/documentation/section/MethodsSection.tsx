@@ -1,10 +1,10 @@
 import { Method } from "@/components/model/method/Method";
 import { resolveMembers } from "@/utils/resolveMembers";
 import type {
-	ApiItem,
-	ApiItemContainerMixin,
-	ApiMethod,
-	ApiMethodSignature
+  ApiItem,
+  ApiItemContainerMixin,
+  ApiMethod,
+  ApiMethodSignature
 } from "@microsoft/api-extractor-model";
 import { ApiItemKind } from "@microsoft/api-extractor-model";
 import { Fragment, useMemo } from "react";
@@ -32,7 +32,6 @@ export function MethodsSection({ item }: { item: ApiItemContainerMixin }) {
           }`}
         >
           <Method method={method} />
-          <div className="border-light-900 dark:border-blue -mx-8 border-t-2" />
         </Fragment>
       )),
     [members],

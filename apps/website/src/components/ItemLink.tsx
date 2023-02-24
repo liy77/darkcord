@@ -20,7 +20,7 @@ export function ItemLink(props: PropsWithChildren<ItemLinkProps>) {
 		throw new Error('ItemLink must be used inside a Next.js page.');
 	}
 
-  const end = path?.split('/')?.length < 3 ? path?.length : -1;
+  const end = path.split('/')?.length < 3 ? path?.length : -1;
 
   const pathPrefix = path?.split('/').slice(0, end).join('/');
 

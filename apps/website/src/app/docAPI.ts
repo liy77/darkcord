@@ -6,11 +6,7 @@ export async function fetchModelJSON() {
     const res = await readFile(
       join(
         process.cwd(),
-        "..",
-        "..",
-        "packages",
-        "darkcord",
-        "docs",
+        "public",
         "docs.api.json",
       ),
       "utf8",

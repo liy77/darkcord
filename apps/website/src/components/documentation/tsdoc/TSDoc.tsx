@@ -1,17 +1,12 @@
-import { ItemLink } from "@/components/ItemLink";
-import { resolveItemURI } from "@/utils/resolveItemURI";
 import type { ApiItem } from "@microsoft/api-extractor-model";
 import type {
-  DocComment,
-  DocLinkTag,
-  DocNode,
+  DocComment, DocNode,
   DocNodeContainer,
   DocPlainText
 } from "@microsoft/tsdoc";
 import { DocNodeKind, StandardTags } from "@microsoft/tsdoc";
-import Link from "next/link";
 import { Fragment, useCallback, type ReactNode } from "react";
-import { ExampleBlock, RemarksBlock, SeeBlock } from "./BlockComment";
+import { ExampleBlock, SeeBlock } from "./BlockComment";
 
 export function TSDoc({
   item,
@@ -40,45 +35,6 @@ export function TSDoc({
           );
         case DocNodeKind.SoftBreak:
           return <Fragment key={idx} />;
-        case DocNodeKind.LinkTag: {
-          const { codeDestination, urlDestination, linkText } =
-            tsdoc as DocLinkTag;
-
-          if (codeDestination) {
-            const foundItem = item
-              .getAssociatedModel()
-              ?.resolveDeclarationReference(
-                codeDestination,
-                item,
-              ).resolvedApiItem;
-
-            if (!foundItem) return null;
-
-            return (
-              <ItemLink
-                className="text-white dark:text-dark focus:ring-width-2 focus:ring-white rounded outline-0 focus:ring"
-                itemURI={resolveItemURI(foundItem)}
-                key={idx}
-              >
-                {linkText ?? foundItem.displayName}
-              </ItemLink>
-            );
-          }
-
-          if (urlDestination) {
-            return (
-              <Link
-                className="text-white focus:ring-width-2 focus:ring-white rounded outline-0 focus:ring"
-                href={urlDestination}
-                key={idx}
-              >
-                {linkText ?? urlDestination}
-              </Link>
-            );
-          }
-
-          return null;
-        }
 
         case DocNodeKind.Comment: {
           const comment = tsdoc as DocComment;
@@ -94,11 +50,6 @@ export function TSDoc({
               {comment.summarySection
                 ? createNode(comment.summarySection)
                 : null}
-              {comment.remarksBlock ? (
-                <RemarksBlock>
-                  {createNode(comment.remarksBlock.content)}
-                </RemarksBlock>
-              ) : null}
               {exampleBlocks.length
                 ? exampleBlocks.map((block, idx) => (
                     <ExampleBlock key={idx}>

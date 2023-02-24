@@ -1,26 +1,20 @@
 import { useCmdK } from "@/contexts/cmdK";
-import { Button } from "ariakit/button";
+import { Button, ButtonOptions } from "ariakit/button";
 import { Command } from "cmdk";
 import { PropsWithChildren } from "react";
 
-interface DocsItemProps {
+interface DocsItemProps extends Omit<ButtonOptions, "as"> {
   description?: string | undefined;
-  link?: string | undefined;
   title: string;
-  props?: object;
 }
 
-export function DocsItem({
-  link,
-  title,
-  description,
-  children,
-  props
-}: PropsWithChildren<DocsItemProps>) {
+export function DocsItem(props: PropsWithChildren<DocsItemProps>) {
   const { setOpen } = useCmdK();
 
+  const { children, title, description, ...itemProps } = props;
+
   return (
-    <Button as="a" {...props} href={link}>
+    <Button as="a" {...itemProps}>
       <Command.Item
         className="hover:bg-[#f1f3f5] transition-all ease-in duration-150 mr-4 dark:hover:bg-[#202425] place-content-center cursor-pointer min-h-[52px] rounded-3 flex flex-col pl-2 place-items-start pr-3 rounded-md select-none"
         onSelect={() => {

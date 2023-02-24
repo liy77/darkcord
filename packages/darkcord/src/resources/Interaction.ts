@@ -2,7 +2,7 @@ import {
   AnyClient,
   DataWithClient,
   InteractionFlags,
-  MessagePostData,
+  MessagePostData
 } from "@typings/index";
 import {
   APIApplicationCommandAutocompleteInteraction,
@@ -25,12 +25,12 @@ import {
   ApplicationCommandType,
   InteractionResponseType,
   InteractionType,
-  MessageFlags,
+  MessageFlags
 } from "discord-api-types/v10";
 
 import { InteractionResponse } from "@darkcord/interactions";
-import { Resolvable } from "@utils/Resolvable";
 import { MakeError, transformMessagePostData } from "@utils/index";
+import { Resolvable } from "@utils/Resolvable";
 import { Base } from "./Base";
 import { Channel, TextBasedChannel } from "./Channel";
 import { Guild } from "./Guild";

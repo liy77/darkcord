@@ -1,27 +1,46 @@
-import type { ApiParameterListMixin } from '@microsoft/api-extractor-model';
-import { useMemo } from 'react';
-import { Table } from './documentation/Table';
-import { TSDoc } from './documentation/tsdoc/TSDoc';
+import type { ApiParameterListMixin } from "@microsoft/api-extractor-model";
+import { useMemo } from "react";
+import { Table } from "./documentation/Table";
+import { TSDoc } from "./documentation/tsdoc/TSDoc";
+import { ExcerptText } from "./ExcerptText";
 
 const columnStyles = {
-	Name: 'whitespace-nowrap',
-	Type: 'whitespace-pre-wrap break-normal',
+  Name: "whitespace-nowrap",
+  Type: "whitespace-pre-wrap break-normal",
 };
 
 export function ParameterTable({ item }: { item: ApiParameterListMixin }) {
-	const rows = useMemo(
-		() =>
-			item.parameters.map((param) => ({
-				Name: param.name,
-				Optional: param.isOptional ? 'Yes' : 'No',
-				Description: param.tsdocParamBlock ? <TSDoc item={item} tsdoc={param.tsdocParamBlock.content} /> : 'None',
-			})),
-		[item],
-	);
+  const rows = useMemo(
+    () =>
+      item.parameters.map((param) => ({
+        Name: param.name,
 
-	return (
-		<div className="overflow-x-auto">
-			<Table columnStyles={columnStyles} columns={['Name', 'Optional', 'Description']} rows={rows} />
-		</div>
-	);
+        Description: param.tsdocParamBlock ? (
+          <div className="flex flex-col">
+            <span className="text-blue-500 hover:underline">
+              <ExcerptText
+                excerpt={param.parameterTypeExcerpt}
+                model={item.getAssociatedModel()!}
+              />
+
+              {param.isOptional ? "(optional)" : ""}
+            </span>
+            <TSDoc item={item} tsdoc={param.tsdocParamBlock.content} />
+          </div>
+        ) : (
+          "None"
+        ),
+      })),
+    [item],
+  );
+
+  return (
+    <div className="overflow-x-auto">
+      <Table
+        columnStyles={columnStyles}
+        columns={["Name", "Description"]}
+        rows={rows}
+      />
+    </div>
+  );
 }

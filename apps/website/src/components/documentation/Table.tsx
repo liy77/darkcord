@@ -13,7 +13,7 @@ export function Table({
 		() =>
 			columns.map((column) => (
 				<th
-					className="border-blue-500 break-normal border-b px-3 py-2 text-left text-sm"
+					className="border-dark-600 dark:border-white break-normal border-b px-3 py-2 text-left text-sm"
 					key={column}
 				>
 					{column}
@@ -28,7 +28,7 @@ export function Table({
 				<tr className="[&>td]:last-of-type:border-0" key={idx}>
 					{Object.entries(row).map(([colName, val]) => (
 						<td
-							className={`border-blue-500 border-b px-3 py-2 text-left text-sm ${
+							className={`border-dark-600 dark:border-white border-b px-3 py-2 text-left text-sm ${
 								columnStyles?.[colName] ?? ''
 							}`}
 							key={colName}
@@ -42,7 +42,7 @@ export function Table({
 	);
 
 	return (
-		<table className="w-full border-1 rounded border-blue-500 border-collapse">
+		<table className="w-auto border-2 rounded-xl border-dark-600 dark:border-white border-collapse">
 			<thead>
 				<tr>{cols}</tr>
 			</thead>

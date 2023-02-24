@@ -1,17 +1,9 @@
 import { fetchModelJSON } from "@/app/docAPI";
 import { Class } from "@/components/model/Class";
-import { Interface } from "@/components/model/Interface";
-import { TypeDefs } from "@/components/model/TypeDefs";
 import { createApiModel } from "@/utils/createApiModel";
 import { findMember } from "@/utils/findMember";
 import { findMemberByKey } from "@/utils/findMemberByKey";
-import {
-  ApiClass,
-  ApiFunction,
-  ApiInterface,
-  ApiItem,
-  ApiTypeAlias
-} from "@microsoft/api-extractor-model";
+import { ApiClass, ApiFunction, ApiItem } from "@microsoft/api-extractor-model";
 import { notFound } from "next/navigation";
 
 export interface ItemRouteParams {
@@ -64,10 +56,6 @@ function Member({ member }: { member?: ApiItem }) {
   switch (member?.kind) {
     case "Class":
       return <Class classes={member as ApiClass} />;
-    case "Interface":
-      return <Interface item={member as ApiInterface} />;
-    case "TypeAlias":
-      return <TypeDefs item={member as ApiTypeAlias} />;
     default:
       return <div>Cannot render that item type</div>;
   }
@@ -77,12 +65,10 @@ export default async function Page({ params }: { params: ItemRouteParams }) {
   const member = await fetchMember(params);
 
   return (
-    <main className="xl:pr-64">
-      <article className="dark:bg-dark-800 bg-light-600">
-        <div className="dark:bg-dark-800 bg-white p-6 pb-20 shadow">
-          {member ? <Member member={member} /> : null}
-        </div>
-      </article>
+    <main className="dark:bg-dark-800 bg-light-600">
+      <div className="dark:bg-dark-800 bg-white p-6 shadow">
+        {member && <Member member={member} />}
+      </div>
     </main>
   );
 }

@@ -16,14 +16,6 @@ export function ExampleBlock({
 	return <Block title={`Example ${exampleIndex ? exampleIndex : ''}`}>{children}</Block>;
 }
 
-export function DefaultValueBlock({ children }: PropsWithChildren): JSX.Element {
-	return <Block title="Default value">{children}</Block>;
-}
-
-export function RemarksBlock({ children }: PropsWithChildren): JSX.Element {
-	return <Block title="Remarks">{children}</Block>;
-}
-
 export function SeeBlock({ children }: PropsWithChildren): JSX.Element {
 	return <Block title="See Also">{children}</Block>;
 }
