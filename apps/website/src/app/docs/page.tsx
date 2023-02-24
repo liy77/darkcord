@@ -11,7 +11,7 @@ import shikiThemeDarkPlus from "shiki/themes/dark-plus.json";
 import shikiThemeLightPlus from "shiki/themes/light-plus.json";
 
 async function loadREADME() {
-  return readFile(join(process.cwd(), "..", "..", "README.md"), "utf8");
+  return readFile(join(process.cwd(), "public", "README.md"), "utf8");
 }
 
 async function generateMDX(readme: string) {

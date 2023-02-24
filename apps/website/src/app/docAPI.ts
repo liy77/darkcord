@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export async function fetchModelJSON() {
-  if (process.env.NEXT_PUBLIC_LOCAL_DEV) {
+
     const res = await readFile(
       join(
         process.cwd(),
@@ -13,11 +13,11 @@ export async function fetchModelJSON() {
     );
 
     return JSON.parse(res);
-  }
+  
 
-  const res = await fetch("https://pics.niskii.dev/docs.api.json", {
-    next: { revalidate: 3_600 },
-  });
+  // const res = await fetch("https://pics.niskii.dev/docs.api.json", {
+  //   next: { revalidate: 3_600 },
+  // });
 
-  return res.json();
+  // return res.json();
 }
