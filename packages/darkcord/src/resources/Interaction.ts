@@ -17,6 +17,7 @@ import {
   APIInteractionDataResolvedGuildMember,
   APIMessageApplicationCommandInteractionData,
   APIMessageComponentInteraction,
+  APIModalInteractionResponseCallbackData,
   APIModalSubmitInteraction,
   APIUser,
   APIUserApplicationCommandInteractionData,
@@ -24,18 +25,19 @@ import {
   ApplicationCommandType,
   InteractionResponseType,
   InteractionType,
+  MessageFlags,
 } from "discord-api-types/v10";
 
-import { MakeError, transformMessagePostData } from "@utils/index";
+import { InteractionResponse } from "@darkcord/interactions";
 import { Resolvable } from "@utils/Resolvable";
+import { MakeError, transformMessagePostData } from "@utils/index";
 import { Base } from "./Base";
-import { Channel } from "./Channel";
+import { Channel, TextBasedChannel } from "./Channel";
 import { Guild } from "./Guild";
 import { Member } from "./Member";
 import { Message } from "./Message";
 import { Role } from "./Role";
 import { User } from "./User";
-import { InteractionResponse } from "@darkcord/interactions";
 
 export class Interaction extends Base {
   /**
@@ -134,6 +136,9 @@ export class ReplyableInteraction extends Interaction {
     this.acknowledged = false;
   }
 
+  /**
+   * Respond to this interaction with defer
+   */
   async defer(flags?: InteractionFlags) {
     if (this.acknowledged) {
       throw MakeError({
@@ -145,7 +150,7 @@ export class ReplyableInteraction extends Interaction {
     if (this.isHTTP) {
       await this._http?.send(
         {
-          flags: flags || 0,
+          flags: (flags as MessageFlags) || 0,
         },
         InteractionResponseType.DeferredChannelMessageWithSource,
       );
@@ -156,7 +161,7 @@ export class ReplyableInteraction extends Interaction {
         this.id,
         this.token,
         {
-          flags: flags || 0,
+          flags: (flags as MessageFlags) || 0,
         },
         InteractionResponseType.DeferredChannelMessageWithSource,
       );
@@ -165,6 +170,11 @@ export class ReplyableInteraction extends Interaction {
     }
   }
 
+  /**
+   * Delete a interaction reply
+   * @param messageId id of the reply to be deleted
+   * @returns
+   */
   deleteReply(messageId: string) {
     if (!this.acknowledged) {
       throw MakeError({
@@ -180,10 +190,18 @@ export class ReplyableInteraction extends Interaction {
     );
   }
 
+  /**
+   * Delete the original reply of this interaction
+   * @returns
+   */
   deleteOriginalReply() {
     return this.deleteReply("@original");
   }
 
+  /**
+   * Respond to this interaction
+   * @param content The content of response
+   */
   async reply(content: MessagePostData | string) {
     if (this.acknowledged) {
       throw MakeError({
@@ -211,6 +229,11 @@ export class ReplyableInteraction extends Interaction {
     this.acknowledged = true;
   }
 
+  /**
+   * Edit a interaction reply
+   * @param messageId
+   * @param content
+   */
   async editReply(messageId: string, content: MessagePostData | string) {
     await this._client.rest.editWebhookMessage(
       this.applicationId,
@@ -220,10 +243,20 @@ export class ReplyableInteraction extends Interaction {
     );
   }
 
+  /**
+   * Edit the original reply of this interaction
+   * @param content
+   * @returns
+   */
   editOriginalReply(content: MessagePostData) {
     return this.editReply("@original", content);
   }
 
+  /**
+   * Create a followup message for the original reply of this interaction
+   * @param content
+   * @returns
+   */
   createFollowUP(content: MessagePostData) {
     if (!this.acknowledged) {
       throw MakeError({
@@ -239,6 +272,73 @@ export class ReplyableInteraction extends Interaction {
     );
   }
 
+  /**
+   * Delete a followup message
+   * @param messageId The id of the followup to be deleted
+   * @returns
+   */
+  deleteFollowUP(messageId: string) {
+    return this._client.rest.deleteWebhookMessage(
+      this.applicationId,
+      this.token,
+      messageId,
+    );
+  }
+
+  /**
+   * Edit a followup message
+   * @param messageId The id of the followup to be edited
+   * @param content The new content of followup
+   * @returns
+   */
+  async editFollowUP(messageId: string, content: MessagePostData) {
+    const data = await this._client.rest.editWebhookMessage(
+      this.applicationId,
+      this.token,
+      messageId,
+      content,
+    );
+    const channel = this._client.channels.cache.get(
+      data.channel_id,
+    )! as TextBasedChannel;
+    const message = channel?.messages?.get(data.id);
+
+    if (message) {
+      return message._update(data);
+    } else {
+      const guildId = channel.isGuildChannel() ? channel.guildId : undefined;
+      const message_1 = new Message(
+        { client: this._client, ...data },
+        guildId ? Resolvable.resolveGuild(guildId, this._client) : undefined,
+      );
+      return Resolvable.resolveMessage(message_1, this._client);
+    }
+  }
+
+  /**
+   * Get a followup message
+   * @param messageId The id of the followup
+   * @returns
+   */
+  async getFollowUP(messageId: string) {
+    const data = await this._client.rest.getWebhookMessage(
+      this.applicationId,
+      this.token,
+      messageId,
+    );
+    const channel = this._client.channels.cache.get(data.channel_id)!;
+    const guildId = channel.isGuildChannel() ? channel.guildId : undefined;
+    const message = new Message(
+      { client: this._client, ...data },
+      guildId ? Resolvable.resolveGuild(guildId, this._client) : undefined,
+    );
+    return Resolvable.resolveMessage(message, this._client);
+  }
+
+  /**
+   * Get the original reply of this interaction
+   * @returns
+   */
   async getOriginalReply() {
     if (!this.acknowledged) {
       throw MakeError({
@@ -792,6 +892,33 @@ export class CommandInteraction extends ReplyableInteraction {
         },
         this.guild,
       );
+    }
+  }
+
+  /**
+   * Create a modal
+   */
+  async createModal(data: APIModalInteractionResponseCallbackData) {
+    if (this.acknowledged) {
+      throw MakeError({
+        name: "InteractionAlreadyAcknowledged",
+        message: "You have already acknowledged this interaction.",
+      });
+    }
+
+    if (this.isHTTP) {
+      await this._http?.send(data, InteractionResponseType.Modal);
+
+      this.acknowledged = true;
+    } else {
+      await this._client.rest.respondInteraction(
+        this.id,
+        this.token,
+        data,
+        InteractionResponseType.Modal,
+      );
+
+      this.acknowledged = true;
     }
   }
 

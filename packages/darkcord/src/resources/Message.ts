@@ -136,7 +136,7 @@ export class Message extends Base {
     this.webhookId = data.webhook_id;
     this.nonce = data.nonce;
     this.user = new User({ ...data.author, client: this._client });
-    this.member = null
+    this.member = null;
     this.type = data.type;
 
     this.channel = null;
@@ -146,7 +146,7 @@ export class Message extends Base {
     this._update(data);
 
     if (this.guild) {
-      this.member = this.guild.members.cache.get(this.user.id)
+      this.member = this.guild.members.cache.get(this.user.id);
     }
   }
 

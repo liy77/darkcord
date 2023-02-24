@@ -1,3 +1,4 @@
+import { MessagePostData, extractMessageData } from "@darkcord/utils";
 import {
   APIApplication,
   APIApplicationCommand,
@@ -17,8 +18,8 @@ import {
   APIGuildScheduledEvent,
   APIGuildTextChannel,
   APIInteractionResponseCallbackData,
-  APIInvite,
   APIMessage,
+  APIModalInteractionResponseCallbackData,
   APIOverwrite,
   APIReaction,
   APIRole,
@@ -60,7 +61,6 @@ import EventEmitter from "node:events";
 import { URLSearchParams } from "node:url";
 import { FormData } from "undici";
 import { RequestHandler, RequestOptions } from "./RequestHandler";
-import { extractMessageData, MessagePostData } from "@darkcord/utils";
 
 export interface RequestHeaders {
   Authorization?: string;
@@ -221,7 +221,8 @@ export class Rest extends EventEmitter {
     data:
       | MessagePostData
       | APIInteractionResponseCallbackData
-      | APICommandAutocompleteInteractionResponseCallbackData,
+      | APICommandAutocompleteInteractionResponseCallbackData
+      | APIModalInteractionResponseCallbackData,
     type: InteractionResponseType,
   ) {
     let d: BodyInit, contentType: string | undefined;

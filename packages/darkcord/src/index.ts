@@ -1,14 +1,16 @@
-// Client
-export * from "@cache/Cache";
 // Cache
+export * from "@cache/Cache";
 export * from "@cache/CacheManager";
+// Client
 export * from "@client/Client";
 export * from "@client/WebSocket";
 export {
   WebServer,
-  type WebServerEvents,
   type WebServerOptions as FullWebServerOptions,
+  type WebServerEvents,
 } from "@darkcord/interactions";
+export { GatewayShard, GatewayShardError, GatewayStatus } from "@darkcord/ws";
+// Manager
 export * from "@manager/ChannelDataManager";
 export * from "@manager/DataManager";
 export * from "@manager/EmojiDataManager";
@@ -40,9 +42,9 @@ export * from "@resources/Webhook";
 export * from "@typings/index";
 // Utils
 export * as Constants from "@utils/Constants";
-export * from "@utils/index";
 export * from "@utils/PluginManager";
 export * from "@utils/Resolvable";
+export * from "@utils/index";
 // Discord API Types
 export * as API from "discord-api-types/v10";
 export * from "./gateway/EventSource";
