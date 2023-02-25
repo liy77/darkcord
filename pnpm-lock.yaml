@@ -110,12 +110,15 @@ importers:
       '@microsoft/tsdoc': ^0.14.2
       '@microsoft/tsdoc-config': ^0.16.2
       '@next/bundle-analyzer': ^13.1.6
+      '@types/jju': ^1.4.2
       '@types/node': ^18.14.0
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
+      '@types/resolve': ^1.20.2
       '@unocss/cli': ^0.49.7
       '@unocss/reset': ^0.49.7
       '@vercel/og': ^0.1.0
+      ajv: ^8.12.0
       ariakit: 2.0.0-next.43
       cmdk: ^0.1.22
       concurrently: ^7.6.0
@@ -135,6 +138,7 @@ importers:
       rehype-raw: ^6.1.1
       rehype-slug: ^5.1.0
       remark-gfm: ^3.0.1
+      resolve: ^1.22.1
       shiki: ^0.14.0
       typescript: ^4.9.5
       unocss: ^0.49.7
@@ -146,6 +150,7 @@ importers:
       '@unocss/cli': 0.49.7
       '@unocss/reset': 0.49.7
       '@vercel/og': 0.1.0
+      ajv: 8.12.0
       ariakit: 2.0.0-next.43_zula6vjvt3wdocc4mwcxqa6nzi
       cmdk: 0.1.22_zula6vjvt3wdocc4mwcxqa6nzi
       next: 13.2.1-canary.0_biqbaboplfbrettd7655fr4n2y
@@ -161,12 +166,15 @@ importers:
       rehype-raw: 6.1.1
       rehype-slug: 5.1.0
       remark-gfm: 3.0.1
+      resolve: 1.22.1
       shiki: 0.14.1
       unocss: 0.49.7
     devDependencies:
+      '@types/jju': 1.4.2
       '@types/node': 18.14.0
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
+      '@types/resolve': 1.20.2
       concurrently: 7.6.0
       eslint: 8.34.0
       eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
@@ -3349,6 +3357,10 @@ packages:
     resolution: {integrity: sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==}
     dev: true
 
+  /@types/jju/1.4.2:
+    resolution: {integrity: sha512-fbvsM6TrP3QN6791tiF6wAkmlNRwf1VARZ7sXyc5kmbfTDFhECaiS5ZFvpaciud0BoKBBFWA8hE3utOLf5XB1w==}
+    dev: true
+
   /@types/js-cookie/2.2.7:
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
     dev: false
@@ -4296,7 +4308,6 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
-    dev: true
 
   /ajv/8.6.3:
     resolution: {integrity: sha512-SMJOdDP6LqTkD0Uq8qLi+gMwSt0imXLSV080qFVwJCpH9U6Mb+SUGHAXM0KNbcBPguytWyvFxcHgMLe2D2XSpw==}
@@ -8875,7 +8886,6 @@ packages:
 
   /json-schema-traverse/1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
-    dev: true
 
   /json-schema/0.4.0:
     resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
@@ -11444,7 +11454,6 @@ packages:
   /require-from-string/2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /require-like/0.1.2:
     resolution: {integrity: sha512-oyrU88skkMtDdauHDuKVrgR+zuItqr6/c//FXzvmxRGMexSDc6hNvJInGW3LL46n+8b50RykrvwSUIIQH2LQ5A==}
