@@ -8,6 +8,8 @@ export async function fetchModelJSON() {
     "utf8",
   );
 
+  console.log(res.length)
+
   return JSON.parse(res);
 
   // const res = await fetch("https://pics.niskii.dev/docs.api.json", {
