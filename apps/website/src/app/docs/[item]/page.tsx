@@ -5,8 +5,6 @@ import { findMember } from "@/utils/findMember";
 import { findMemberByKey } from "@/utils/findMemberByKey";
 import { ApiClass, ApiFunction, ApiItem } from "@/utils/api-extractor-model/src/index";
 import { notFound } from "next/navigation";
-import { Nav } from "@/components/Nav";
-import { serializeIntoSidebarItemData } from "@/utils/serializeIntoSidebarItemData";
 
 export interface ItemRouteParams {
   item: string;
@@ -65,34 +63,9 @@ function Member({ member }: { member?: ApiItem }) {
 
 export default async function Page({ params }: { params: ItemRouteParams }) {
   const member = await fetchMember(params);
-  const modelJSON = await fetchModelJSON();
-  const model = createApiModel(modelJSON);
 
-	const pkg = model.tryGetPackageByName("darkcord");
-
-	if (!pkg) {
-		return notFound();
-	}
-
-	const entry = pkg.entryPoints[0];
-
-  if (!entry) {
-		return notFound();
-	}
-
-  const members = entry.members.filter((member) => {
-    if (member.kind !== "Function") {
-      return true;
-    }
-
-    return (member as ApiFunction).overloadIndex === 1;
-  });
-  
   return (
-    <main className="position fixed dark:bg-dark-800 bg-light-600">
-      <Nav
-        members={members.map((member) => serializeIntoSidebarItemData(member))}
-      />
+    <main className="dark:bg-dark-800 bg-light-600">
       <div className="dark:bg-dark-800 bg-white p-6 shadow">
         {member && <Member member={member} />}
       </div>
