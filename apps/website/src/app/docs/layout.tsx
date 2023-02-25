@@ -37,7 +37,7 @@ export default async function DocsLayout({ children }: PropsWithChildren) {
     <Providers>
       <Header />
       <article className="pt-18 lg:pl-76 position fix">
-        <div className="position fix z-10 min-h-[calc(100vh_-_70px)]">
+        <div className="position fixed z-10 min-h-[calc(100vh_-_70px)]">
           <main>{children}</main>
         </div>
         <Nav
