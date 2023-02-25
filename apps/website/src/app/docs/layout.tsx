@@ -37,10 +37,10 @@ export default async function DocsLayout({ children }: PropsWithChildren) {
     <Providers>
       <Header />
       <article className="pt-18 lg:pl-76 position fix">
-        <Nav
-          members={members.map((member) => serializeIntoSidebarItemData(member))}
-        />
         <div className="position fix z-10 min-h-[calc(100vh_-_70px)]">
+          <Nav
+            members={members.map((member) => serializeIntoSidebarItemData(member))}
+          />
           <main>{children}</main>
         </div>
       </article>
