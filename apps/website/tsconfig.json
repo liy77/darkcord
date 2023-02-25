@@ -3,7 +3,11 @@
     "esModuleInterop": true,
     "target": "ESNext",
     "removeComments": false,
-		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -29,7 +33,8 @@
         "./src/*"
       ]
     },
-    "module": "esnext"
+    "module": "esnext",
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "next-env.d.ts",

@@ -15,7 +15,7 @@ import {
   import path from 'node:path';
   import jju from 'jju';
   
-  const ajv: Ajv.default = new Ajv.default({ verbose: true });
+  const ajv: Ajv.default = new Ajv.default({ verbose: true, strict: false });
   
   function initializeSchemaValidator(): Ajv.ValidateFunction {
     const jsonSchemaPath: string = resolve.sync(path.join(process.cwd(), "public", 'tsdoc.schema.json'), { basedir: __dirname });
