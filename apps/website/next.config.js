@@ -6,7 +6,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 /** @type {import('next').NextConfig} */
-export default withBundleAnalyzer({
+export default {
   reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,
@@ -26,4 +26,4 @@ export default withBundleAnalyzer({
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   }
-});
+}
