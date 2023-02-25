@@ -40,7 +40,7 @@ export default async function DocsLayout({ children }: PropsWithChildren) {
         members={members.map((member) => serializeIntoSidebarItemData(member))}
       />
       <article className="pt-18 lg:pl-76">
-        <div className="relative z-10 min-h-[calc(100vh_-_70px)]">
+        <div className="position fixed z-10 min-h-[calc(100vh_-_70px)]">
           <main>{children}</main>
         </div>
       </article>
