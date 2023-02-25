@@ -75,7 +75,7 @@ export class ApiConstructor extends ApiParameterListMixin(
     const parent: DeclarationReference = this.parent
       ? this.parent.canonicalReference
       : // .withMeaning() requires some kind of component
-        DeclarationReference.empty().addNavigationStep(Navigation.Members, '(parent)');
-    return parent.withMeaning(Meaning.Constructor).withOverloadIndex(this.overloadIndex);
+        DeclarationReference.empty().addNavigationStep("#" as Navigation, '(parent)');
+    return parent.withMeaning("constructor" as Meaning).withOverloadIndex(this.overloadIndex);
   }
 }

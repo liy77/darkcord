@@ -95,7 +95,7 @@ export class ApiEnumMember extends ApiNameMixin(ApiReleaseTagMixin(ApiInitialize
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
-      .addNavigationStep(Navigation.Exports, nameComponent)
-      .withMeaning(Meaning.Member);
+      .addNavigationStep("." as Navigation, nameComponent)
+      .withMeaning("member" as Meaning.Member);
   }
 }

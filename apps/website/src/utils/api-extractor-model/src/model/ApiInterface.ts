@@ -130,9 +130,9 @@ export class ApiInterface extends ApiItemContainerMixin(
   /** @beta @override */
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
-    const navigation: Navigation = this.isExported ? Navigation.Exports : Navigation.Locals;
+    const navigation: Navigation = this.isExported ? "." : "~";
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
       .addNavigationStep(navigation, nameComponent)
-      .withMeaning(Meaning.Interface);
+      .withMeaning("interface" as Meaning.Interface);
   }
 }

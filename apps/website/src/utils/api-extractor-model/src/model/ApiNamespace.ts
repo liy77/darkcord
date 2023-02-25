@@ -71,9 +71,9 @@ export class ApiNamespace extends ApiItemContainerMixin(
   /** @beta @override */
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
-    const navigation: Navigation = this.isExported ? Navigation.Exports : Navigation.Locals;
+    const navigation = this.isExported ? "." as Navigation : "~" as Navigation;
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
       .addNavigationStep(navigation, nameComponent)
-      .withMeaning(Meaning.Namespace);
+      .withMeaning("namespace" as Meaning.Namespace);
   }
 }

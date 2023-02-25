@@ -4,7 +4,6 @@
 import {
   DeclarationReference,
   Meaning,
-  Navigation
 } from '@microsoft/tsdoc/lib-commonjs/beta/DeclarationReference';
 import { ApiItemKind } from '../items/ApiItem';
 import { IApiDeclaredItemOptions, ApiDeclaredItem } from '../items/ApiDeclaredItem';
@@ -82,7 +81,7 @@ export class ApiCallSignature extends ApiTypeParameterListMixin(
     const parent: DeclarationReference = this.parent
       ? this.parent.canonicalReference
       : // .withMeaning() requires some kind of component
-        DeclarationReference.empty().addNavigationStep(Navigation.Members, '(parent)');
-    return parent.withMeaning(Meaning.CallSignature).withOverloadIndex(this.overloadIndex);
+        DeclarationReference.empty().addNavigationStep("#", '(parent)');
+    return parent.withMeaning("call"as Meaning).withOverloadIndex(this.overloadIndex);
   }
 }

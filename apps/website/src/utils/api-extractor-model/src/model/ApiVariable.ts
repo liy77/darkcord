@@ -108,9 +108,9 @@ export class ApiVariable extends ApiNameMixin(
   /** @beta @override */
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
-    const navigation: Navigation = this.isExported ? Navigation.Exports : Navigation.Locals;
+    const navigation = this.isExported ? "." as Navigation : "~" as Navigation;
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
       .addNavigationStep(navigation, nameComponent)
-      .withMeaning(Meaning.Variable);
+      .withMeaning("var" as Meaning.Variable);
   }
 }

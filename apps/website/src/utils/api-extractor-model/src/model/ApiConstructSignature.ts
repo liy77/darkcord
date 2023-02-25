@@ -95,7 +95,7 @@ export class ApiConstructSignature extends ApiTypeParameterListMixin(
     const parent: DeclarationReference = this.parent
       ? this.parent.canonicalReference
       : // .withMeaning() requires some kind of component
-        DeclarationReference.empty().addNavigationStep(Navigation.Members, '(parent)');
-    return parent.withMeaning(Meaning.ConstructSignature).withOverloadIndex(this.overloadIndex);
+        DeclarationReference.empty().addNavigationStep("#", '(parent)');
+    return parent.withMeaning("new"as Meaning.ConstructSignature).withOverloadIndex(this.overloadIndex);
   }
 }

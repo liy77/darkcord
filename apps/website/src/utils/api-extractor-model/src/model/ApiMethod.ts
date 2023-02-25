@@ -96,8 +96,8 @@ export class ApiMethod extends ApiNameMixin(
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
-      .addNavigationStep(this.isStatic ? Navigation.Exports : Navigation.Members, nameComponent)
-      .withMeaning(Meaning.Member)
+      .addNavigationStep(this.isStatic ? "." as Navigation : "#" as Navigation, nameComponent)
+      .withMeaning("member" as Meaning.Member)
       .withOverloadIndex(this.overloadIndex);
   }
 }

@@ -111,12 +111,12 @@ export class ApiItem {
    */
   public get canonicalReference(): DeclarationReference {
     if (!this._canonicalReference) {
-      try {
+      // try {
         this._canonicalReference = this.buildCanonicalReference();
-      } catch (e) {
-        const name: string = this.getScopedNameWithinPackage() || this.displayName;
-        throw new InternalError(`Error building canonical reference for ${name}:\n` + (e as Error).message);
-      }
+      // } catch (e) {
+      //   const name: string = this.getScopedNameWithinPackage() || this.displayName;
+      //   throw new InternalError(`Error building canonical reference for ${name}:\n` + (e as Error).message);
+      // }
     }
     return this._canonicalReference;
   }

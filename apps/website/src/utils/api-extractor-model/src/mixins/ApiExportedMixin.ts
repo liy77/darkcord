@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.s
 
-import { DeclarationReference, Navigation } from '@microsoft/tsdoc/lib-commonjs/beta/DeclarationReference';
+import { DeclarationReference } from '@microsoft/tsdoc/lib-commonjs/beta/DeclarationReference';
 import { ApiItem, IApiItemJson, IApiItemConstructor, IApiItemOptions } from '../items/ApiItem';
 import { DeserializerContext } from '../model/DeserializerContext';
 
@@ -102,7 +102,7 @@ export function ApiExportedMixin<TBaseClass extends IApiItemConstructor>(
       const declarationReference: DeclarationReference = DeclarationReference.parse(
         jsonObject.canonicalReference
       );
-      options.isExported = declarationReference.navigation === Navigation.Exports;
+      options.isExported = declarationReference.navigation === ".";
     }
 
     public get isExported(): boolean {

@@ -79,10 +79,10 @@ export class ApiFunction extends ApiNameMixin(
   /** @beta @override */
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
-    const navigation: Navigation = this.isExported ? Navigation.Exports : Navigation.Locals;
+    const navigation: Navigation = this.isExported ? "." : "~";
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
       .addNavigationStep(navigation, nameComponent)
-      .withMeaning(Meaning.Function)
+      .withMeaning("function" as Meaning.Function)
       .withOverloadIndex(this.overloadIndex);
   }
 }

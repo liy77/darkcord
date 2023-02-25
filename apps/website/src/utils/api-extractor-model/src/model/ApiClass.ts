@@ -146,9 +146,9 @@ export class ApiClass extends ApiItemContainerMixin(
   /** @beta @override */
   public buildCanonicalReference(): DeclarationReference {
     const nameComponent: Component = DeclarationReference.parseComponent(this.name);
-    const navigation: Navigation = this.isExported ? Navigation.Exports : Navigation.Locals;
+    const navigation = this.isExported ? "." : "~";
     return (this.parent ? this.parent.canonicalReference : DeclarationReference.empty())
-      .addNavigationStep(navigation, nameComponent)
-      .withMeaning(Meaning.Class);
+      .addNavigationStep(navigation as Navigation, nameComponent)
+      .withMeaning("class" as Meaning.Class);
   }
 }
