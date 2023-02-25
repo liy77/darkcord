@@ -7,7 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 export default withBundleAnalyzer({
-  reactStrictMode: false,
+  reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -18,7 +18,7 @@ export default withBundleAnalyzer({
   outputFileTracing: true,
   experimental: {
     appDir: true,
-    serverComponentsExternalPackages: ["@microsoft/api-extractor-model", "jju", "shiki"],
+    serverComponentsExternalPackages: ["@microsoft/api-extractor-model", "jju", "shiki", "@microsoft/tsdoc", "@microsoft/tsdoc-config"],
     outputFileTracingRoot: fileURLToPath(new URL("../../", import.meta.url)),
     fallbackNodePolyfills: false,
   },
