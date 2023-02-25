@@ -13,7 +13,7 @@ export function Nav({ members }: { members: SidebarSectionItemData[] }) {
 
   return (
     <nav
-      className={`h-[calc(100vh_-_73px)] position fixed border-base fixed top-[61px] left-0 bottom-0 z-20 w-full border-r bg-white dark:bg-[#151718] ${
+      className={`h-[calc(100vh_-_73px)] width 0% position fixed border-base fixed top-[61px] left-0 bottom-0 z-20 w-full border-r bg-white dark:bg-[#151718] ${
         opened ? "block" : "hidden"
       } lg:w-76 lg:max-w-76 lg:block`}
     >
