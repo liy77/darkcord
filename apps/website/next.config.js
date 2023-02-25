@@ -7,6 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 export default withBundleAnalyzer({
+  reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,
   },

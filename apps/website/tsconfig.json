@@ -1,6 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "removeComments": false,
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "skipLibCheck": true,
