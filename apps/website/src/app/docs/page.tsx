@@ -51,12 +51,3 @@ export default async function Page() {
     </article>
   );
 }
-
-Page.getLayout = async function (page: typeof Page) {
-  return (
-    // @ts-expect-error
-    <DocsLayout>
-      page
-    </DocsLayout>
-  )
-}
