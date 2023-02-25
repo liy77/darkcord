@@ -9,6 +9,7 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import shikiThemeDarkPlus from "shiki/themes/dark-plus.json";
 import shikiThemeLightPlus from "shiki/themes/light-plus.json";
+import DocsLayout from "./layout";
 
 async function loadREADME() {
   return readFile(join(process.cwd(), "public", "README.md"), "utf8");
@@ -49,4 +50,13 @@ export default async function Page() {
       </div>
     </article>
   );
+}
+
+Page.getLayout = async function (page: typeof Page) {
+  return (
+    // @ts-expect-error
+    <DocsLayout>
+      page
+    </DocsLayout>
+  )
 }

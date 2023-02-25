@@ -5,7 +5,7 @@ import { createApiModel } from "@/utils/createApiModel";
 import { serializeIntoSidebarItemData } from "@/utils/serializeIntoSidebarItemData";
 import { ApiFunction } from "@/utils/api-extractor-model/src/index";
 import { notFound } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactElement } from "react";
 import { fetchModelJSON } from "../docAPI";
 import { Providers } from "./providers";
 
@@ -41,7 +41,7 @@ export default async function DocsLayout({ children }: PropsWithChildren) {
       />
       <article className="pt-18 lg:pl-76">
         <div className="relative z-10 min-h-[calc(100vh_-_70px)]">
-          {children}
+          <main>{children}</main>
         </div>
       </article>
       <CmdKDialog />
