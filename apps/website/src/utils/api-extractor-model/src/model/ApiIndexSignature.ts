@@ -72,7 +72,7 @@ export class ApiIndexSignature extends ApiParameterListMixin(
     const parent: DeclarationReference = this.parent
       ? this.parent.canonicalReference
       : // .withMeaning() requires some kind of component
-        DeclarationReference.empty().addNavigationStep("#", '(parent)');
+        DeclarationReference.empty().addNavigationStep("#" as Navigation, '(parent)');
     return parent.withMeaning("index" as Meaning.IndexSignature).withOverloadIndex(this.overloadIndex);
   }
 }
