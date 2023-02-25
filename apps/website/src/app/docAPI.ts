@@ -2,13 +2,10 @@ import fs from "node:fs/promises"
 import { join } from "node:path"
 
 export async function fetchModelJSON() {
-  console.log("FETCH MODEL JSON", process.cwd())
   const res = await fs.readFile(
     join(process.cwd(), "public", "docs.api.json"),
     "utf8",
   );
-
-  console.log(res.length)
 
   return JSON.parse(res);
 
