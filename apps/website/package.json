@@ -28,7 +28,6 @@
   "dependencies": {
     "@microsoft/api-extractor-model": "^7.26.4",
     "@microsoft/tsdoc": "^0.14.2",
-    "@microsoft/tsdoc-config": "^0.16.2",
     "@next/bundle-analyzer": "^13.1.6",
     "@unocss/cli": "^0.49.7",
     "@unocss/reset": "^0.49.7",
