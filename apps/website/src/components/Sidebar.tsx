@@ -41,10 +41,11 @@ export function Sidebar({ members }: { members: SidebarSectionItemData[] }) {
   }`;
   const { setOpened } = useNav();
 
+  // @ts-nocheck
   const groupItems = useMemo(() => groupMembers(members), [members]);
 
   return (
-    <div className="flex flex-col gap-3 p-3 pb-32 lg:pb-12">
+    <div className="position fixed flex flex-col gap-3 p-3 pb-32 lg:pb-12">
       {(Object.keys(groupItems) as (keyof GroupedMembers)[])
         .filter((group) => groupItems[group]?.length)
         .map((group, id) => (
