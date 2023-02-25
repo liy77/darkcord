@@ -5,7 +5,7 @@
   "scripts": {
     "start:next": "next start",
     "dev": "pnpm --stream --r docs && concurrently \"pnpm dev:css\" \"pnpm dev:next\"",
-    "build:prod": "yarn build:css && yarn build:next",
+    "build:prod": "pnpm --stream --r docs && pnpm build:css && pnpm build:next",
     "build:next": "next build",
     "build:css": "pnpm generate:css",
     "dev:next": "next dev",
