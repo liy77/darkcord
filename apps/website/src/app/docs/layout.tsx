@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { Nav } from "@/components/Nav";
 import { createApiModel } from "@/utils/createApiModel";
 import { serializeIntoSidebarItemData } from "@/utils/serializeIntoSidebarItemData";
-import { ApiFunction } from "@microsoft/api-extractor-model";
+import { ApiFunction } from "@/utils/api-extractor-model/src/index";
 import { notFound } from "next/navigation";
 import { PropsWithChildren } from "react";
 import { fetchModelJSON } from "../docAPI";

@@ -1,7 +1,7 @@
 import type {
   ApiMethod,
   ApiMethodSignature
-} from "@microsoft/api-extractor-model";
+} from "@/utils/api-extractor-model/src/index";
 import { MethodDocumentation } from "./MethodDocumentation";
 import { MethodHeader } from "./MethodHeader";
 

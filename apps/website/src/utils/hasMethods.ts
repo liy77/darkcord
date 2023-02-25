@@ -1,7 +1,7 @@
 import {
   ApiItemContainerMixin,
   ApiItemKind
-} from "@microsoft/api-extractor-model";
+} from "@/utils/api-extractor-model/src/index";
 import { memberPredicate } from "./memberPredicate";
 import { resolveMembers } from "./resolveMembers";
 

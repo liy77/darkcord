@@ -5,8 +5,8 @@ import type {
   ApiItemContainerMixin,
   ApiMethod,
   ApiMethodSignature
-} from "@microsoft/api-extractor-model";
-import { ApiItemKind } from "@microsoft/api-extractor-model";
+} from "@/utils/api-extractor-model/src/index";
+import { ApiItemKind } from "@/utils/api-extractor-model/src/index";
 import { Fragment, useMemo } from "react";
 import { DocumentationSection } from "./DocumentationSection";
 

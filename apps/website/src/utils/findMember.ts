@@ -1,4 +1,4 @@
-import { ApiItem, ApiModel } from "@microsoft/api-extractor-model";
+import { ApiItem, ApiModel } from "@/utils/api-extractor-model/src/index";
 
 export function findMember(model: ApiModel, memberName: string | undefined): ApiItem | undefined {
 	if (!memberName) {

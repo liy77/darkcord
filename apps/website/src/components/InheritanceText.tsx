@@ -1,5 +1,5 @@
 import { resolveItemURI } from '@/utils/resolveItemURI';
-import type { ApiDeclaredItem } from '@microsoft/api-extractor-model';
+import type { ApiDeclaredItem } from '@/utils/api-extractor-model/src/index';
 import { ItemLink } from './ItemLink';
 
 export function InheritanceText({ parent }: { parent: ApiDeclaredItem }) {

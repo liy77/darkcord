@@ -1,5 +1,5 @@
 import { SidebarSectionItemData } from "@/components/Sidebar";
-import { ApiItem } from "@microsoft/api-extractor-model";
+import { ApiItem } from "@/utils/api-extractor-model/src/index";
 import { resolveItemURI } from "./resolveItemURI";
 
 export function serializeIntoSidebarItemData(item: ApiItem): SidebarSectionItemData {

@@ -5,7 +5,7 @@ import {
   ApiMethodSignature,
   ApiProperty,
   ApiPropertySignature
-} from "@microsoft/api-extractor-model";
+} from "@/utils/api-extractor-model/src/index";
 
 export function memberPredicate(
   item: ApiItem,

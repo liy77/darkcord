@@ -1,6 +1,6 @@
 import { resolveItemURI } from "@/utils/resolveItemURI";
-import type { ApiModel, Excerpt } from "@microsoft/api-extractor-model";
-import { ExcerptTokenKind } from "@microsoft/api-extractor-model";
+import type { ApiModel, Excerpt } from "@/utils/api-extractor-model/src/index";
+import { ExcerptTokenKind } from "@/utils/api-extractor-model/src/index";
 import { ItemLink } from "./ItemLink";
 
 export interface ExcerptTextProps {

@@ -1,5 +1,5 @@
 import { useNav } from "@/contexts/nav";
-import { ApiItemKind } from "@microsoft/api-extractor-model";
+import { ApiItemKind } from "@/utils/api-extractor-model/src/index";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { ItemLink } from "./ItemLink";

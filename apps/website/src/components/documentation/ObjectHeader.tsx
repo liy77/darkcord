@@ -1,7 +1,7 @@
 import {
   ApiDeclaredItem,
   ApiItemContainerMixin
-} from "@microsoft/api-extractor-model";
+} from "@/utils/api-extractor-model/src/index";
 import { Header } from "./Header";
 import { TSDoc } from "./tsdoc/TSDoc";
 

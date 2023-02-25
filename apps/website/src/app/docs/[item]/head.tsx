@@ -2,7 +2,7 @@ import { fetchModelJSON } from "@/app/docAPI";
 import { createApiModel } from "@/utils/createApiModel";
 import { findMember } from "@/utils/findMember";
 import { tryResolveSummaryText } from "@/utils/tryResolveSummaryText";
-import { ApiDeclaredItem, ApiItem } from "@microsoft/api-extractor-model";
+import { ApiDeclaredItem, ApiItem } from "@/utils/api-extractor-model/src/index";
 import { ItemRouteParams } from "./page";
 
 async function fetchMember({

@@ -18,7 +18,7 @@ export default withBundleAnalyzer({
   outputFileTracing: true,
   experimental: {
     appDir: true,
-    serverComponentsExternalPackages: ["@microsoft/api-extractor-model", "jju", "shiki"],
+    serverComponentsExternalPackages: ["jju", "shiki"],
     outputFileTracingRoot: fileURLToPath(new URL("../../", import.meta.url)),
     fallbackNodePolyfills: false,
   },

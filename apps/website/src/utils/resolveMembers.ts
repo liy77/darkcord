@@ -1,4 +1,4 @@
-import { ApiItem, ApiItemContainerMixin } from "@microsoft/api-extractor-model";
+import { ApiItem, ApiItemContainerMixin } from "@/utils/api-extractor-model/src/index";
 
 export function resolveMembers<T extends ApiItem>(
 	parent: ApiItemContainerMixin,

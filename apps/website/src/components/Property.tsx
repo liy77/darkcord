@@ -1,4 +1,4 @@
-import type { ApiPropertyItem } from "@microsoft/api-extractor-model";
+import type { ApiPropertyItem } from "@/utils/api-extractor-model/src/index";
 import type { PropsWithChildren } from "react";
 import { TSDoc } from "./documentation/tsdoc/TSDoc";
 import { ExcerptText } from "./ExcerptText";

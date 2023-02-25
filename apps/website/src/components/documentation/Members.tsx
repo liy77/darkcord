@@ -1,6 +1,6 @@
 import { hasMethods } from '@/utils/hasMethods';
 import { hasProperties } from '@/utils/hasProperties';
-import type { ApiDeclaredItem, ApiItemContainerMixin } from '@microsoft/api-extractor-model';
+import type { ApiDeclaredItem, ApiItemContainerMixin } from '@/utils/api-extractor-model/src/index';
 import { MethodsSection } from './section/MethodsSection';
 import { PropertiesSection } from './section/PropertiesSection';
 

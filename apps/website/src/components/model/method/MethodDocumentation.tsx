@@ -5,7 +5,7 @@ import { ParameterTable } from "@/components/ParameterTable";
 import type {
   ApiMethod,
   ApiMethodSignature
-} from "@microsoft/api-extractor-model";
+} from "@/utils/api-extractor-model/src/index";
 
 export interface MethodDocumentationProps {
   method: ApiMethod | ApiMethodSignature;

@@ -3,7 +3,7 @@ import { Class } from "@/components/model/Class";
 import { createApiModel } from "@/utils/createApiModel";
 import { findMember } from "@/utils/findMember";
 import { findMemberByKey } from "@/utils/findMemberByKey";
-import { ApiClass, ApiFunction, ApiItem } from "@microsoft/api-extractor-model";
+import { ApiClass, ApiFunction, ApiItem } from "@/utils/api-extractor-model/src/index";
 import { notFound } from "next/navigation";
 
 export interface ItemRouteParams {

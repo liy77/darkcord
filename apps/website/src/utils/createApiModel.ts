@@ -1,4 +1,4 @@
-import { ApiItem, ApiModel, ApiPackage } from "@microsoft/api-extractor-model";
+import { ApiItem, ApiModel, ApiPackage } from "@/utils/api-extractor-model/src/index";
 import { TSDocConfiguration } from "@microsoft/tsdoc";
 import { TSDocConfigFile } from './tsdocConfig';
 

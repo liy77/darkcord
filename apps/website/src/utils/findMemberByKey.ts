@@ -1,4 +1,4 @@
-import { ApiEntryPoint, ApiModel } from "@microsoft/api-extractor-model";
+import { ApiEntryPoint, ApiModel } from "@/utils/api-extractor-model/src/index";
 
 export function findMemberByKey(model: ApiModel, containerKey: string) {
 	const pkg = model.tryGetPackageByName("darkcord")!;

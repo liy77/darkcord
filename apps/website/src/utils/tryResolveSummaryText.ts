@@ -1,4 +1,4 @@
-import { ApiDeclaredItem } from "@microsoft/api-extractor-model";
+import { ApiDeclaredItem } from "@/utils/api-extractor-model/src/index";
 import {
   DocCodeSpan,
   DocNode,

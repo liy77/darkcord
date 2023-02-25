@@ -1,4 +1,4 @@
-import type { ApiParameterListMixin } from "@microsoft/api-extractor-model";
+import type { ApiParameterListMixin } from "@/utils/api-extractor-model/src/index";
 import { useMemo } from "react";
 import { Table } from "./documentation/Table";
 import { TSDoc } from "./documentation/tsdoc/TSDoc";

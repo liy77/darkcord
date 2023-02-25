@@ -1,4 +1,4 @@
-import type { ApiItem } from "@microsoft/api-extractor-model";
+import type { ApiItem } from "@/utils/api-extractor-model/src/index";
 import type {
   DocComment, DocNode,
   DocNodeContainer,

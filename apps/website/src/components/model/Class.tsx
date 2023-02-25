@@ -1,4 +1,4 @@
-import { ApiClass } from "@microsoft/api-extractor-model";
+import { ApiClass } from "@/utils/api-extractor-model/src/index";
 import { Documentation } from "../documentation/Documentation";
 import { Members } from "../documentation/Members";
 import { ObjectHeader } from "../documentation/ObjectHeader";
