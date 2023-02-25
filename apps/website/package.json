@@ -48,10 +48,10 @@
     "rehype-pretty-code": "^0.9.4",
     "rehype-raw": "^6.1.1",
     "rehype-slug": "^5.1.0",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "@microsoft/tsdoc-config": "^0.16.2"
   },
   "devDependencies": {
-    "@microsoft/tsdoc-config": "^0.16.2",
     "@types/node": "^18.14.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
