@@ -43,7 +43,7 @@ export default async function Page() {
   const mdxSource = await generateMDX(readmeSource);
 
   return (
-    <article className="relative margin-left 76em float left dark:bg-dark-800 bg-white p-6 pb-20 shadow">
+    <article className="margin-left 76em float right dark:bg-dark-800 bg-white p-6 pb-20 shadow">
       <div className="prose max-w-none">
         <MDXRemote {...mdxSource} />
       </div>
