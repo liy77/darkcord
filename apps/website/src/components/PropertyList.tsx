@@ -1,4 +1,3 @@
-import { resolveMembers } from "@/utils/resolveMembers";
 import type {
   ApiItem,
   ApiItemContainerMixin,
@@ -7,6 +6,7 @@ import type {
   ApiPropertySignature
 } from "@/utils/api-extractor-model/src/index";
 import { ApiItemKind } from "@/utils/api-extractor-model/src/index";
+import { resolveMembers } from "@/utils/resolveMembers";
 import { Fragment, useMemo } from "react";
 import { Property, PropertySeparatorType } from "./Property";
 

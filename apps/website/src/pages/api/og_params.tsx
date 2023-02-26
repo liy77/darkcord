@@ -73,7 +73,7 @@ export default async function handler(req: NextRequest) {
 
   const description = hasDescription
     ? searchParams.get("description")!.slice(0, 100)
-    : "Default description";
+    : "";
 
   return new ImageResponse(
     (

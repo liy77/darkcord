@@ -18,7 +18,6 @@
 html,
 body {
   height: 100%;
-  color-scheme: light;
 }
 
 #__next {
@@ -26,48 +25,28 @@ body {
 }
 
 #__next[aria-hidden="true"] {
-	filter: blur(3.33px);
+  filter: blur(3.33px);
 }
 
 [data-nextjs-scroll-focus-boundary] {
   height: 100%;
 }
 
-[data-theme="dark"] {
-  display: none;
-}
-
-.dark [data-theme="dark"] {
-  display: block;
-}
-
-.dark [data-theme="light"] {
-  display: none;
-}
-
-pre[data-theme="light"] {
-  background: #ffffff;
-  border: 1px solid #dddddd;
-}
-
-pre[data-theme="dark"] {
+pre {
+  font-size: 13px !important;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+  tab-size: 4;
+  hyphens: none;
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 4px;
   background: #1e1e1e;
 }
 
-pre {
-	font-size: 13px !important;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	line-height: 1.5;
-	tab-size: 4;
-	hyphens: none;
-	padding: 1em;
-	margin: 0.5em 0;
-	overflow: auto;
-	border-radius: 4px;
-}
-
 code {
-	font-family: 'Inter', sans-serif !important;
+  font-family: "Inter", sans-serif !important;
 }

@@ -23,7 +23,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="header-base fixed top-0 left-0 z-20 w-full border-b">
+    <header className="bg-[#151718] border-[#3a3f42] fixed top-0 left-0 z-20 w-full border-b">
       <div className="h-60px block px-6">
         <div className="flex h-full flex-row place-content-between place-items-center">
           <Button
@@ -49,7 +49,7 @@ export function Header() {
             {matches ? (
               <Button
                 as="div"
-                className="hover:bg-light-700 dark:hover:bg-dark-500 focus:ring-width-2 focus:ring-white border-base rounded border px-4 py-2.5 outline-0 focus:ring active:translate-y-px"
+                className="hover:bg-dark-500 focus:ring-width-2 text-white focus:ring-white border-[#3a3f42] rounded border px-4 py-2.5 outline-0 focus:ring active:translate-y-px"
                 onClick={() => setOpen(true)}
               >
                 <div className="flex flex-row place-items-center gap-4">
@@ -64,7 +64,7 @@ export function Header() {
             ) : (
               <Button
                 as="div"
-                className="hover:bg-light-700 dark:hover:bg-dark-500 focus:ring-width-2 focus:ring-white border-base flex rounded border px-4 py-2.5 outline-0 focus:ring active:translate-y-px"
+                className="hover:bg-dark-500 focus:ring-width-2 focus:ring-white border-[#3a3f42] flex rounded border px-4 py-2.5 outline-0 focus:ring active:translate-y-px"
                 onClick={() => setOpen(true)}
               >
                 <Icon as={FiSearch} />

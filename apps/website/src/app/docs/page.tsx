@@ -8,8 +8,6 @@ import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import shikiThemeDarkPlus from "shiki/themes/dark-plus.json";
-import shikiThemeLightPlus from "shiki/themes/light-plus.json";
-import DocsLayout from "./layout";
 
 async function loadREADME() {
   return readFile(join(process.cwd(), "public", "README.md"), "utf8");
@@ -27,10 +25,7 @@ async function generateMDX(readme: string) {
         [
           rehypePrettyCode,
           {
-            theme: {
-              dark: shikiThemeDarkPlus,
-              light: shikiThemeLightPlus,
-            },
+            theme: shikiThemeDarkPlus,
           },
         ],
       ],
@@ -44,7 +39,7 @@ export default async function Page() {
   const mdxSource = await generateMDX(readmeSource);
 
   return (
-    <article className="width 10% padding-top 75% margin-left 76em float left dark:bg-dark-800 bg-white p-6 pb-20 shadow">
+    <article className="bg-dark-800 text-white p-6 pb-20 shadow">
       <div className="prose max-w-none">
         <MDXRemote {...mdxSource} />
       </div>

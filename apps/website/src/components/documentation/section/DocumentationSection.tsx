@@ -20,7 +20,7 @@ export function DocumentationSection(
     <Section {...options}>
       {children}
       {separator && (
-        <div className="border-light-900 dark:border-dark-100 -mx-8 mt-6 border-t-2" />
+        <div className="border-light-900 -mx-8 mt-6 border-t-2" />
       )}
     </Section>
   );

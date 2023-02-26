@@ -41,21 +41,20 @@ export function Sidebar({ members }: { members: SidebarSectionItemData[] }) {
   }`;
   const { setOpened } = useNav();
 
-  // @ts-nocheck
   const groupItems = useMemo(() => groupMembers(members), [members]);
 
   return (
-    <div className="width 250px height 100vh float left flex flex-col gap-3 p-3 pb-32 lg:pb-12">
+    <div className="flex flex-col text-white gap-3 p-3 pb-32 lg:pb-12">
       {(Object.keys(groupItems) as (keyof GroupedMembers)[])
         .filter((group) => groupItems[group]?.length)
         .map((group, id) => (
           <Section key={id} title={group}>
             {groupItems[group].map((member, index) => (
               <ItemLink
-                className={`dark:border-dark-100 focus:ring-width-2 focus:ring-white ml-5 flex flex-col border-l p-[5px] pl-6 outline-0 focus:rounded focus:border-0 focus:ring ${
+                className={`border-dark-100 focus:ring-width-2 focus:ring-white ml-5 flex flex-col border-l p-[5px] pl-6 outline-0 focus:rounded focus:border-0 focus:ring ${
                   asPathWithoutQueryAndAnchor === member.href
                     ? "text-blue-4"
-                    : "dark:hover:bg-dark-200 hover:bg-light-700"
+                    : "hover:bg-dark-200"
                 }`}
                 itemURI={member.href}
                 key={index}

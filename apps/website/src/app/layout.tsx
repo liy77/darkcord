@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
 
 import "@unocss/reset/tailwind.css";
@@ -13,19 +12,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <head />
-      <body className="dark:bg-dark-800 bg-white">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          disableTransitionOnChange
-          value={{
-            light: "light",
-            dark: "dark",
-          }}
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+      <body className="bg-dark-800">{children}</body>
     </html>
   );
 }

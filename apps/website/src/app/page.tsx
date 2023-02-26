@@ -6,7 +6,7 @@ import darkcord_logo from "../assets/darkcord-logo.svg";
 function Button({ href, children }: PropsWithChildren<{ href: string }>) {
   return (
     <Link
-      className="dark:bg-white bg-dark-800 text-white dark:text-dark-800 focus:ring-width-2 flex h-11 transform-gpu cursor-pointer select-none appearance-none flex-row place-items-center rounded border-0 px-6 text-base font-semibold leading-none text-white no-underline outline-0 focus:ring focus:ring-white active:translate-y-px"
+      className="bg-white text-dark-800 focus:ring-width-2 flex h-11 transform-gpu cursor-pointer select-none appearance-none flex-row place-items-center rounded border-0 px-6 text-base font-semibold leading-none no-underline outline-0 focus:ring focus:ring-white active:translate-y-px"
       href={href}
       prefetch={false}
     >

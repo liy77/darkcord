@@ -6,13 +6,8 @@ import {
 } from "unocss";
 
 export default defineConfig({
-  shortcuts: {
-    "header-base":
-      "dark:bg-[#151718] dark:border-[#3a3f42] bg-white border-[#d7dbdf]",
-    "border-base": "dark:border-[#3a3f42] border-[#c1c8cd]",
-  },
   presets: [
-    presetUno({ dark: "class" }),
+    presetUno(),
     presetWebFonts({
       provider: "bunny",
       fonts: {

@@ -36,7 +36,7 @@ export function MethodHeader({
   return (
     <div className="scroll-mt-30 flex flex-col mb-2" id={key}>
       <div className="ml-4">
-        <h4 className="break-all text-lg dark:text-white text-dark hover:underline font-bold">
+        <h4 className="break-all text-lg hover:underline font-bold">
           <a href={`#${key}`}>{getShorthandName(method)}</a>
         </h4>
       </div>

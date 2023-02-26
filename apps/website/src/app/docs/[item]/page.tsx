@@ -1,9 +1,13 @@
 import { fetchModelJSON } from "@/app/docAPI";
 import { Class } from "@/components/model/Class";
+import {
+  ApiClass,
+  ApiFunction,
+  ApiItem
+} from "@/utils/api-extractor-model/src/index";
 import { createApiModel } from "@/utils/createApiModel";
 import { findMember } from "@/utils/findMember";
 import { findMemberByKey } from "@/utils/findMemberByKey";
-import { ApiClass, ApiFunction, ApiItem } from "@/utils/api-extractor-model/src/index";
 import { notFound } from "next/navigation";
 
 export interface ItemRouteParams {
@@ -65,8 +69,8 @@ export default async function Page({ params }: { params: ItemRouteParams }) {
   const member = await fetchMember(params);
 
   return (
-    <main className="float left dark:bg-dark-800 bg-light-600">
-      <div className="margin-left 76px dark:bg-dark-800 bg-white p-6 shadow">
+    <main className="bg-dark-800">
+      <div className="p-6 text-white shadow">
         {member && <Member member={member} />}
       </div>
     </main>

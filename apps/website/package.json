@@ -8,6 +8,7 @@
     "build:prod": "pnpm build:css && pnpm build:next",
     "build:next": "next build",
     "build:css": "pnpm generate:css",
+    "build:docs": "pnpm --stream --r docs",
     "dev:next": "next dev",
     "dev:css": "pnpm generate:css --watch",
     "generate:css": "unocss src/**/*.tsx --out-file ./src/styles/unocss.css --config ../../unocss.config.ts",
@@ -27,17 +28,16 @@
   },
   "dependencies": {
     "@microsoft/tsdoc": "^0.14.2",
-    "@next/bundle-analyzer": "^13.1.6",
+    "@next/bundle-analyzer": "^13.2.1",
     "@rushstack/node-core-library": "^3.55.2",
-    "@unocss/cli": "^0.49.7",
-    "@unocss/reset": "^0.49.7",
+    "@unocss/cli": "^0.49.8",
+    "@unocss/reset": "^0.49.8",
     "@vercel/og": "^0.1.0",
     "ajv": "^8.12.0",
     "ariakit": "2.0.0-next.43",
     "cmdk": "^0.1.22",
-    "next": "13.2.1",
+    "next": "13.2.2-canary.1",
     "next-mdx-remote": "^4.3.0",
-    "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "18.2.0",
@@ -49,19 +49,20 @@
     "rehype-slug": "^5.1.0",
     "remark-gfm": "^3.0.1",
     "resolve": "^1.22.1",
-    "shiki": "^0.14.0",
-    "unocss": "^0.49.7"
+    "shiki": "^0.14.1",
+    "unocss": "^0.49.8"
   },
   "devDependencies": {
     "@types/jju": "^1.4.2",
-    "@types/node": "^18.14.0",
+    "@types/node": "^18.14.2",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "@types/resolve": "^1.20.2",
     "concurrently": "^7.6.0",
-    "eslint": "^8.34.0",
+    "eslint": "^8.35.0",
     "eslint-config-next": "13.1.6",
     "jju": "^1.4.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "vercel": "^28.16.2"
   }
 }
