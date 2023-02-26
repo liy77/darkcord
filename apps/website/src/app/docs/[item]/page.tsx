@@ -66,7 +66,7 @@ export default async function Page({ params }: { params: ItemRouteParams }) {
 
   return (
     <main className="dark:bg-dark-800 bg-light-600">
-      <div className="dark:bg-dark-800 bg-white p-6 shadow">
+      <div className="margin-left 76px dark:bg-dark-800 bg-white p-6 shadow">
         {member && <Member member={member} />}
       </div>
     </main>
