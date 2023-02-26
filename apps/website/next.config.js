@@ -14,13 +14,13 @@ export default withBundleAnalyzer({
   typescript: {
     ignoreBuildErrors: true,
   },
-  cleanDistDir: true,
+  cleanDistDir: false,
   outputFileTracing: true,
   experimental: {
     appDir: true,
     serverComponentsExternalPackages: ["jju", "shiki"],
     outputFileTracingRoot: fileURLToPath(new URL("../../", import.meta.url)),
-    fallbackNodePolyfills: false,
+    fallbackNodePolyfills: true,
   },
   images: {
     dangerouslyAllowSVG: true,
