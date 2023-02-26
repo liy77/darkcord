@@ -65,7 +65,7 @@ export default async function Page({ params }: { params: ItemRouteParams }) {
   const member = await fetchMember(params);
 
   return (
-    <main className="dark:bg-dark-800 bg-light-600">
+    <main className="float left dark:bg-dark-800 bg-light-600">
       <div className="margin-left 76px dark:bg-dark-800 bg-white p-6 shadow">
         {member && <Member member={member} />}
       </div>
