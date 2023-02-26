@@ -13,7 +13,7 @@ export function Nav({ members }: { members: SidebarSectionItemData[] }) {
 
   return (
     <nav
-      className={`h-[calc(100vh_-_73px)] width 0% border-base margin-left 76px fixed top-[61px] left-0 bottom-0 z-20 w-full border-r bg-white dark:bg-[#151718] ${
+      className={`h-[calc(100vh_-_73px)] width 0% border-base fixed top-[61px] left-0 bottom-0 z-20 w-full border-r bg-white dark:bg-[#151718] ${
         opened ? "block" : "hidden"
       } lg:w-76 lg:max-w-76 lg:block`}
     >
@@ -46,7 +46,7 @@ export function Nav({ members }: { members: SidebarSectionItemData[] }) {
         renderTrackVertical={(props) => (
           <div
             {...props}
-            className="absolute top-0.5 right-0.5 bottom-0.5 z-30 w-1.5 rounded"
+            className="top-0.5 right-0.5 bottom-0.5 z-30 w-1.5 rounded"
           />
         )}
         universal

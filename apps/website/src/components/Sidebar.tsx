@@ -45,7 +45,7 @@ export function Sidebar({ members }: { members: SidebarSectionItemData[] }) {
   const groupItems = useMemo(() => groupMembers(members), [members]);
 
   return (
-    <div className="width 250px height 100vh float left fixed flex flex-col gap-3 p-3 pb-32 lg:pb-12">
+    <div className="width 250px height 100vh float left flex flex-col gap-3 p-3 pb-32 lg:pb-12">
       {(Object.keys(groupItems) as (keyof GroupedMembers)[])
         .filter((group) => groupItems[group]?.length)
         .map((group, id) => (
