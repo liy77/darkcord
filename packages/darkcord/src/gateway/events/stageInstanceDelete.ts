@@ -6,7 +6,7 @@ export class StageInstanceDelete extends Event {
   run(data: GatewayStageInstanceDeleteDispatchData) {
     const guild = this.getGuild(data.guild_id);
 
-    guild!.stageInstances.delete(data.id);
+    guild?.stageInstances.delete(data.id);
 
     this.client.emit(Events.StageInstanceDelete, data);
   }
