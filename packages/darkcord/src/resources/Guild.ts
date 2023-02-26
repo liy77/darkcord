@@ -18,7 +18,6 @@ import {
   APIGuildWelcomeScreen,
   APIInviteGuild,
   APIPartialGuild,
-  APIRole,
   APIStageInstance,
   APIUser,
   CDNRoutes,
@@ -52,7 +51,7 @@ import {
   RESTPostAPIGuildScheduledEventJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIGuildBanJSONBody,
-  RouteBases,
+  RouteBases
 } from "discord-api-types/v10";
 
 import { Base } from "./Base";
@@ -60,7 +59,6 @@ import { Channel, WelcomeChannel } from "./Channel";
 import { Invite } from "./Invite";
 import { Member } from "./Member";
 import { Permissions } from "./Permission";
-import { Role } from "./Role";
 import { User } from "./User";
 import { VoiceState } from "./VoiceState";
 
@@ -394,6 +392,7 @@ export class Guild extends BaseGuild {
     this.invites = new Map();
     this.voiceStates = new Map();
     this.scheduledEvents = new Map();
+    this.stageInstances = new Map()
     this.maxMembers = data.max_members;
     this.approximateMemberCount = data.approximate_member_count;
     this.approximatePresenceCount = data.approximate_presence_count;

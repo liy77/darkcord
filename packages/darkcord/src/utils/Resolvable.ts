@@ -52,7 +52,7 @@ export namespace Resolvable {
 
     resolved.channel = channel;
     resolved.isResolved = true;
-    channel.messages.add(resolved);
+    channel.messages?.add(resolved);
 
     return resolved;
   }

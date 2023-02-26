@@ -954,7 +954,7 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
   }
 }
 
-export class StageChannel extends BaseVoiceChannel {
+export class StageChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
   constructor(data: DataWithClient<APIGuildStageVoiceChannel>, guild: Guild) {
     super(data, guild);
   }
