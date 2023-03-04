@@ -2,21 +2,35 @@ import { DataWithClient } from "@typings/index";
 import {
   APITeam,
   APITeamMember,
+  APIUser,
   TeamMemberMembershipState,
 } from "discord-api-types/v10";
 
 import { User } from "./User";
 
 export class TeamMember {
+  /**
+   * The user's membership state on the team
+   */
   membershipState: TeamMemberMembershipState;
+  /**
+   * Will always be ["*"]
+   */
   permissions: ["*"];
+  /**
+   * The id of the parent team of which they are a member
+   */
   teamId: string;
-  user: User;
+  /**
+   * The user of team
+   */
+  user: User | APIUser;
+
 
   constructor(data: DataWithClient<APITeamMember>) {
     this.permissions = ["*"];
     this.teamId = data.team_id;
-    this.user = new User({ ...data.user, client: data.client });
+    this.user = data.client.users.add(data.user, false);
     this.membershipState = data.membership_state;
   }
 }
