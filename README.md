@@ -148,7 +148,6 @@ client.connect();
 ## Useful Links
 
 - [Website](https://darkcord.denkylabs.com)
-- [GitHub](https://github.com/denkylabs/darkcord)
+- [GitHub](https://github.com/JustAWaifuHunter/darkcord)
 - [npm](https://npmjs.com/package/darkcord)
 - [Discord API Discord server](https://discord.gg/discord-api)
-- [Denky Labs Discord server](https://discord.gg/98DNuKDx8j)
