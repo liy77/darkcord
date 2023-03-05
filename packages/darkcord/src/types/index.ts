@@ -26,9 +26,7 @@ import {
   APIReaction,
   APIRole,
   APIStageInstance,
-  APITextBasedChannel,
   APIUser,
-  ChannelType,
   GatewayGuildMembersChunkDispatchData,
   GatewayIntentBits,
   GatewayReceivePayload,
@@ -36,7 +34,7 @@ import {
   MessageFlags,
   RESTPatchAPIChannelJSONBody,
   RESTPostAPIGuildChannelJSONBody,
-  UserAvatarFormat,
+  UserAvatarFormat
 } from "discord-api-types/v10";
 
 import { Client, InteractionClient } from "@client/Client";
@@ -99,7 +97,7 @@ export interface ClientOptions extends BaseClientOptions {
     roles?: CacheOption;
     messageCacheLimitPerChannel?: number;
   };
-  plugins: PluginFn[];
+  plugins?: PluginFn[];
 }
 
 export interface WebServerOptions {
