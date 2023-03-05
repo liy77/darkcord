@@ -715,6 +715,7 @@ export class Guild extends BaseGuild {
     const opts = {
       position: options.position,
       name: options.name,
+      type: options.type as number,
       permission_overwrites: options.permissionOverwrites,
       nsfw: options.nsfw,
       parent_id: options.parentId,

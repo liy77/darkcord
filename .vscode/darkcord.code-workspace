@@ -59,7 +59,8 @@
 			"Zlib",
 			"Package",
 			"Message",
-			"VoiceChannel"
+			"VoiceChannel",
+			"Guild"
 		]
 	}
 }
