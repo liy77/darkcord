@@ -34,7 +34,7 @@ import {
   MessageFlags,
   RESTPatchAPIChannelJSONBody,
   RESTPostAPIGuildChannelJSONBody,
-  UserAvatarFormat
+  UserAvatarFormat,
 } from "discord-api-types/v10";
 
 import { Client, InteractionClient } from "@client/Client";

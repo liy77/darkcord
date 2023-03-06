@@ -40,6 +40,7 @@
 			"docgen",
 			"esbuild",
 			"fnames",
+			"mentionables",
 			"rawmoji",
 			"rawsticker",
 			"Replyable",

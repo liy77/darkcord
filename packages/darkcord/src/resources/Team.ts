@@ -26,7 +26,6 @@ export class TeamMember {
    */
   user: User | APIUser;
 
-
   constructor(data: DataWithClient<APITeamMember>) {
     this.permissions = ["*"];
     this.teamId = data.team_id;

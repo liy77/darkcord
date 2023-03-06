@@ -17,12 +17,15 @@ import {
   APIInteractionDataResolvedGuildMember,
   APIMessageApplicationCommandInteractionData,
   APIMessageComponentInteraction,
+  APIMessageSelectMenuInteractionData,
   APIModalInteractionResponseCallbackData,
   APIModalSubmitInteraction,
+  APIRole,
   APIUser,
   APIUserApplicationCommandInteractionData,
   ApplicationCommandOptionType,
   ApplicationCommandType,
+  ComponentType,
   InteractionResponseType,
   InteractionType,
   MessageFlags,
@@ -36,8 +39,8 @@ import { Channel, TextBasedChannel } from "./Channel";
 import { Guild } from "./Guild";
 import { Member } from "./Member";
 import { Message } from "./Message";
-import { Role } from "./Role";
 import { User } from "./User";
+import { Role } from "./Role";
 
 export class Interaction extends Base {
   /**
@@ -377,11 +380,137 @@ export class ReplyableInteraction extends Interaction {
   }
 }
 
+export class SelectMenuInteractionValues {
+  #resolved: APIInteractionDataResolved | null;
+  _rawValues: string[];
+  constructor(resolved: APIInteractionDataResolved | null, values: string[], public _client: AnyClient, public guild?: Guild | null) {
+    this.#resolved = resolved
+    this._rawValues = values
+  }
+
+  _get<T extends Channel | User | Member | Role | APIUser | APIRole>(fn: (s: string) => T | undefined): T[] {
+    if (!this.#resolved) {
+      throw new Error("Cannot get channels, mentions, roles or members in string select menu")
+    }
+
+    return this._rawValues.map(fn).filter(r => !!r) as T[]
+  }
+
+  /**
+   * Get the selected channels
+   * @returns 
+   */
+  channels() {
+    return this._get((id) => {
+      const channel = this.#resolved?.channels?.[id]
+      return channel && this._client.channels.cache.get(channel.id)
+    })
+  }
+
+  /**
+   * Get the selected users
+   * @returns 
+   */
+  users() {
+    return this._get((id) => {
+      const user = this.#resolved?.users?.[id]
+      return user && this._client.users.get(user.id)
+    })
+  }
+
+  /**
+   * Get the selected members
+   * @returns 
+   */
+  members() {
+    return this._get((id) => {
+      const member = this.#resolved?.members?.[id]
+      return member && this.guild?.members.cache.get(id)
+    })
+  }
+
+  /**
+   * Get the selected roles
+   * @returns 
+   */
+  roles() {
+    return this._get((id) => {
+      const role = this.#resolved?.roles?.[id]
+      return role && this.guild?.roles.cache.get(role.id)
+    })
+  }
+
+  /**
+   * Get the selected mentionables (roles, channels, users, members)
+   * @returns 
+   */
+  mentionables() {
+    return this._get((id) => {
+      const user = this.#resolved?.users?.[id]
+      const channel = this.#resolved?.channels?.[id]
+      const role = this.#resolved?.roles?.[id]
+      const member = this.#resolved?.members?.[id]
+
+      if (member) {
+        return this.guild?.members.cache.get(id) || this._client.users.get(id)
+      }
+
+      if (user) {
+        return this._client.users.get(user.id)
+      }
+
+      if (channel) {
+        return this._client.channels.cache.get(channel.id)
+      }
+
+      if (role) {
+        return this._client.roles.cache.get(role.id)
+      }
+    })
+  }
+
+  /**
+   * Get the selected strings
+   * @returns 
+   */
+  strings() {
+    return this._rawValues
+  }
+}
+
+export class SelectMenuInteractionData {
+  /**
+   * The type of the component
+   */
+  componentType: ComponentType;
+  /**
+   * The custom_id of the component
+   */
+  customId: string;
+  /**
+   * Resolved data of the select menu
+   */
+  resolved: APIInteractionDataResolved | null;
+  /**
+   * Values of the select menu
+   */
+  values: SelectMenuInteractionValues;
+  constructor(data: DataWithClient<APIMessageSelectMenuInteractionData>, guild?: Guild | null) {
+    this.componentType = data.component_type
+    this.customId = data.custom_id
+    this.resolved = null
+    if ("resolved" in data) {
+      this.resolved = data.resolved
+    }
+    this.values = new SelectMenuInteractionValues(this.resolved, data.values, data.client, guild)
+  }
+}
+
 export class ComponentInteraction extends ReplyableInteraction {
   /**
-   * The channel it was sent from
+   * The type of the component
    */
-  componentType: any;
+  componentType: ComponentType;
   /**
    * The custom_id of the component
    */
@@ -406,6 +535,18 @@ export class ComponentInteraction extends ReplyableInteraction {
    * The channel it was sent from
    */
   channel: Channel;
+  /**
+   * The component data payload
+   */
+  data: SelectMenuInteractionData | null;
+  /**
+   * The guild id it was sent from
+   */
+  guildId?: string;
+  /**
+   * The guild it was sent from
+   */
+  guild?: Guild | null;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
     httpResponse?: InteractionResponse,
@@ -413,6 +554,8 @@ export class ComponentInteraction extends ReplyableInteraction {
     super(data, httpResponse);
     this.componentType = data.data.component_type;
     this.customId = data.data.custom_id;
+    this.guildId = data.guild_id
+    this.guild = this.guildId ? data.client.guilds.cache.get(this.guildId) : null
     this.channelId = data.channel_id;
     this.locale = data.locale;
     this.guildLocale = data.guild_locale ?? null;
@@ -424,6 +567,19 @@ export class ComponentInteraction extends ReplyableInteraction {
       data.client,
     );
     this.channel = data.client.channels.cache.get(data.channel_id)!;
+
+    this.data = null
+    if (
+      [
+        ComponentType.ChannelSelect,
+        ComponentType.MentionableSelect,
+        ComponentType.RoleSelect,
+        ComponentType.StringSelect,
+        ComponentType.UserSelect,
+      ].some((type) => this.componentType === type)
+    ) {
+      this.data = new SelectMenuInteractionData({ client: data.client, ...data.data as APIMessageSelectMenuInteractionData }, this.guild)
+    }
   }
 
   async deferUpdate() {
@@ -608,13 +764,18 @@ export class CommandInteractionOptions {
       options as APIApplicationCommandInteractionDataBasicOption[];
   }
 
+  /**
+   * Get a option
+   * @param name The name of option
+   * @returns
+   */
   get(name: string) {
     const option = this.#options.find((o) => o.name === name);
 
     switch (option?.type) {
       case ApplicationCommandOptionType.Attachment: {
         return {
-          value: this.#resolved.attachments?.[option.value],
+          value: this.#resolved.attachments?.[option.value] ?? null,
           name: option.name,
           type: option.type,
         };
@@ -623,14 +784,18 @@ export class CommandInteractionOptions {
         const user = this.#resolved.users?.[option.value];
 
         return {
-          value: user ? new User({ ...user, client: this._client }) : null,
+          value: user ? this._client.users.add(user) : null,
           name: option.name,
           type: option.type,
         };
       }
       case ApplicationCommandOptionType.Channel: {
+        const channel = this.#resolved.channels?.[option.value];
+
         return {
-          value: this.#resolved.channels?.[option.value],
+          value: channel
+            ? this._client.channels.cache.get(channel.id) || channel
+            : null,
           name: option.name,
           type: option.type,
         };
@@ -638,10 +803,7 @@ export class CommandInteractionOptions {
       case ApplicationCommandOptionType.Role: {
         const role = this.#resolved.roles?.[option.value];
         return {
-          value:
-            role && this.guild
-              ? new Role({ ...role, client: this._client }, this.guild)
-              : null,
+          value: role && this.guild ? this.guild.roles.add(role) : null,
           name: option.name,
           type: option.type,
         };
@@ -652,9 +814,11 @@ export class CommandInteractionOptions {
         const member = this.#resolved.members?.[option.value];
 
         return {
-          value: user
-            ? new User({ ...user, client: this._client })
-            : role ?? member ?? null,
+          value:
+            (member && this.guild?.members.cache.get(option.value)) ||
+            (user && this._client.users.add(user)) ||
+            (role && this.guild?.roles.add(role)) ||
+            null,
           name: option.name,
           type: option.type,
         };
@@ -665,36 +829,81 @@ export class CommandInteractionOptions {
     }
   }
 
+  /**
+   * Get a string option value
+   * @param name Option name
+   * @returns
+   */
   string(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.String ? r.value : null;
   }
 
+  /**
+   * Get a number option value
+   * @param name Option name
+   * @returns
+   */
   number(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.Number ? r.value : null;
   }
 
+  /**
+   * Get a integer option value
+   * @param name Option name
+   * @returns
+   */
   integer(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.Integer ? r.value : null;
   }
 
+  /**
+   * Get a boolean option value
+   * @param name Option name
+   * @returns
+   */
   boolean(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.Boolean ? r.value : null;
   }
 
+  /**
+   * Get a attachment option value
+   * @param name Option name
+   * @returns
+   */
   attachment(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.Attachment ? r.value : null;
   }
 
+  /**
+   * Get a user option value
+   * @param name Option name
+   * @returns
+   */
   user(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.User ? r.value : null;
   }
 
+  /**
+   * Get a role option value
+   * @param name Option name
+   * @returns
+   */
+  role(name: string) {
+    const r = this.get(name);
+    return r?.type === ApplicationCommandOptionType.Role ? r.value : null;
+  }
+
+  /**
+   * Get a mentionable (user, member, role, channel) option value
+   * @param name Option name
+   * @returns
+   */
   mentionable(name: string) {
     const r = this.get(name);
     return r?.type === ApplicationCommandOptionType.Mentionable

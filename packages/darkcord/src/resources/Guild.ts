@@ -51,7 +51,7 @@ import {
   RESTPostAPIGuildScheduledEventJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIGuildBanJSONBody,
-  RouteBases
+  RouteBases,
 } from "discord-api-types/v10";
 
 import { Base } from "./Base";
@@ -392,7 +392,7 @@ export class Guild extends BaseGuild {
     this.invites = new Map();
     this.voiceStates = new Map();
     this.scheduledEvents = new Map();
-    this.stageInstances = new Map()
+    this.stageInstances = new Map();
     this.maxMembers = data.max_members;
     this.approximateMemberCount = data.approximate_member_count;
     this.approximatePresenceCount = data.approximate_presence_count;
