@@ -383,98 +383,107 @@ export class ReplyableInteraction extends Interaction {
 export class SelectMenuInteractionValues {
   #resolved: APIInteractionDataResolved | null;
   _rawValues: string[];
-  constructor(resolved: APIInteractionDataResolved | null, values: string[], public _client: AnyClient, public guild?: Guild | null) {
-    this.#resolved = resolved
-    this._rawValues = values
+  constructor(
+    resolved: APIInteractionDataResolved | null,
+    values: string[],
+    public _client: AnyClient,
+    public guild?: Guild | null,
+  ) {
+    this.#resolved = resolved;
+    this._rawValues = values;
   }
 
-  _get<T extends Channel | User | Member | Role | APIUser | APIRole>(fn: (s: string) => T | undefined): T[] {
+  _get<T extends Channel | User | Member | Role | APIUser | APIRole>(
+    fn: (s: string) => T | undefined,
+  ): T[] {
     if (!this.#resolved) {
-      throw new Error("Cannot get channels, mentions, roles or members in string select menu")
+      throw new Error(
+        "Cannot get channels, mentions, roles or members in string select menu",
+      );
     }
 
-    return this._rawValues.map(fn).filter(r => !!r) as T[]
+    return this._rawValues.map(fn).filter((r) => !!r) as T[];
   }
 
   /**
    * Get the selected channels
-   * @returns 
+   * @returns
    */
   channels() {
     return this._get((id) => {
-      const channel = this.#resolved?.channels?.[id]
-      return channel && this._client.channels.cache.get(channel.id)
-    })
+      const channel = this.#resolved?.channels?.[id];
+      return channel && this._client.channels.cache.get(channel.id);
+    });
   }
 
   /**
    * Get the selected users
-   * @returns 
+   * @returns
    */
   users() {
     return this._get((id) => {
-      const user = this.#resolved?.users?.[id]
-      return user && this._client.users.get(user.id)
-    })
+      const user = this.#resolved?.users?.[id];
+      return user && this._client.users.get(user.id);
+    });
   }
 
   /**
    * Get the selected members
-   * @returns 
+   * @returns
    */
   members() {
     return this._get((id) => {
-      const member = this.#resolved?.members?.[id]
-      return member && this.guild?.members.cache.get(id)
-    })
+      const member = this.#resolved?.members?.[id];
+      return member && this.guild?.members.cache.get(id);
+    });
   }
 
   /**
    * Get the selected roles
-   * @returns 
+   * @returns
    */
   roles() {
     return this._get((id) => {
-      const role = this.#resolved?.roles?.[id]
-      return role && this.guild?.roles.cache.get(role.id)
-    })
+      const role = this.#resolved?.roles?.[id];
+      return role && this.guild?.roles.cache.get(role.id);
+    });
   }
 
   /**
    * Get the selected mentionables (roles, channels, users, members)
-   * @returns 
+   * @returns
    */
   mentionables() {
     return this._get((id) => {
-      const user = this.#resolved?.users?.[id]
-      const channel = this.#resolved?.channels?.[id]
-      const role = this.#resolved?.roles?.[id]
-      const member = this.#resolved?.members?.[id]
+      const user = this.#resolved?.users?.[id];
+      const channel = this.#resolved?.channels?.[id];
+      const role = this.#resolved?.roles?.[id];
+      const member = this.#resolved?.members?.[id];
 
       if (member) {
-        return this.guild?.members.cache.get(id) || this._client.users.get(id)
+        return this.guild?.members.cache.get(id) || this._client.users.get(id);
       }
 
       if (user) {
-        return this._client.users.get(user.id)
+        return this._client.users.get(user.id);
       }
 
       if (channel) {
-        return this._client.channels.cache.get(channel.id)
+        return this._client.channels.cache.get(channel.id);
       }
 
       if (role) {
-        return this._client.roles.cache.get(role.id)
+        return this._client.roles.cache.get(role.id);
       }
-    })
+    });
   }
 
   /**
    * Get the selected strings
-   * @returns 
+   * @returns
    */
   strings() {
-    return this._rawValues
+    return this._rawValues;
   }
 }
 
@@ -495,14 +504,22 @@ export class SelectMenuInteractionData {
    * Values of the select menu
    */
   values: SelectMenuInteractionValues;
-  constructor(data: DataWithClient<APIMessageSelectMenuInteractionData>, guild?: Guild | null) {
-    this.componentType = data.component_type
-    this.customId = data.custom_id
-    this.resolved = null
+  constructor(
+    data: DataWithClient<APIMessageSelectMenuInteractionData>,
+    guild?: Guild | null,
+  ) {
+    this.componentType = data.component_type;
+    this.customId = data.custom_id;
+    this.resolved = null;
     if ("resolved" in data) {
-      this.resolved = data.resolved
+      this.resolved = data.resolved;
     }
-    this.values = new SelectMenuInteractionValues(this.resolved, data.values, data.client, guild)
+    this.values = new SelectMenuInteractionValues(
+      this.resolved,
+      data.values,
+      data.client,
+      guild,
+    );
   }
 }
 
@@ -554,8 +571,10 @@ export class ComponentInteraction extends ReplyableInteraction {
     super(data, httpResponse);
     this.componentType = data.data.component_type;
     this.customId = data.data.custom_id;
-    this.guildId = data.guild_id
-    this.guild = this.guildId ? data.client.guilds.cache.get(this.guildId) : null
+    this.guildId = data.guild_id;
+    this.guild = this.guildId
+      ? data.client.guilds.cache.get(this.guildId)
+      : null;
     this.channelId = data.channel_id;
     this.locale = data.locale;
     this.guildLocale = data.guild_locale ?? null;
@@ -568,7 +587,7 @@ export class ComponentInteraction extends ReplyableInteraction {
     );
     this.channel = data.client.channels.cache.get(data.channel_id)!;
 
-    this.data = null
+    this.data = null;
     if (
       [
         ComponentType.ChannelSelect,
@@ -578,7 +597,13 @@ export class ComponentInteraction extends ReplyableInteraction {
         ComponentType.UserSelect,
       ].some((type) => this.componentType === type)
     ) {
-      this.data = new SelectMenuInteractionData({ client: data.client, ...data.data as APIMessageSelectMenuInteractionData }, this.guild)
+      this.data = new SelectMenuInteractionData(
+        {
+          client: data.client,
+          ...(data.data as APIMessageSelectMenuInteractionData),
+        },
+        this.guild,
+      );
     }
   }
 
