@@ -463,14 +463,21 @@ export class Guild extends BaseGuild {
 
   /**
    * Remove the ban for a user
-   * @param userId
-   * @param reason
+   * @param userId User id to remove ban
+   * @param reason Reason to remove ban
    * @returns
    */
   removeMemberBan(userId: string, reason?: string) {
     return this._client.rest.removeGuildBan(this.id, userId, reason);
   }
 
+  /**
+   * Modify the position of a role in the guild
+   * @param roleId Role id to be modified
+   * @param newPosition The new position of role
+   * @param reason Reason to modify the position
+   * @returns
+   */
   async setRolePosition(roleId: string, newPosition: number, reason?: string) {
     if (Number.isNaN(newPosition)) {
       throw new TypeError("Invalid position");
@@ -487,6 +494,13 @@ export class Guild extends BaseGuild {
     return this.roles.add(role!);
   }
 
+  /**
+   * Edit a guild role
+   * @param roleId The id of role to be edited
+   * @param options The options to edit role
+   * @param reason Reason to edit role
+   * @returns
+   */
   async editRole(
     roleId: string,
     options: KeysToCamelCase<RESTPatchAPIGuildRoleJSONBody>,
@@ -503,6 +517,12 @@ export class Guild extends BaseGuild {
     return this.roles.add(role);
   }
 
+  /**
+   * Create a new role for the guild
+   * @param options The options to create role
+   * @param reason The reason to create role
+   * @returns
+   */
   async createRole(
     options: Omit<
       KeysToCamelCase<RESTPostAPIGuildRoleJSONBody>,
@@ -529,10 +549,22 @@ export class Guild extends BaseGuild {
     return this.roles.add(role);
   }
 
+  /**
+   * Delete a guild role
+   * @param id The id of role to be deleted
+   * @param reason Reason to delete role
+   * @returns
+   */
   deleteRole(id: string, reason?: string) {
     return this._client.rest.deleteGuildRole(this.id, id, reason);
   }
 
+  /**
+   * Begin a prune operation
+   * @param options Options to prune members
+   * @param reason Reason to prune members
+   * @returns
+   */
   pruneMembers(
     options: KeysToCamelCase<RESTPostAPIGuildPruneJSONBody>,
     reason?: string,
@@ -548,10 +580,23 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * Remove a member from a guild
+   * @param userId The id of the member to be removed
+   * @param reason Reason to remove member
+   * @returns
+   */
   removeMember(userId: string, reason?: string) {
     return this._client.rest.removeGuildMember(this.id, userId, reason);
   }
 
+  /**
+   * Adds a role to a member
+   * @param userId Id of the member who will receive the role
+   * @param roleId The role to be added to member
+   * @param reason Reason to add role
+   * @returns
+   */
   addMemberRole(userId: string, roleId: string, reason?: string) {
     return this._client.rest.addGuildMemberRole(
       this.id,
@@ -561,6 +606,13 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * Removes a role from a member
+   * @param userId The id of user to remove role
+   * @param roleId The id of role to be removed from member
+   * @param reason The reason to remove role
+   * @returns
+   */
   removeMemberRole(userId: string, roleId: string, reason?: string) {
     return this._client.rest.removeGuildMemberRole(
       this.id,
@@ -570,11 +622,22 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * Edit the current member
+   * @param options Options to edit member
+   * @param reason Reason to edit member
+   */
   editMember(
     userId: "@me",
     options: RESTPatchAPICurrentGuildMemberJSONBody,
     reason?: string,
   ): Promise<Member>;
+  /**
+   * Edit a member of the guild
+   * @param userId The id of member to be edited
+   * @param options Options to edit member
+   * @param reason Reason to edit member
+   */
   editMember(
     userId: string,
     options: KeysToCamelCase<RESTPatchAPIGuildMemberJSONBody>,
@@ -711,6 +774,12 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * Create a channel in this guild
+   * @param options The options to create channel
+   * @param reason Reason to create channel
+   * @returns
+   */
   async createChannel(options: CreateChannelOptions, reason?: string) {
     const opts = {
       position: options.position,
@@ -745,10 +814,21 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * Delete a channel in this guild
+   * @param id The id of channel to be deleted
+   * @param reason Reason to delete channel
+   * @returns
+   */
   deleteChannel(id: string, reason?: string) {
     return this._client.rest.deleteChannel(id, reason);
   }
 
+  /**
+   * Get permissions of user
+   * @param userId user id to get permissions
+   * @returns
+   */
   permissionsOf(userId: string | Member) {
     let member: Member | undefined | null;
 
@@ -784,10 +864,21 @@ export class Guild extends BaseGuild {
     return new Permissions(perms);
   }
 
+  /**
+   * Create a new guild command
+   * @param options Options to create command
+   * @returns
+   */
   createApplicationCommand(options: RESTPostAPIApplicationCommandsJSONBody) {
     return this._client.application!.createGuildCommand(this.id, options);
   }
 
+  /**
+   * Edit a guild command
+   * @param commandId The id of command to be edited
+   * @param options Options to edit command
+   * @returns
+   */
   editApplicationCommand(
     commandId: string,
     options: RESTPatchAPIApplicationCommandJSONBody,
@@ -799,10 +890,20 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * Delete a guild command
+   * @param commandId The id of command to be deleted
+   * @returns
+   */
   deleteApplicationCommand(commandId: string) {
     return this._client.application!.deleteGuildCommand(this.id, commandId);
   }
 
+  /**
+   * Takes a list of application commands, overwriting the existing command list for this application for the targeted guild
+   * @param commands The array of commands
+   * @returns
+   */
   bulkOverwriteApplicationCommands(
     commands: RESTPutAPIApplicationCommandsJSONBody,
   ) {
@@ -812,6 +913,23 @@ export class Guild extends BaseGuild {
     );
   }
 
+  /**
+   * The acronym that shows up in place of a guild icon
+   * @returns
+   */
+  get nameAcronym() {
+    return this.name
+      .replace(/'s /g, " ")
+      .replace(/\w+/g, (e) => e[0])
+      .replace(/\s/g, "");
+  }
+
+  /**
+   * Edit the guild
+   * @param options Options to edit guild 
+   * @param reason Reason to edit
+   * @returns 
+   */
   async edit(
     options: KeysToCamelCase<RESTPatchAPIGuildJSONBody>,
     reason?: string,
