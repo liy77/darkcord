@@ -17,6 +17,10 @@ export class EmojiDataManager extends DataManager<Emoji | APIEmoji> {
     });
   }
 
+  get(id: string) {
+    return this.cache.get(id);
+  }
+
   #resolve(emoji: APIEmoji | Emoji, addInCache = false) {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

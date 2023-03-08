@@ -76,18 +76,24 @@ export class User extends Base {
   constructor(data: DataWithClient<APIUser>) {
     super(data);
     this._client = data.client;
-    this.username = data.username;
-    this.discriminator = data.discriminator;
-    this.avatar = data.avatar;
-    this.banner = data.banner;
-    this.bot = Boolean(data.bot);
-    this.locale = data.locale as LocaleString;
-    this.mfaEnabled = Boolean(data.mfa_enabled);
-    this.premiumType = data.premium_type;
-    this.verified = Boolean(data.verified);
-    this.flags = data.flags;
-    this.publicFlags = data.public_flags;
-    this.system = Boolean(data.system);
+    this._update(data);
+  }
+
+  _update(data: APIUser) {
+    if ("username" in data) this.username = data.username;
+    if ("discriminator" in data) this.discriminator = data.discriminator;
+    if ("avatar" in data) this.avatar = data.avatar;
+    if ("banner" in data) this.banner = data.banner;
+    if ("bot" in data) this.bot = Boolean(data.bot);
+    if ("locale" in data) this.locale = data.locale as LocaleString;
+    if ("mfa_enabled") this.mfaEnabled = Boolean(data.mfa_enabled);
+    if ("premium_type" in data) this.premiumType = data.premium_type;
+    if ("verified" in data) this.verified = Boolean(data.verified);
+    if ("flags" in data) this.flags = data.flags;
+    if ("public_flags" in data) this.publicFlags = data.public_flags;
+    if ("system" in data) this.system = Boolean(data.system);
+
+    return this;
   }
 
   /**
@@ -182,6 +188,21 @@ export class User extends Base {
 
     await this._client.rest.deleteChannel(this.dm.id);
     this._client.channels.cache.delete(this.dm.id);
+  }
+
+  get forged() {
+    return Boolean(this.id && !this.flags && !this.username);
+  }
+
+  /**
+   * Update information of this user
+   *
+   * Util if this is forged
+   * @returns
+   */
+  async fetchInformation() {
+    const data = await this._client.rest.getUser(this.id);
+    return this._update(data);
   }
 
   toString() {

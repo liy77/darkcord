@@ -1,7 +1,7 @@
 import { CacheManager } from "@cache/CacheManager";
 import { Channel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
-import { BaseCacheOptions } from "@typings/index";
+import { BaseCacheOptions, DataWithClient } from "@typings/index";
 import {
   APIChannel,
   APIGuildChannel,
@@ -57,6 +57,20 @@ export class ChannelDataManager extends DataManager<Channel> {
 
   add(channel: APIChannel | Channel, replace = true) {
     return super.add(this._resolve(channel), replace, channel.id);
+  }
+
+  get(id: string) {
+    return this.cache.get(id);
+  }
+
+  forge(id: string) {
+    return this.add(
+      new Channel({
+        client: this.manager.client,
+        id,
+      } as DataWithClient<APIChannel>),
+      false,
+    );
   }
 
   async fetch(id: string) {

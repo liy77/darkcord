@@ -20,6 +20,10 @@ export class MemberDataManager extends DataManager<Member> {
     });
   }
 
+  get(id: string) {
+    return this.cache.get(id);
+  }
+
   add(member: Member, replace = true) {
     return super.add(member, replace, member.id);
   }

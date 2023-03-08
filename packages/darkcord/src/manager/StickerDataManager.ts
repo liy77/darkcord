@@ -18,6 +18,10 @@ export class StickerDataManager extends DataManager<Sticker | APISticker> {
     });
   }
 
+  get(id: string) {
+    return this.cache.get(id);
+  }
+
   add(sticker: Sticker | APISticker, replace = true) {
     return super.add(this.#resolve(sticker), replace, sticker.id);
   }

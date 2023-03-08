@@ -8,8 +8,8 @@ import {
   MessagePostData,
 } from "@typings/index";
 import { channelMention } from "@utils/Constants";
-import { transformMessagePostData } from "@utils/index";
 import { Resolvable } from "@utils/Resolvable";
+import { transformMessagePostData } from "@utils/index";
 import {
   APIChannel,
   APIChannelBase,
@@ -180,6 +180,21 @@ export class Channel extends Base {
 
   isVoice(): this is VoiceChannel {
     return this instanceof VoiceChannel;
+  }
+
+  get forged() {
+    return Boolean(this.id && !this.flags && !this.name);
+  }
+
+  /**
+   * Update information of this channel
+   *
+   * Util if this is forged
+   * @returns
+   */
+  async fetchInformation() {
+    const data = await this._client.rest.getChannel(this.id);
+    return this._update(data);
   }
 
   static from(data: DataWithClient<APIChannel>, guild?: Guild) {

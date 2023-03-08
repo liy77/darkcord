@@ -69,6 +69,8 @@ export class Role extends Base {
     this.permissions = new Permissions(BigInt(data.permissions));
     this.managed = Boolean(data.managed);
     this.unicodeEmoji = data.unicode_emoji;
+
+    return this;
   }
 
   setPosition(newPosition: number, reason?: string) {
@@ -80,6 +82,10 @@ export class Role extends Base {
     reason?: string,
   ) {
     return this.guild.editRole(this.id, options, reason);
+  }
+
+  get forged() {
+    return Boolean(this.id && !this.color && !this.name);
   }
 
   toString() {

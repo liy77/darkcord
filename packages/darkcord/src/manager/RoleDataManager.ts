@@ -1,7 +1,7 @@
 import { CacheManager } from "@cache/CacheManager";
 import { Guild } from "@resources/Guild";
 import { Role } from "@resources/Role";
-import { BaseCacheOptions } from "@typings/index";
+import { BaseCacheOptions, DataWithClient } from "@typings/index";
 import { Partials } from "@utils/Constants";
 import { APIGuild, APIRole } from "discord-api-types/v10";
 import { DataCache, DataManager } from "./DataManager";
@@ -25,11 +25,25 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
     });
   }
 
+  get(id: string) {
+    return this.cache.get(id);
+  }
+
   add(role: APIRole | Role, replace = true) {
     return super.add(this._resolve(role), replace, role.id);
   }
 
-  _resolve(role: (APIRole & { guildId?: string }) | Role, addInCache = false) {
+  forge(id: string) {
+    return this.add(
+      new Role(
+        { client: this.manager.client, id } as DataWithClient<APIRole>,
+        this.guild,
+      ),
+      false,
+    );
+  }
+
+  _resolve(role: APIRole | Role, addInCache = false) {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       role &&

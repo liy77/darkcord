@@ -1,6 +1,6 @@
 import { CacheManager } from "@cache/CacheManager";
 import { User } from "@resources/User";
-import { BaseCacheOptions } from "@typings/index";
+import { BaseCacheOptions, DataWithClient } from "@typings/index";
 import { Partials } from "@utils/Constants";
 import { APIUser } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
@@ -16,6 +16,16 @@ export class UserDataManager extends DataManager<APIUser | User> {
   get(id: string) {
     const user = this.cache.get(id);
     return user && this.#resolve(user, true);
+  }
+
+  forge(id: string) {
+    return this.add(
+      new User({
+        client: this.manager.client,
+        id,
+      } as unknown as DataWithClient<APIUser>),
+      false,
+    );
   }
 
   add(user: User | APIUser, replace = true) {

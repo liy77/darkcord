@@ -14,6 +14,10 @@ export class GuildDataManager extends DataManager<Guild> {
     super(limit);
   }
 
+  get(id: string) {
+    return this.cache.get(id);
+  }
+
   async fetch(id: string, options: GuildFetchOptions = {}) {
     const raw = await this.manager.client.rest.getGuild(id);
     const guild = new Guild({ ...raw, client: this.manager.client });
