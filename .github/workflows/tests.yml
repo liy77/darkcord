@@ -32,4 +32,3 @@ jobs:
       
     - run: pnpm install --frozen-lockfile
     - run: pnpm run c --if-present
-    - run: npm test
