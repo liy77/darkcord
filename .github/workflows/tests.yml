@@ -35,5 +35,5 @@ jobs:
         cache: 'pnpm'
         cache-dependency-path: 'pnpm-lock.yaml'
         
-    - name: Compile
-      run: pnpm install && cd ./packages/darkcord && pnpm run c
+    - name: CI
+      run: pnpm install --frozen-lockfile
