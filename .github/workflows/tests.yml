@@ -34,8 +34,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
         cache-dependency-path: 'pnpm-lock.yaml'
-      
-    - run: pnpm install
-      working-directory: ./packages
-    - run: pnpm run c
-      working-directory: ./packages/darkcord
+        
+    - name: Compile
+      run: pnpm install && cd ./packages/darkcord && pnpm run c
