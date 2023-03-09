@@ -6,6 +6,8 @@
     <br />
     	<p>
 		<a href="https://github.com/JustAWaifuHunter/darkcord/actions"><img src="https://github.com/JustAWaifuHunter/darkcord/actions/workflows/tests.yml/badge.svg" alt="Tests status" /></a>
+		<a href="https://www.npmjs.com/package/darkcord"><img src="https://img.shields.io/npm/dm/darkcord" alt="Npm Package" /></a>
+		<a href="https://www.codefactor.io/repository/github/justawaifuhunter/darkcord"><img src="https://www.codefactor.io/repository/github/justawaifuhunter/darkcord/badge" alt="CodeFactor" /></a>
 	</p>
 </div>
 
