@@ -1,11 +1,13 @@
 <div align="center">
 	<br />
     	<p>
-		<img src="https://media.discordapp.net/attachments/903700220259487767/1068110112687935518/darkcord.png" width="546" alt="darkcord" />
+		<img src="https://media.discordapp.net/attachments/903700220259487767/1083430114563465256/tema2_preto.png" width="546" alt="darkcord" />
 	</p>
     <br />
     	<p>
-		<a href="https://github.com/denkylabs/darkcord/actions"><img src="https://github.com/denkylabs/darkcord/actions/workflows/tests.yml/badge.svg" alt="Tests status" /></a>
+		<a href="https://github.com/JustAWaifuHunter/darkcord/actions"><img src="https://github.com/JustAWaifuHunter/darkcord/actions/workflows/tests.yml/badge.svg" alt="Tests status" /></a>
+		<a href="https://www.npmjs.com/package/darkcord"><img src="https://img.shields.io/npm/dm/darkcord" alt="Npm Package" /></a>
+		<a href="https://www.codefactor.io/repository/github/justawaifuhunter/darkcord"><img src="https://www.codefactor.io/repository/github/justawaifuhunter/darkcord/badge" alt="CodeFactor" /></a>
 	</p>
 </div>
 
