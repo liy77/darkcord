@@ -78,6 +78,11 @@ export const GatewayShardError = (
     ],
   });
 
+export enum CloseCodes {
+  Normal = 1_000,
+  Resuming = 4_200,
+}
+
 export declare interface GatewayShard {
   on<T extends keyof GatewayShardEvents>(
     event: T,
@@ -225,7 +230,7 @@ export class GatewayShard extends EventEmitter {
     this.shardId = this.options.shardId;
     this.pendingGuilds = 0;
     this.pendingGuildsMap = new Map();
-    this.events = events.setGatewayShard(this);
+    this.events = events.setGatewayShard(this as any);
     this.intents = this.client.options.gateway.intents as GatewayIntentBits;
     this._inflate = null;
 
@@ -245,9 +250,16 @@ export class GatewayShard extends EventEmitter {
     return GatewayShardError(message, code, this.shardId);
   }
 
-  async #handleClose(code: GatewayCloseCodes) {
+  async #handleClose(code: CloseCodes | GatewayCloseCodes) {
     let errMessage: string;
     switch (code) {
+      case CloseCodes.Normal: {
+        this.debug("Disconnected from Discord");
+        return;
+      }
+      case CloseCodes.Resuming: {
+        return;
+      }
       case GatewayCloseCodes.UnknownOpcode: {
         errMessage = "Received unknown op code";
         break;
@@ -728,19 +740,31 @@ export class GatewayShard extends EventEmitter {
    * @param reason Close reason
    */
   close(code: number, reason?: string) {
-    this.status = GatewayStatus.Closing;
+    if (this.status === GatewayStatus.Closing) {
+      this.debug("Tried to close a shard that is already being closing");
+      return;
+    }
 
-    this.debug(
-      `Closing Gateway with code ${code}${
-        reason ? ` and reason ${reason}` : ""
-      } `,
-    );
-    this.ws?.close(code, reason);
+    if (
+      this.ws &&
+      (this.ws.readyState === WebSocket.OPEN ||
+        this.ws.readyState === WebSocket.CONNECTING)
+    ) {
+      this.status = GatewayStatus.Closing;
 
-    this.ws?.removeEventListener("close", this.#onClose);
-    this.ws?.removeEventListener("message", this.#onMessage);
-    this.ws?.removeEventListener("open", this.#onOpen);
-    this.ws = undefined;
+      this.debug(
+        `Closing Gateway with code ${code}${
+          reason ? ` and reason ${reason}` : ""
+        } `,
+      );
+
+      this.ws.close(code, reason);
+
+      this.ws.removeEventListener("close", this.#onClose);
+      this.ws.removeEventListener("message", this.#onMessage);
+      this.ws.removeEventListener("open", this.#onOpen);
+      this.ws = undefined;
+    }
   }
 
   init() {
@@ -789,7 +813,7 @@ export class GatewayShard extends EventEmitter {
     this.emit(ShardEvents.Reconnecting);
     this.debug("Discord asked to reconnect, reconnecting gateway...");
     clearInterval(this.heartbeatSendInterval);
-    this.close(1000, "Discord Gateway Reconnect");
+    this.close(CloseCodes.Resuming, "Discord Gateway Reconnect");
     this.init();
   }
 
@@ -806,6 +830,6 @@ export class GatewayShard extends EventEmitter {
       this.heartbeatSendInterval = undefined;
     }
 
-    this.close(1_000, "Shard destroyed");
+    this.close(CloseCodes.Normal, "Shard destroyed");
   }
 }

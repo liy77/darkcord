@@ -926,9 +926,9 @@ export class Guild extends BaseGuild {
 
   /**
    * Edit the guild
-   * @param options Options to edit guild 
+   * @param options Options to edit guild
    * @param reason Reason to edit
-   * @returns 
+   * @returns
    */
   async edit(
     options: KeysToCamelCase<RESTPatchAPIGuildJSONBody>,
