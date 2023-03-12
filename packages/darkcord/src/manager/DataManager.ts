@@ -26,7 +26,24 @@ export class DataCache<V extends Record<string, any>> extends Cache<V> {
       id = item.id;
     }
 
-    if (this.has(id!) && !replace) return item;
+    if (this.has(id!) && !replace) {
+      const existing = this.get(id!);
+
+      // If the item exists and is a structure with update function, update the existing value
+      if (
+        item &&
+        typeof item === "object" &&
+        item._update &&
+        existing &&
+        typeof existing === "object" &&
+        existing._update
+      ) {
+        return existing._update("rawData" in item ? item.rawData : item);
+      }
+
+      return item;
+    }
+
     this.set(id!, item);
     return item;
   }
