@@ -86,7 +86,7 @@ export class BaseGuild extends Base {
   /**
    * Verification level required for the guild
    */
-  verificationLevel!: GuildVerificationLevel;
+  verificationLevel: GuildVerificationLevel | null;
   /**
    * The vanity url code for the guild
    */
@@ -95,6 +95,10 @@ export class BaseGuild extends Base {
    * Guild name (2-100 characters, excluding trailing and leading whitespace)
    */
   name: string;
+  /**
+   * The guild id
+   */
+  declare id: string;
   constructor(data: DataWithClient<APIPartialGuild>) {
     super(data, data.client);
 
@@ -131,15 +135,24 @@ export class BaseGuild extends Base {
 
   _update(data: APIPartialGuild) {
     if ("name" in data) this.name = data.name;
-    if ("banner" in data) this.banner = data.banner ?? null;
-    if ("icon" in data) this.icon = data.icon ?? null;
-    if ("features" in data) this.features = data.features!;
-    if ("splash" in data) this.splash = data.splash ?? null;
-    if ("description" in data) this.description = data.description ?? null;
-    if ("verification_level" in data)
-      this.verificationLevel = data.verification_level!;
-    if ("vanity_url_code" in data)
-      this.vanityUrlCode = data.vanity_url_code ?? null;
+    if ("banner" in data && data.banner) this.banner = data.banner;
+    else this.banner ??= null;
+    if ("icon" in data) this.icon = data.icon;
+    else this.icon ??= null;
+    if ("features" in data && data.features) this.features = data.features;
+    else this.features ??= [];
+    if ("splash" in data) this.splash = data.splash;
+    else this.splash ??= null;
+    if ("description" in data && data.description)
+      this.description = data.description;
+    else this.description ??= null;
+    if ("verification_level" in data && data.verification_level)
+      this.verificationLevel = data.verification_level;
+    else this.verificationLevel ??= null;
+    if ("vanity_url_code" in data && data.vanity_url_code)
+      this.vanityUrlCode = data.vanity_url_code;
+    else this.vanityUrlCode ??= null;
+
     return this;
   }
 }
@@ -207,15 +220,11 @@ export class Guild extends BaseGuild {
   /**
    * Icon hash, returned when in the template object
    */
-  iconHash?: string | null | undefined;
+  iconHash: string | null;
   /**
    * Discovery splash hash; only present for guilds with the "DISCOVERABLE" feature
    */
   discoverySplash: string | null;
-  /**
-   * True if the user is the owner of the guild
-   */
-  owner?: boolean | undefined;
   /**
    * Id of owner
    */
@@ -223,7 +232,7 @@ export class Guild extends BaseGuild {
   /**
    * Total permissions for the user in the guild (excludes overwrites)
    */
-  permissions?: string | undefined;
+  permissions: Permissions;
   /**
    * Id of afk channel
    */
@@ -336,15 +345,15 @@ export class Guild extends BaseGuild {
   /**
    * The number of boosts this guild currently has
    */
-  premiumSubscriptionCount: number | null;
+  premiumSubscriptionCount: number;
   /**
    * Guild presences
    */
   presences: GatewayPresenceUpdate[];
   /**
-   * Guild shard id (only in Gateway Client)
+   * Guild shard id
    */
-  shardId: string | null;
+  shardId: string;
   /**
    * Stage Instances in this guild
    */
@@ -393,32 +402,9 @@ export class Guild extends BaseGuild {
     this.voiceStates = new Map();
     this.scheduledEvents = new Map();
     this.stageInstances = new Map();
-    this.maxMembers = data.max_members;
-    this.approximateMemberCount = data.approximate_member_count;
-    this.approximatePresenceCount = data.approximate_presence_count;
-    this.shardId = "shard_id" in data ? data.shard_id : null;
+    this.shardId = "shard_id" in data ? data.shard_id : "0";
 
     this._update(data);
-
-    if (Array.isArray(this.rawData.roles)) {
-      for (const role of this.rawData.roles) {
-        this.roles.add(role);
-        this._client.cache.roles.cache._add(role);
-      }
-    }
-
-    if (Array.isArray(this.rawData.emojis)) {
-      for (const emoji of this.rawData.emojis) {
-        this.emojis.add(emoji);
-        this._client.cache.emojis.add(emoji);
-      }
-    }
-
-    if (Array.isArray(this.rawData.stickers)) {
-      for (const sticker of this.rawData.stickers) {
-        this.stickers.add(sticker);
-      }
-    }
   }
 
   /**
@@ -941,20 +927,50 @@ export class Guild extends BaseGuild {
 
   _update(data: APIGuild) {
     if ("nsfw_level" in data) this.nsfwLevel = data.nsfw_level;
-    if ("premium_subscription_count" in data)
-      this.premiumSubscriptionCount = data.premium_subscription_count ?? null;
-    if ("icon_hash" in data) this.iconHash = data.icon_hash;
+    if ("premium_subscription_count" in data && data.premium_subscription_count)
+      this.premiumSubscriptionCount = data.premium_subscription_count;
+    else this.premiumSubscriptionCount ??= 0;
+    if ("icon_hash" in data && data.icon_hash) this.iconHash = data.icon_hash;
+    else this.iconHash ??= null;
     if ("widget_channel_id" in data)
       this.widgetChannelId = data.widget_channel_id;
     if ("widget_enabled" in data) this.widgetEnabled = data.widget_enabled;
     if ("owner_id" in data) this.ownerId = data.owner_id;
-    if ("owner" in data) this.owner = data.owner;
     if ("discovery_splash" in data)
       this.discoverySplash = data.discovery_splash;
     if ("afk_channel_id" in data) this.afkChannelId = data.afk_channel_id;
     if ("afk_timeout" in data) this.afkTimeout = data.afk_timeout;
     if ("public_updates_channel_id" in data)
       this.publicUpdatesChannelId = data.public_updates_channel_id;
+    else this.publicUpdatesChannelId ??= null;
+    if ("max_members" in data) this.maxMembers = data.max_members;
+    if ("approximate_member_count" in data)
+      this.approximateMemberCount = data.approximate_member_count;
+    if ("approximate_presence_count" in data)
+      this.approximatePresenceCount = data.approximate_presence_count;
+    if ("permissions" in data && data.permissions)
+      this.permissions = new Permissions(BigInt(data.permissions));
+    else this.permissions ??= new Permissions(0n);
+
+    if ("roles" in data && Array.isArray(data.roles)) {
+      for (const role of data.roles) {
+        this.roles.add(role);
+        this._client.cache.roles.cache._add(role);
+      }
+    }
+
+    if ("emojis" in data && Array.isArray(data.emojis)) {
+      for (const emoji of data.emojis) {
+        this.emojis.add(emoji);
+        this._client.cache.emojis.add(emoji);
+      }
+    }
+
+    if ("stickers" in data && Array.isArray(data.stickers)) {
+      for (const sticker of data.stickers) {
+        this.stickers.add(sticker);
+      }
+    }
 
     super._update(data);
     return this;
