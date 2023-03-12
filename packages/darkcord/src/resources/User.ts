@@ -17,6 +17,10 @@ import { DMChannel } from "./Channel";
 
 export class User extends Base {
   /**
+   * The user's id
+   */
+  declare id: string;
+  /**
    * The user's username, not unique across the platform
    */
   username: string;
@@ -31,23 +35,23 @@ export class User extends Base {
   /**
    * Whether the user belongs to an OAuth2 application
    */
-  bot?: boolean | undefined;
+  bot?: boolean;
   /**
    * Whether the user is an Official Discord System user (part of the urgent message system)
    */
-  system?: boolean | undefined;
+  system?: boolean;
   /**
    * Whether the user has two factor enabled on their account
    */
-  mfaEnabled?: boolean | undefined;
+  mfaEnabled?: boolean;
   /**
    * The user's banner hash
    */
-  banner?: string | null | undefined;
+  banner?: string | null;
   /**
    * The user's banner color encoded as an integer representation of hexadecimal color code
    */
-  accentColor?: number | null | undefined;
+  accentColor: number | null;
   /**
    * The user's chosen language option
    */
@@ -55,27 +59,23 @@ export class User extends Base {
   /**
    * Whether the email on this account has been verified
    */
-  verified?: boolean | undefined;
-  /**
-   * The user's email
-   */
-  email?: string | null | undefined;
+  verified: boolean;
   /**
    * The flags on a user's account
    */
-  flags?: UserFlags | undefined;
+  flags: UserFlags | null;
   /**
    * The type of Nitro subscription on a user's account
    */
-  premiumType?: UserPremiumType | undefined;
+  premiumType?: UserPremiumType;
   /**
    * The public flags on a user's account
    */
-  publicFlags?: UserFlags | undefined;
+  publicFlags: UserFlags | null;
 
   constructor(data: DataWithClient<APIUser>) {
-    super(data);
-    this._client = data.client;
+    super(data, data.client);
+
     this._update(data);
   }
 
@@ -85,13 +85,23 @@ export class User extends Base {
     if ("avatar" in data) this.avatar = data.avatar;
     if ("banner" in data) this.banner = data.banner;
     if ("bot" in data) this.bot = Boolean(data.bot);
+    else this.bot ??= false;
     if ("locale" in data) this.locale = data.locale as LocaleString;
     if ("mfa_enabled") this.mfaEnabled = Boolean(data.mfa_enabled);
+    else this.mfaEnabled ??= false;
     if ("premium_type" in data) this.premiumType = data.premium_type;
     if ("verified" in data) this.verified = Boolean(data.verified);
-    if ("flags" in data) this.flags = data.flags;
-    if ("public_flags" in data) this.publicFlags = data.public_flags;
+    else this.verified ??= false;
+    if ("flags" in data && data.flags) this.flags = data.flags;
+    else this.flags ??= null;
+    if ("public_flags" in data && data.public_flags)
+      this.publicFlags = data.public_flags;
+    else this.publicFlags ??= null;
     if ("system" in data) this.system = Boolean(data.system);
+    else this.system ??= false;
+    if ("accent_color" in data && data.accent_color)
+      this.accentColor = data.accent_color;
+    else this.accentColor ??= null;
 
     return this;
   }
@@ -220,7 +230,6 @@ export class User extends Base {
       "defaultAvatarURL",
       "discriminator",
       "dm",
-      "email",
       "username",
       "tag",
       "system",
