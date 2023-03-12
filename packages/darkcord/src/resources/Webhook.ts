@@ -67,9 +67,7 @@ export class Webhook extends Base {
 
     this.type = data.type;
     this.guildId = data.guild_id;
-    this.user = data.user
-      ? new User({ ...data.user, client: this._client })
-      : null;
+    this.user = data.user ? this._client.users.add(data.user) : null;
     this.token = data.token;
     this.applicationId = data.application_id;
 

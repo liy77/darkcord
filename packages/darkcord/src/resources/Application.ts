@@ -112,9 +112,7 @@ export class Application extends Base {
     this.botRequireCodeGrant = data.bot_require_code_grant;
     this.termsOfServiceUrl = data.terms_of_service_url;
     this.privacyPolicyUrl = data.privacy_policy_url;
-    this.owner = data.owner
-      ? new User({ ...data.owner, client: data.client })
-      : null;
+    this.owner = data.owner ? this._client.users.add(data.owner) : null;
     this.verifyKey = data.verify_key;
     this.team = data.team
       ? new Team({ ...data.team, client: data.client })

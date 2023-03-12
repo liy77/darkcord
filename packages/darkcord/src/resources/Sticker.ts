@@ -59,9 +59,7 @@ export class Sticker extends Base {
     this.formatType = data.format_type;
     this.available = data.available;
     this.guildId = data.guild_id;
-    this.user = data.user
-      ? new User({ ...data.user, client: data.client })
-      : null;
+    this.user = data.user ? this._client.users.add(data.user) : null;
     this.sortValue = data.sort_value;
   }
 
