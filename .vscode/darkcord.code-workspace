@@ -62,7 +62,8 @@
 			"Package",
 			"Message",
 			"VoiceChannel",
-			"Guild"
+			"Guild",
+			"User"
 		]
 	}
 }
