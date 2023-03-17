@@ -2,6 +2,7 @@ import { MessagePostData, extractMessageData } from "@darkcord/utils";
 import {
   APIApplication,
   APIApplicationCommand,
+  APIAuditLog,
   APIAutoModerationRule,
   APIBan,
   APIChannel,
@@ -500,9 +501,9 @@ export class Rest extends EventEmitter {
   }
 
   getGuildIntegrations(guildId: string) {
-    return this.get(
-      Routes.guildIntegrations(guildId),
-    ) as Promise<APIGuildIntegration>;
+    return this.get(Routes.guildIntegrations(guildId)) as Promise<
+      APIGuildIntegration[]
+    >;
   }
 
   deleteGuildIntegration(
@@ -788,5 +789,9 @@ export class Rest extends EventEmitter {
     return this.patch(Routes.channelMessage(channelId, messageId), d, {
       contentType,
     }) as Promise<APIMessage>;
+  }
+
+  getGuildAuditLog(guildId: string) {
+    return this.get(Routes.guildAuditLog(guildId)) as Promise<APIAuditLog>;
   }
 }
