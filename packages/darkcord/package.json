@@ -1,6 +1,6 @@
 {
   "name": "darkcord",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A NodeJS Package to interact with Discord API",
   "repository": {
     "type": "git",
