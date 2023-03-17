@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Client, InteractionClient } from "@client/Client";
-import { ChannelDataManager } from "@manager/ChannelDataManager";
+import { ClientChannelsDataManager } from "@manager/ChannelDataManager";
 import { DataCache } from "@manager/DataManager";
 import { EmojiDataManager } from "@manager/EmojiDataManager";
 import { GuildDataManager } from "@manager/GuildDataManager";
 import { ClientRoles, RoleDataManager } from "@manager/RoleDataManager";
 import { UserDataManager } from "@manager/UserDataManager";
 import { ThreadChannel } from "@resources/Channel";
-import { Partials } from "@utils/Constants";
 import { CamelCase, ClientOptions } from "@typings/index";
+import { Partials } from "@utils/Constants";
 
 import { Cache } from "./Cache";
 
 export class CacheManager {
-  channels: ChannelDataManager;
+  channels: ClientChannelsDataManager;
   guilds: GuildDataManager;
   emojis: EmojiDataManager;
   users: UserDataManager;
   roles: ClientRoles;
   threads: DataCache<ThreadChannel>;
   constructor(public client: Client | InteractionClient) {
-    this.channels = this._createCache("channels") as ChannelDataManager;
+    this.channels = this._createCache("channels") as ClientChannelsDataManager;
     this.threads = this._createCache("threads") as DataCache<ThreadChannel>;
     this.emojis = this._createCache("emojis") as EmojiDataManager;
     this.guilds = this._createCache("guilds") as GuildDataManager;
@@ -42,7 +42,7 @@ export class CacheManager {
         return new GuildDataManager(this, this._cacheLimit("guilds"));
       }
       case "channels": {
-        return new ChannelDataManager(options?.channels ?? Infinity, this);
+        return new ClientChannelsDataManager(options?.channels ?? Infinity, this);
       }
       case "roles": {
         return new ClientRoles(options?.roles ?? Infinity);

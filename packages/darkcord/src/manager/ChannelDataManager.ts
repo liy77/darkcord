@@ -8,6 +8,7 @@ import {
   ChannelType,
 } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
+import { GuildResolvable, Resolvable } from "@utils/Resolvable";
 
 export class ChannelDataManager extends DataManager<Channel> {
   constructor(
@@ -55,7 +56,7 @@ export class ChannelDataManager extends DataManager<Channel> {
     return channel;
   }
 
-  add(channel: APIChannel | Channel, replace = true) {
+  add(channel: Channel | APIChannel, replace = true) {
     return super.add(this._resolve(channel), replace, channel.id);
   }
 
@@ -91,6 +92,18 @@ export class ChannelDataManager extends DataManager<Channel> {
     );
 
     return this.add(i);
+  }
+}
+
+export class ClientChannelsDataManager extends ChannelDataManager {
+  _add(channel: APIChannel | Channel, guild?: GuildResolvable, replace = true) {
+    return super.add(
+      super._resolve(
+        channel,
+        guild ? Resolvable.resolveGuild(guild, this.manager.client) : undefined,
+      ),
+      replace,
+    );
   }
 }
 
