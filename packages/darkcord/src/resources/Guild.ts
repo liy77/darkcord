@@ -61,6 +61,8 @@ import { Member } from "./Member";
 import { Permissions } from "./Permission";
 import { User } from "./User";
 import { VoiceState } from "./VoiceState";
+import { AuditLog } from "./AuditLog";
+import { Integration } from "./Integration";
 
 export class BaseGuild extends Base {
   /**
@@ -373,31 +375,6 @@ export class Guild extends BaseGuild {
   constructor(data: DataWithClient<APIGuild | APIGuildWithShard>) {
     super(data);
 
-    this.channels = new GuildChannelDataManager(
-      this._client.cache._cacheLimit("channels"),
-      this._client.cache,
-      this,
-    );
-    this.roles = new RoleDataManager(
-      this._client.cache._cacheLimit("roles"),
-      this._client.cache,
-      this,
-    );
-    this.emojis = new GuildEmojiDataManager(
-      this._client.cache._cacheLimit("emojis"),
-      this._client.cache,
-      this,
-    );
-    this.stickers = new GuildStickerDataManager(
-      this._client.cache._cacheLimit("stickers"),
-      this._client.cache,
-      this,
-    );
-    this.members = new MemberDataManager(
-      this._client.cache._cacheLimit("members"),
-      this._client.cache,
-      this,
-    );
     this.invites = new Map();
     this.voiceStates = new Map();
     this.scheduledEvents = new Map();
@@ -656,12 +633,26 @@ export class Guild extends BaseGuild {
     return this.members.add(new Member(member, this));
   }
 
+  async getAuditLogs() {
+    const data = await this._client.rest.getGuildAuditLog(this.id);
+    return new AuditLog({ ...data, client: this._client, guild: this });
+  }
+
   getInvites() {
     return this._client.rest.getGuildInvites(this.id);
   }
 
-  getIntegrations() {
-    return this._client.rest.getGuildIntegrations(this.id);
+  async getIntegrations() {
+    const rawIntegrations = await this._client.rest.getGuildIntegrations(
+      this.id,
+    );
+
+    const integrations: Integration[] = [];
+    for (const rawIntegration of rawIntegrations) {
+      integrations.push(new Integration(rawIntegration, this));
+    }
+
+    return integrations;
   }
 
   deleteIntegration(id: string) {
@@ -951,6 +942,32 @@ export class Guild extends BaseGuild {
     if ("permissions" in data && data.permissions)
       this.permissions = new Permissions(BigInt(data.permissions));
     else this.permissions ??= new Permissions(0n);
+
+    this.channels ??= new GuildChannelDataManager(
+      this._client.cache._cacheLimit("channels"),
+      this._client.cache,
+      this,
+    );
+    this.roles ??= new RoleDataManager(
+      this._client.cache._cacheLimit("roles"),
+      this._client.cache,
+      this,
+    );
+    this.emojis ??= new GuildEmojiDataManager(
+      this._client.cache._cacheLimit("emojis"),
+      this._client.cache,
+      this,
+    );
+    this.stickers ??= new GuildStickerDataManager(
+      this._client.cache._cacheLimit("stickers"),
+      this._client.cache,
+      this,
+    );
+    this.members ??= new MemberDataManager(
+      this._client.cache._cacheLimit("members"),
+      this._client.cache,
+      this,
+    );
 
     if ("roles" in data && Array.isArray(data.roles)) {
       for (const role of data.roles) {
