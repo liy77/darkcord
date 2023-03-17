@@ -147,6 +147,10 @@ client.on("ready", () => console.log("Client is Ready"));
 client.connect();
 ```
 
+## Project Stats
+
+![Alt](https://repobeats.axiom.co/api/embed/3d66e800bfed33981075004875fdb26af9fb3cc5.svg "Repobeats analytics image")
+
 ## Useful Links
 
 - [Website](https://darkcord.denkylabs.com)
