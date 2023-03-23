@@ -11,6 +11,9 @@
   "main": "./dist/index.js",
   "typings": "./typings/index.d.ts",
   "scripts": {
+    "pre:windows": "prepare.bat",
+    "pre:linux": "./prepare.sh",
+    "pre": "node scripts/prepare.js",
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./typings && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
     "lint": "pnpm eslint --ext .ts --fix **/src/**"
