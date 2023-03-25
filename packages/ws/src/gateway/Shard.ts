@@ -4,15 +4,17 @@ import {
   MakeError,
   MissingIntentsError,
 } from "@darkcord/utils";
+
+import type ZlibAlternative from "@darkcord/zlib";
 import type {
   Client,
   ClientEvents,
   Constants,
+  EventSource,
   GatewayShardEvents,
   GatewayShardOptions,
   KeysToCamelCase,
   Optional,
-  EventSource,
 } from "darkcord";
 import {
   APIGatewayBotInfo,
@@ -39,9 +41,8 @@ import {
 } from "node:timers";
 import WebSocket from "ws";
 import type ZlibSync from "zlib-sync";
-import { WebSocketUtil } from "../utils/WebSocketUtil";
-import type ZlibAlternative from "@darkcord/zlib";
 import { GatewayStatus, ShardEvents } from "../utils/Constants";
+import { WebSocketUtil } from "../utils/WebSocketUtil";
 
 let Zlib: typeof ZlibAlternative;
 let zlib: typeof ZlibSync | ZlibAlternative;
@@ -417,7 +418,7 @@ export class GatewayShard extends EventEmitter {
         }
 
         if (!this.client.options.gateway.disabledEvents?.includes(eventName)) {
-          this.events.get(eventName)?.(data.d);
+          this.events.get(eventName as string)?.(data.d);
         }
         break;
       }

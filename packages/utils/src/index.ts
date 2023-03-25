@@ -1,3 +1,4 @@
+// @ts-ignore
 import { KeysToCamelCase, MessageAttachment } from "darkcord";
 import { APIInteractionResponse } from "discord-api-types/v10";
 import { Buffer } from "node:buffer";

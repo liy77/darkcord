@@ -1,4 +1,5 @@
 import { Rest } from "@darkcord/rest";
+// @ts-ignore
 import { MessagePostData } from "darkcord";
 import {
   APICommandAutocompleteInteractionResponseCallbackData,
