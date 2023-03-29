@@ -81,8 +81,8 @@ export class BaseClient<E> extends EventEmitter {
    * @returns
    */
   listen(event: keyof E) {
-    return (target: any) => {
-      this.on(event, target);
+    return (target: any, name: any) => {
+      this.on(event,target[name]);
     };
   }
 
