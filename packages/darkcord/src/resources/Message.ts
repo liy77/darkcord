@@ -140,17 +140,22 @@ export class Message extends Base {
     this.member = null;
     this.type = data.type;
 
-    this.channel = null;
     this.guild = guild ?? null;
     this.guildId = guild?.id;
     this.reactions = new DataCache();
-    this._update(data);
 
     if (this.guild) {
       this.member = this.guild.members.cache.get(this.user.id);
     }
+
+    this._update(data);
   }
 
+  /**
+   * Reply this message
+   * @param content The content  to reply
+   * @returns
+   */
   async reply(content: MessagePostData | string) {
     if (this.type !== MessageType.Reply && this.type !== MessageType.Default) {
       return;
@@ -178,6 +183,11 @@ export class Message extends Base {
     return this.channel?.createMessage(content);
   }
 
+  /**
+   * Create's a reaction in message
+   * @param emoji Emoji to create te reactions
+   * @returns
+   */
   async createReaction(emoji: string | Emoji): Promise<APIReaction | Reaction> {
     if (emoji instanceof Emoji) {
       emoji = emoji.uriComponent;
@@ -202,6 +212,11 @@ export class Message extends Base {
     );
   }
 
+  /**
+   * Delete the message
+   * @param reason Reason to delete message
+   * @returns
+   */
   delete(reason?: string) {
     if (!this.isResolved) {
       throw new Error("Message not resolved");
@@ -210,6 +225,11 @@ export class Message extends Base {
     return this.channel?.deleteMessage(this.id, reason);
   }
 
+  /**
+   * Edit the message
+   * @param content The new content of message
+   * @returns
+   */
   async edit(content: MessagePostData) {
     const data = await this._client.rest.editMessage(
       this.channelId,
@@ -218,6 +238,18 @@ export class Message extends Base {
     );
 
     return this._update(data);
+  }
+
+  /**
+   * Fetch's the webhook of message
+   * @returns
+   */
+  fetchWebhook() {
+    if (this.channel?.isGuildText() && this.webhookId) {
+      return this.channel.fetchWebhook(this.webhookId);
+    }
+
+    return null;
   }
 
   _update(data: APIMessage) {
@@ -232,6 +264,10 @@ export class Message extends Base {
     if ("edited_timestamp" in data && data.edited_timestamp)
       this.editedTimestamp = Date.parse(data.edited_timestamp);
     if ("sticker_items" in data) this.stickerItems = data.sticker_items;
+
+    this.channel ??= this._client.channels.cache.get(
+      data.channel_id,
+    ) as TextBasedChannel;
 
     if (Array.isArray(data.reactions)) {
       for (const reaction of data.reactions) {

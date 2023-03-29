@@ -6,7 +6,7 @@ import {
   APIAuditLogEntry,
   APIAutoModerationRule,
   APIGuildScheduledEvent,
-  APIUser
+  APIUser,
 } from "discord-api-types/v10";
 import { ThreadChannel } from "./Channel";
 import { Integration } from "./Integration";
