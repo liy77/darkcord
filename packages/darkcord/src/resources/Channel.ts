@@ -468,8 +468,10 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
   }
 
   async createWebhook(data: RESTPostAPIChannelWebhookJSONBody) {
-    const webhook = await this._client.rest.createWebhook(this.id, data);
-    return new Webhook({ ...webhook, client: this._client });
+    const rawWebhook = await this._client.rest.createWebhook(this.id, data);
+    const webhook = new Webhook({ ...rawWebhook, client: this._client });
+
+    return webhook;
   }
 
   async fetchWebhook(webhookId: string) {

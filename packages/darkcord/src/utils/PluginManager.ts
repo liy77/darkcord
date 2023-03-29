@@ -12,7 +12,7 @@ import * as Invite from "@resources/Invite";
 import * as AnyMember from "@resources/Member";
 import * as Message from "@resources/Message";
 import * as Webhook from "@resources/Webhook";
-import { ClientEvents } from "@typings/index";
+import type { ClientEvents } from "@typings/index";
 import { MakeError } from "@utils/index";
 import { join as JOIN } from "node:path";
 

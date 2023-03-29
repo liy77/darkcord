@@ -42,7 +42,10 @@ export class CacheManager {
         return new GuildDataManager(this, this._cacheLimit("guilds"));
       }
       case "channels": {
-        return new ClientChannelsDataManager(options?.channels ?? Infinity, this);
+        return new ClientChannelsDataManager(
+          options?.channels ?? Infinity,
+          this,
+        );
       }
       case "roles": {
         return new ClientRoles(options?.roles ?? Infinity);
