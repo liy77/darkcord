@@ -41,10 +41,8 @@ export * from "@resources/Webhook";
 // Typings
 export * from "@typings/index";
 // Utils
-export * as Constants from "@utils/Constants";
-export * from "@utils/PluginManager";
-export * from "@utils/Resolvable";
 export * from "@utils/index";
 // Discord API Types
 export * as API from "discord-api-types/v10";
+// Gateway
 export * from "./gateway/EventSource";
