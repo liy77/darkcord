@@ -29,6 +29,7 @@ import {
   InteractionResponseType,
   InteractionType,
   MessageFlags,
+  ModalSubmitActionRowComponent,
 } from "discord-api-types/v10";
 
 import { InteractionResponse } from "@darkcord/interactions";
@@ -688,6 +689,14 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
    * The channel id it was sent from
    */
   channel: Channel | null;
+  /**
+   * A developer-defined identifier for the component, max 100 characters
+   */
+  customId: string;
+  /**
+   * A list of child components
+   */
+  components: ModalSubmitActionRowComponent[];
   constructor(
     data: DataWithClient<APIModalSubmitInteraction>,
     httpResponse?: InteractionResponse,
@@ -703,6 +712,8 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
       : null;
     this.channelId = data.channel_id;
     this.channel = data.client.channels.cache.get(this.channelId!)!;
+    this.customId = data.data.custom_id
+    this.components = data.data.components
   }
 
   async deferUpdate() {
