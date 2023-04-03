@@ -1,7 +1,7 @@
 {
   "name": "@darkcord/ws",
   "description": "Package to handle darkcord websocket for discord gateway",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
@@ -18,18 +18,17 @@
     "directory": "packages/ws"
   },
   "dependencies": {
-    "darkcord": "workspace:^",
     "@darkcord/utils": "workspace:^",
+    "darkcord": "workspace:^",
     "discord-api-types": "^0.37.33",
     "ws": "^8.12.0"
   },
-  "optionalDependencies": {
+  "devDependencies": {
+    "@darkcord/zlib": "workspace:^1.0.1",
+    "@types/pako": "^2.0.0",
+    "@types/ws": "^8.5.4",
     "bufferutil": "^4.0.7",
     "erlpack": "^0.1.4",
-    "zlib-sync": "^0.1.8",
-    "@darkcord/zlib": "workspace:zlib"
-  },
-  "devDependencies": {
-    "@types/ws": "^8.5.4"
+    "zlib-sync": "^0.1.8"
   }
 }
