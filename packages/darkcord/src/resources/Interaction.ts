@@ -712,8 +712,8 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
       : null;
     this.channelId = data.channel_id;
     this.channel = data.client.channels.cache.get(this.channelId!)!;
-    this.customId = data.data.custom_id
-    this.components = data.data.components
+    this.customId = data.data.custom_id;
+    this.components = data.data.components;
   }
 
   async deferUpdate() {

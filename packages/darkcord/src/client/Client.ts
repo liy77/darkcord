@@ -82,7 +82,7 @@ export class BaseClient<E> extends EventEmitter {
    */
   listen(event: keyof E) {
     return (target: any, name: any) => {
-      this.on(event,target[name]);
+      this.on(event, target[name]);
     };
   }
 
@@ -199,7 +199,7 @@ export class Client extends BaseClient<ClientEvents> {
   token: string;
   declare options: Required<
     Omit<ClientOptions, "gateway"> & {
-      gateway: Omit<ClientOptions["gateway"], "intents"> & {
+      gateway: Omit<Required<ClientOptions["gateway"]>, "intents"> & {
         intents: GatewayIntentBits;
       };
     }
