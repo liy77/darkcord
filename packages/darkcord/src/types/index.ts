@@ -78,6 +78,7 @@ export interface ClientOptions extends BaseClientOptions {
     intents: GatewayIntentBits | GatewayIntentBits[];
     encoding?: "json" | "etf";
     compress?: boolean;
+    concurrency?: number;
     properties?: {
       browser: string;
       device: string;
