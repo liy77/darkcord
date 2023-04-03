@@ -52,7 +52,8 @@ function getZlib() {
     zlib = require("zlib-sync");
   } catch {
     try {
-      Zlib = zlib = require("@darkcord/zlib");
+      Zlib = require("@darkcord/zlib").default;
+      zlib = new Zlib();
     } catch {
       throw MakeError({
         name: "NoZlib",
@@ -81,7 +82,9 @@ export const GatewayShardError = (
 
 export enum CloseCodes {
   Normal = 1_000,
+  Abnormal = 1_006,
   Resuming = 4_200,
+  BadGateway = 1_014,
 }
 
 export declare interface GatewayShard {
@@ -155,7 +158,7 @@ export class GatewayShard extends EventEmitter {
    * The time of shard is online
    */
   uptime?: number;
-  _inflate: import("zlib-sync").Inflate | null;
+  _inflate: ZlibSync.Inflate | null;
   /**
    * Source of gateway events
    */
@@ -257,6 +260,14 @@ export class GatewayShard extends EventEmitter {
       case CloseCodes.Normal: {
         this.debug("Disconnected from Discord");
         return;
+      }
+      case CloseCodes.Abnormal: {
+        this.debug("Abnormal close code received. Reconnecting...");
+        return this.reconnect();
+      }
+      case CloseCodes.BadGateway: {
+        errMessage = "Bad Gateway";
+        break;
       }
       case CloseCodes.Resuming: {
         return;
@@ -451,11 +462,11 @@ export class GatewayShard extends EventEmitter {
         getZlib();
 
         try {
-          if (zlib instanceof Zlib) {
+          if (Zlib && zlib instanceof Zlib) {
             data = zlib.decompress(data);
           } else {
             if (!this._inflate) {
-              this._inflate = new zlib.Inflate({
+              this._inflate = new (zlib as typeof ZlibSync).Inflate({
                 chunkSize: 65535,
                 to: this.options.encoding === "json" ? "string" : undefined,
               });
@@ -469,8 +480,11 @@ export class GatewayShard extends EventEmitter {
               data[l - 2] === 0xff &&
               data[l - 1] === 0xff;
 
-            this._inflate!.push(data, flush && zlib.Z_SYNC_FLUSH);
-            data = this._inflate!.result;
+            this._inflate!.push(
+              data,
+              flush && (zlib as typeof ZlibSync).Z_SYNC_FLUSH,
+            );
+            data = Buffer.from(this._inflate!.result!);
           }
         } catch (err) {
           this.emit(ShardEvents.Error, err);
