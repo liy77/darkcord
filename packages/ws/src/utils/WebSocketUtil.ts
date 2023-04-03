@@ -15,7 +15,11 @@ export namespace WebSocketUtil {
       try {
         const erlpack = require("erlpack");
         return erlpack.unpack(data);
-      } catch {}
+      } catch (e) {
+        if (e.code === "MODULE_NOT_FOUND") {
+          throw new Error("Encoding is ETF, but no erlpack found.");
+        }
+      }
     }
 
     return JSON.parse(data);
