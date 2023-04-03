@@ -29,6 +29,10 @@ export class UserDataManager extends DataManager<APIUser | User> {
   }
 
   add(user: User | APIUser, replace = true) {
+    if (!user || !user.id) {
+      return null;
+    }
+
     return super.add(this.#resolve(user), replace, user.id);
   }
 
