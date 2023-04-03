@@ -2,17 +2,27 @@
 import { Events, ShardEvents } from "@utils/Constants";
 import { DiscordAPIError, InvalidTokenError, MakeError } from "@darkcord/utils";
 import {
+  APIGatewayBotInfo,
   GatewayPresenceUpdateData,
   GatewaySendPayload,
 } from "discord-api-types/v10";
-import { GatewayShard } from "@darkcord/ws";
+import { GatewayShard, GatewayStatus } from "@darkcord/ws";
 import { Client } from "./Client";
 import { EventSource } from "../gateway/EventSource";
+import { Cache } from "@cache/Cache";
 
 export class WebSocket {
-  shards: Map<string, GatewayShard>;
+  shards: Cache<GatewayShard>;
+  #queue: GatewayShard[];
+  #buckets: Record<number, number>;
+  totalShards: number;
+  maxConcurrency: number;
+  #connectTimeout: NodeJS.Timeout | null;
   constructor(public client: Client) {
-    this.shards = new Map();
+    this.shards = new Cache();
+    this.#queue = [];
+    this.#buckets = {};
+    this.#connectTimeout = null;
   }
 
   get ping() {
@@ -23,7 +33,48 @@ export class WebSocket {
     return ping / this.shards.size;
   }
 
+  async handleShards() {
+    if (this.#queue.length === 0) {
+      return;
+    }
+
+    const maxConcurrency = this.client.options.gateway.concurrency;
+
+    for (const shard of this.#queue) {
+      const ratelimitKey = Number(shard.shardId) % maxConcurrency ?? 0;
+      const lastConnect = this.#buckets[ratelimitKey] ?? 0;
+
+      if (!shard.sessionId && Date.now() - lastConnect < 5_000) {
+        continue;
+      }
+
+      if (
+        this.shards.some((s) => {
+          const _ratelimitKey = Number(shard.shardId) % maxConcurrency ?? 0;
+          return (
+            s.status === GatewayStatus.Connecting &&
+            _ratelimitKey === ratelimitKey
+          );
+        })
+      ) {
+        continue;
+      }
+
+      // Handling shard
+      await this.handleShard(shard);
+      this.#buckets[ratelimitKey] = Date.now();
+    }
+  }
+
   async handleShard(gatewayShard: GatewayShard) {
+    const _existing = this.#queue.findIndex(
+      (s) => s.shardId === gatewayShard.shardId,
+    );
+
+    if (_existing !== -1) {
+      this.#queue.splice(_existing, 1);
+    }
+
     const id = gatewayShard.shardId;
 
     this.client.emit(Events.Debug, `Starting connecting Shard ${id}`);
@@ -59,24 +110,44 @@ export class WebSocket {
   }
 
   async connect() {
-    const gateway = await this.client.rest
-      .getGateway()
-      .catch((err: DiscordAPIError) => {
-        throw err.status === 401 ? InvalidTokenError : err;
-      });
-
     this.client.emit(Events.Debug, "Starting Shards...");
 
     let totalShards = this.client.options.gateway.totalShards;
+    let maxConcurrency = this.client.options.gateway.concurrency;
+
+    let gateway: APIGatewayBotInfo;
+
+    if (!totalShards || !maxConcurrency) {
+      // Fetch gateway
+      gateway = await this.client.rest
+        .getGateway()
+        .catch((err: DiscordAPIError) => {
+          throw err.status === 401 ? InvalidTokenError : err;
+        });
+    }
 
     if (!totalShards) {
-      totalShards = gateway.shards;
+      totalShards = gateway!.shards;
 
       this.client.emit(
         Events.Debug,
-        `Using recommend shards count provided by Discord: ${gateway.shards}`,
+        `Using recommend shards count provided by Discord: ${gateway!.shards}`,
       );
     }
+
+    if (!maxConcurrency) {
+      maxConcurrency = gateway!.session_start_limit.max_concurrency;
+
+      this.client.emit(
+        Events.Debug,
+        `Using max concurrency provided by Discord: ${
+          gateway!.session_start_limit.max_concurrency
+        }`,
+      );
+    }
+
+    this.totalShards ??= totalShards;
+    this.maxConcurrency ??= maxConcurrency;
 
     const compress = this.client.options.gateway.compress;
 
@@ -91,8 +162,16 @@ export class WebSocket {
         },
       );
 
+      this.#queue.push(shard);
       // Handling shard
       await this.handleShard(shard);
+    }
+
+    if (this.#queue.length !== 0 && !this.#connectTimeout) {
+      this.#connectTimeout = setTimeout(async () => {
+        this.#connectTimeout = null;
+        await this.connect();
+      }, 500).unref();
     }
   }
 
