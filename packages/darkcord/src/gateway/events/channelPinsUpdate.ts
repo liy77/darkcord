@@ -27,9 +27,12 @@ export class ChannelPinsUpdate extends Event {
 
       this.client.channels.add(channel!);
 
+      const disabledEvents = this.client.options.gateway.disabledEvents;
+
       if (
         channel.lastPinTimestamp &&
-        oldLastPinTimestamp! < channel.lastPinTimestamp
+        oldLastPinTimestamp! < channel.lastPinTimestamp &&
+        !disabledEvents.includes("channelPinsAdd")
       ) {
         this.client.emit(
           Events.ChannelPinsAdd,
@@ -39,7 +42,8 @@ export class ChannelPinsUpdate extends Event {
         );
       } else if (
         channel.lastPinTimestamp &&
-        oldLastPinTimestamp! > channel.lastPinTimestamp
+        oldLastPinTimestamp! > channel.lastPinTimestamp &&
+        !disabledEvents.includes("channelPinsRemove")
       ) {
         this.client.emit(
           Events.ChannelPinsRemove,

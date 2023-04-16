@@ -29,6 +29,8 @@ export class VoiceStateUpdate extends Event {
       member = guild.members.add(new Member(data.member, guild));
     }
 
+    const disabledEvents = this.client.options.gateway.disabledEvents;
+
     if (oldVoiceState?.channelId !== data.channel_id) {
       const channel = this.client.channels.cache.get(data.channel_id!);
       const oldChannel = this.client.channels.cache.get(
@@ -41,15 +43,19 @@ export class VoiceStateUpdate extends Event {
       ) {
         guild.voiceStates.set(data.user_id, updated);
 
-        if (oldVoiceState && oldChannel) {
+        if (
+          oldVoiceState &&
+          oldChannel &&
+          !disabledEvents.includes("voiceChannelSwitch")
+        ) {
           oldChannel.members.cache.delete(member!.id);
           const m = channel.members.add(member!);
           this.client.emit(Events.VoiceChannelSwitch, m, oldChannel, channel);
-        } else {
+        } else if (!disabledEvents.includes("voiceChannelJoin")) {
           const m = channel.members.add(member!);
           this.client.emit(Events.VoiceChannelJoin, m, channel);
         }
-      } else if (oldChannel) {
+      } else if (oldChannel && !disabledEvents.includes("voiceChannelLeave")) {
         oldChannel.members.cache.delete(member!.id);
 
         guild.voiceStates.delete(data.user_id);
