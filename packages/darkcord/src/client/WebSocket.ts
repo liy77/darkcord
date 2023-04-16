@@ -38,7 +38,8 @@ export class WebSocket {
       return;
     }
 
-    const maxConcurrency = this.maxConcurrency || this.client.options.gateway.concurrency;
+    const maxConcurrency =
+      this.maxConcurrency || this.client.options.gateway.concurrency;
 
     for (const shard of this.#queue) {
       const ratelimitKey = Number(shard.shardId) % maxConcurrency ?? 0;
@@ -163,13 +164,13 @@ export class WebSocket {
       );
 
       if (gateway) {
-        shard.fetchedGateway = gateway
+        shard.fetchedGateway = gateway;
       }
 
       this.#queue.push(shard);
     }
 
-    await this.handleShards()
+    await this.handleShards();
 
     if (this.#queue.length !== 0 && !this.#connectTimeout) {
       this.#connectTimeout = setTimeout(async () => {

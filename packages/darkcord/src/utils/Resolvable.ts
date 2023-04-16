@@ -118,7 +118,7 @@ export namespace Resolvable {
         resolved = Channel.from({ ...channelResolvable, client }, guild!);
       }
     } else {
-      resolved = channelResolvable
+      resolved = channelResolvable;
     }
 
     if (resolved!.isGuildChannel()) {
