@@ -13,3 +13,6 @@
 /packages/**/test.cjs
 /yarn-error.log
 /packages/**/docs
+/packages/zlib/build
+/packages/zlib/.vscode
+/packages/zlib/src

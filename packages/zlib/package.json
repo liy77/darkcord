@@ -1,15 +1,11 @@
 {
   "name": "@darkcord/zlib",
   "description": "Alternative to zlib-sync for @darkcord/ws",
-  "version": "1.0.1",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
+  "version": "1.0.2",
+  "main": "./cpp.js",
+  "types": "./cpp.d.ts",
+  "scripts": {
+    "build": "node-gyp configure build"
   },
   "dependencies": {
     "@darkcord/utils": "workspace:^"

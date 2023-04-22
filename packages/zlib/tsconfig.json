@@ -4,5 +4,6 @@
     "outDir": "./dist",
     "baseUrl": "./src"
   },
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "include": ["./src"]
 }
