@@ -24,7 +24,6 @@ exports.constants = zlib.constants;
 
 exports.ProcessSync = zlib.ProcessSync;
 
-console.log(zlib.ProcessSync("inflate"))
 exports.createInflateProcess = (options) => new zlib.ProcessSync("inflate", options);
 exports.createDeflateProcess = (options) => new zlib.ProcessSync("deflate", options);
 exports.createInflateRawProcess = (options) => new zlib.ProcessSync("inflateRaw", options);
