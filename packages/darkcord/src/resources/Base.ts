@@ -102,7 +102,7 @@ export class Base {
 
       let value: any = source[prop];
 
-      if (value.toJSON) {
+      if (typeof value === "object" && value?.toJSON) {
         value = value.toJSON();
       } else if (typeof value === "bigint") {
         value = value.toString();
