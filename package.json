@@ -2,8 +2,7 @@
   "name": "@darkcord/darkcord",
   "description": "darkcord workspace",
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/*"
   ],
   "scripts": {
     "pretty": "pnpm prettier --write .",
