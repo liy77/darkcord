@@ -3,6 +3,7 @@ import { Events } from "@utils/Constants";
 import {
   APIGuildMember,
   GatewayGuildMembersChunkDispatchData,
+  GatewayPresenceUpdate,
 } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -27,7 +28,7 @@ export class GuildMembersChunk extends Event {
 
     if (data.presences) {
       for (const presence of data.presences) {
-        guild.presences.push(presence);
+        guild.presences.push(presence as GatewayPresenceUpdate);
       }
     }
 
