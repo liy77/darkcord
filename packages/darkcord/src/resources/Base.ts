@@ -10,7 +10,7 @@ export namespace Snowflake {
     });
 
   export function valid(id: string) {
-    return Number(id).toString() === id;
+    return Number.isInteger(Number(id));
   }
 
   export function getEpoch(id: string) {
