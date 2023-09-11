@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "node_modules": false,
+        "tsconfig.json": false
+    }
+}

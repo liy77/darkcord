@@ -1,6 +1,7 @@
 {
     "files.exclude": {
-        "tsconfig.json": false
+        "tsconfig.json": false,
+        "node_modules": false
     },
     "workspace.isHidden": false
 }
