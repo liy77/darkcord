@@ -9,6 +9,7 @@ import {
   InteractionResponseType,
   InteractionType,
 } from "discord-api-types/v10";
+import EventEmitter from "node:events";
 import { IncomingMessage, ServerResponse, createServer } from "node:http";
 import { verifyKeyMiddleware } from "../middleware/index";
 
@@ -88,12 +89,14 @@ export declare interface WebServer {
     ...args: WebServerEvents[T]
   ): boolean;
 }
-export class WebServer {
+export class WebServer extends EventEmitter {
   rest: Rest;
   port: number;
   hostname: string;
   publicKey: string;
   constructor(options: WebServerOptions) {
+    super();
+
     if (typeof options !== "object") {
       throw new TypeError("Invalid webserver options");
     }
