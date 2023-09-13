@@ -8,7 +8,7 @@ import {
   InteractionClientEvents,
   InteractionClientOptions,
 } from "@typings/index";
-import { bitsArrayToBits, MakeError } from "@utils/index";
+import { MakeError, bitsArrayToBits } from "@utils/index";
 import {
   ApplicationFlags,
   GatewayIntentBits,
@@ -16,7 +16,6 @@ import {
 } from "discord-api-types/v10";
 import EventEmitter from "node:events";
 
-import { Cache } from "@cache/Cache";
 import { WebServer } from "@darkcord/interactions";
 import { Rest } from "@darkcord/rest";
 import { ChannelDataManager } from "@manager/ChannelDataManager";
@@ -182,11 +181,13 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
   }
 
   async connect() {
-    const rawApplication = await this.rest.getCurrentApplication();
-    this.application = new ClientApplication({
-      ...rawApplication,
-      client: this,
-    });
+    if (this.options.rest?.token) {
+      const rawApplication = await this.rest.getCurrentApplication();
+      this.application = new ClientApplication({
+        ...rawApplication,
+        client: this,
+      });
+    }
 
     await this.webserver.listen();
   }
