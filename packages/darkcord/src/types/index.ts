@@ -104,6 +104,7 @@ export interface ClientOptions extends BaseClientOptions {
 export interface WebServerOptions {
   hostname?: string;
   port: number;
+  route?: string;
 }
 
 export type InteractionFlags =
