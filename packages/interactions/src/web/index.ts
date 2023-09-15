@@ -37,6 +37,7 @@ export interface WebServerEvents {
 export interface WebServerOptions {
   hostname?: string;
   port: number;
+  route?: string;
   token?: string;
   publicKey: string;
 }
@@ -94,6 +95,7 @@ export class WebServer extends EventEmitter {
   port: number;
   hostname: string;
   publicKey: string;
+  route: string;
   constructor(options: WebServerOptions) {
     super();
 
@@ -114,10 +116,13 @@ export class WebServer extends EventEmitter {
     this.port = options.port;
     this.hostname = options.hostname ?? LocalHost;
     this.publicKey = options.publicKey;
+    this.route = options.route ?? "/";
   }
 
   listen() {
     const server = createServer(async (req, res) => {
+      if (req.url !== this.route || req.method !== "POST") return;
+
       this.emit("data", req, res);
 
       // Verify key and return parsed interaction
