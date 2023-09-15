@@ -69,6 +69,11 @@ export interface InteractionClientOptions extends BaseClientOptions {
     roles?: CacheOption;
     messageCacheLimitPerChannel?: number;
   };
+  /**
+   * Resolves partial values and converts them into resolved instances, which may be slower due to requests made in the API, but is functional.
+   * @default false
+   */
+  resolvePartialData?: boolean;
 }
 
 export type CacheOption = number | BaseCacheOptions<any>;

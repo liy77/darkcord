@@ -1,3 +1,4 @@
+import { InteractionClient } from "@client/Client";
 import {
   CategoryChannel,
   Channel,
@@ -9,6 +10,8 @@ import {
   VoiceChannel,
 } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
+import { Interaction } from "@resources/Interaction";
+import { Member } from "@resources/Member";
 import { Message } from "@resources/Message";
 import { AnyClient } from "@typings/index";
 import { APIChannel, APIGuild, APIMessage } from "discord-api-types/v10";
@@ -128,5 +131,53 @@ export namespace Resolvable {
     client.channels.add(resolved!);
 
     return resolved;
+  }
+
+  export async function resolvePartialHTTPInteractionValues(
+    interaction: Interaction,
+    client: InteractionClient,
+  ) {
+    if (
+      (interaction.isCommand() ||
+        interaction.isComponent() ||
+        interaction.isModalSubmit()) &&
+      interaction.isHTTP
+    ) {
+      let guild: Guild | undefined;
+
+      if ("guildId" in interaction) {
+        if (client.guilds.cache.has(interaction.guildId!)) {
+          guild = client.guilds.cache.get(interaction.guildId!);
+        } else if (interaction.guildId) {
+          // Slower, but functional
+          guild = await client.guilds.fetch(interaction.guildId, {
+            fetchMembers: true,
+          });
+        }
+
+        interaction.guild = guild;
+      }
+
+      if (interaction.channel) {
+        interaction.channel = resolveChannel(
+          interaction.channel as APIChannel,
+          client,
+          guild,
+        )!;
+      }
+
+      if (
+        "member" in interaction &&
+        interaction.member &&
+        !(interaction.member instanceof Member) &&
+        guild
+      ) {
+        interaction.member =
+          guild.members.cache.get(interaction.member.user?.id!) ??
+          guild.members.add(new Member(interaction.member, guild));
+      }
+    }
+
+    return interaction;
   }
 }

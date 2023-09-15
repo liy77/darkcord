@@ -26,6 +26,7 @@ import { ClientRoles } from "@manager/RoleDataManager";
 import { UserDataManager } from "@manager/UserDataManager";
 import { ThreadChannel } from "@resources/Channel";
 import { PluginManager } from "@utils/PluginManager";
+import { Resolvable } from "@utils/Resolvable";
 import { ClientApplication } from "../resources/Application";
 import { WebSocket } from "./WebSocket";
 
@@ -156,6 +157,9 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
       publicKey,
       token: token,
     });
+
+    this.options.resolvePartialData = Boolean(options.resolvePartialData);
+
     const cache = new CacheManager(this);
     this.cache = cache;
     this.channels = cache.channels;
@@ -172,11 +176,17 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
       this.emit("connect");
     });
 
-    this.webserver.on("interactionDataReceived", (body, res) => {
-      this.emit(
-        "interactionCreate",
-        Interaction.from({ ...body, client: this }, res),
-      );
+    this.webserver.on("interactionDataReceived", async (body, res) => {
+      let interaction = Interaction.from({ ...body, client: this }, res);
+
+      if (this.options.resolvePartialData) {
+        interaction = await Resolvable.resolvePartialHTTPInteractionValues(
+          interaction,
+          this,
+        );
+      }
+      
+      this.emit("interactionCreate", interaction);
     });
   }
 
