@@ -53,11 +53,15 @@ export function verifyKeyMiddleware(publicKey: string) {
         const body = JSON.parse(rawBody) as APIInteraction;
 
         if (!(await verify(rawBody, publicKey, signature, timestamp))) {
-          throw new Error("Invalid signature");
+          res.statusCode = 401;
+          res.end("Darkcord Error: Invalid signature");
+          return;
         }
 
         if (body.type === InteractionType.Ping) {
           // Responding ping
+          res.setHeader("Content-Type", "application/json");
+          res.statusCode = 200;
           res.end(
             JSON.stringify({
               type: InteractionResponseType.Pong,
