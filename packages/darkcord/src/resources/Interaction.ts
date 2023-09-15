@@ -10,6 +10,7 @@ import {
   APIApplicationCommandInteractionDataBasicOption,
   APIApplicationCommandInteractionDataOption,
   APIApplicationCommandOptionChoice,
+  APIChannel,
   APIChatInputApplicationCommandInteractionData,
   APIGuildMember,
   APIInteraction,
@@ -40,8 +41,8 @@ import { Channel, TextBasedChannel } from "./Channel";
 import { Guild } from "./Guild";
 import { Member } from "./Member";
 import { Message } from "./Message";
-import { User } from "./User";
 import { Role } from "./Role";
+import { User } from "./User";
 
 export class Interaction extends Base {
   /**
@@ -535,6 +536,7 @@ export class ComponentInteraction extends ReplyableInteraction {
   customId: string;
   /**
    * The channel id it was sent from
+   * @deprecated use `channel.id` instead
    */
   channelId: string;
   /**
@@ -552,7 +554,7 @@ export class ComponentInteraction extends ReplyableInteraction {
   /**
    * The channel it was sent from
    */
-  channel: Channel;
+  channel: Channel | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">);
   /**
    * The component data payload
    */
@@ -586,7 +588,8 @@ export class ComponentInteraction extends ReplyableInteraction {
       }),
       data.client,
     );
-    this.channel = data.client.channels.cache.get(data.channel_id)!;
+    this.channel =
+      data.client.channels.cache.get(data.channel?.id)! ?? data.channel;
 
     this.data = null;
     if (
@@ -683,12 +686,16 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
   message: Message | null;
   /**
    * The channel id it was sent from
+   * @deprecated use `channel.id` instead
    */
   channelId?: string;
   /**
    * The channel id it was sent from
    */
-  channel: Channel | null;
+  channel:
+    | Channel
+    | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">)
+    | null;
   /**
    * A developer-defined identifier for the component, max 100 characters
    */
@@ -711,7 +718,8 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
         )
       : null;
     this.channelId = data.channel_id;
-    this.channel = data.client.channels.cache.get(this.channelId!)!;
+    this.channel =
+      data.client.channels.cache.get(this.channel?.id!)! ?? data.channel;
     this.customId = data.data.custom_id;
     this.components = data.data.components;
   }
@@ -1046,6 +1054,7 @@ export class CommandInteraction extends ReplyableInteraction {
   guildLocale?: string;
   /**
    * The channel id it was sent from
+   * @deprecated use `channel.id` instead
    */
   channelId: string;
   /**
@@ -1062,11 +1071,11 @@ export class CommandInteraction extends ReplyableInteraction {
   /**
    * Member of the invoked command
    */
-  member: Member | null;
+  member: Member | APIGuildMember | null = null;
   /**
    * User of the invoked command
    */
-  user: User | APIUser | null;
+  user: User | APIUser | null = null;
   /**
    * The name of the invoked command
    */
@@ -1082,7 +1091,12 @@ export class CommandInteraction extends ReplyableInteraction {
   /**
    * The channel it was sent from
    */
-  channel: Channel | null;
+  channel:
+    | Channel
+    | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">)
+    | null;
+
+  declare rawData: APIApplicationCommandInteraction;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
     httpResponse?: InteractionResponse,
@@ -1091,10 +1105,9 @@ export class CommandInteraction extends ReplyableInteraction {
     this.guildId = data.guild_id;
     this.guildLocale = data.guild_locale;
     this.channelId = data.channel_id;
-    this.channel = data.client.channels.cache.get(data.channel_id)!;
+    this.channel =
+      data.client.channels.cache.get(data.channel?.id)! ?? data.channel;
     this.guild = data.client.guilds.cache.get(data.guild_id!);
-    this.member = null;
-    this.user = null;
     this.commandName = data.data.name;
     this.locale = data.locale;
     this.message = data.message
@@ -1104,10 +1117,13 @@ export class CommandInteraction extends ReplyableInteraction {
         )
       : null;
 
-    if ("member" in data && this.guild) {
+    if ("member" in data && data.member && this.guild) {
       const member = new Member(data.member as APIGuildMember, this.guild);
       this.member = this.guild.members.add(member);
-      this.user = this.member!.user;
+      this.user = this.member!.user!;
+    } else if ("member" in data && data.member) {
+      this.member = data.member;
+      this.user = this._client.cache.users.add(data.member.user!);
     } else {
       this.user = this._client.cache.users.add(data.user!);
     }
