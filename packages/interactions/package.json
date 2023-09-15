@@ -1,6 +1,6 @@
 {
   "name": "@darkcord/interactions",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Package to handle darkcord web server for interactions",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
