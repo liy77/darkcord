@@ -45,7 +45,7 @@ import { GatewayStatus, ShardEvents } from "../utils/Constants";
 import { WebSocketUtil } from "../utils/WebSocketUtil";
 
 let Zlib: typeof ZlibAlternative;
-let zlib: typeof ZlibSync | ZlibAlternative;
+let zlib: typeof ZlibSync | typeof ZlibAlternative;
 
 function getZlib() {
   try {
@@ -53,7 +53,7 @@ function getZlib() {
   } catch {
     try {
       Zlib = require("@darkcord/zlib").default;
-      zlib = new Zlib();
+      zlib = Zlib;
     } catch {
       throw MakeError({
         name: "NoZlib",
@@ -462,8 +462,8 @@ export class GatewayShard extends EventEmitter {
         getZlib();
 
         try {
-          if (Zlib && zlib instanceof Zlib) {
-            data = zlib.decompress(data);
+          if (Zlib) {
+            data = (zlib as typeof ZlibAlternative).inflate(data);
           } else {
             if (!this._inflate) {
               this._inflate = new (zlib as typeof ZlibSync).Inflate({
