@@ -67,6 +67,7 @@ export class InteractionResponse {
       return;
     }
 
+    this.res.setHeader("Content-Type", "application/json");
     this.res.end(
       JSON.stringify({
         data,
