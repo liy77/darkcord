@@ -1,11 +1,14 @@
 import { Channel } from "@resources/Channel";
 import { Guild } from "@resources/Guild";
-import { Events, GatewayStatus } from "@utils/Constants";
-import { GatewayGuildCreateDispatchData } from "discord-api-types/v10";
-import { Event } from "./Event";
 import { Member } from "@resources/Member";
 import { Role } from "@resources/Role";
 import { VoiceState } from "@resources/VoiceState";
+import { Events, GatewayStatus } from "@utils/Constants";
+import {
+  GatewayGuildCreateDispatchData,
+  GatewayIntentBits,
+} from "discord-api-types/v10";
+import { Event } from "./Event";
 
 export class GuildCreate extends Event {
   async run(data: GatewayGuildCreateDispatchData) {
@@ -46,7 +49,10 @@ export class GuildCreate extends Event {
       guild.members.add(resolved, true);
     }
 
-    if (!this.gatewayShard.ready) {
+    if (
+      !this.gatewayShard.ready &&
+      this.client.options.gateway.intents & GatewayIntentBits.GuildMembers
+    ) {
       this.gatewayShard.requestGuildMembers({
         guildId: data.id,
         nonce: Date.now().toString() + Math.random().toString(36),
