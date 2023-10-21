@@ -15,12 +15,10 @@
     "darkcord": "workspace:^",
     "eslint": "^8.34.0",
     "eslint-plugin-import": "^2.27.5",
-    "interactions": "^0.0.1",
     "prettier": "^2.8.4",
     "ts-node": "^10.9.1",
     "tscpaths": "^0.0.9",
-    "typescript": "^4.9.5",
-    "unocss": "^0.49.7"
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "tsup": "^6.6.3"
