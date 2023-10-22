@@ -105,34 +105,31 @@ const components = {
 		return (
 			<>
 				<pre
-          className={cn(
-            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900",
-            className
-          )}
-          {...props}
-        />
-				 {__rawString__ && !__npmCommand__ && (
-          <CopyButton
-            value={__rawString__}
-            src={__src__}
-            event={__event__}
-            className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
-          />
-        )}
-				 {__npmCommand__ &&
-          __yarnCommand__ &&
-          __pnpmCommand__ &&
-          __bunCommand__ && (
-            <CopyNpmCommandButton
-              commands={{
-                __npmCommand__,
-                __yarnCommand__,
-                __pnpmCommand__,
-                __bunCommand__,
-              }}
-              className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
-            />
-          )}
+					className={cn(
+						'mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900',
+						className,
+					)}
+					{...props}
+				/>
+				{__rawString__ && !__npmCommand__ && (
+					<CopyButton
+						value={__rawString__}
+						src={__src__}
+						event={__event__}
+						className={cn('absolute right-4 top-4', __withMeta__ && 'top-16')}
+					/>
+				)}
+				{__npmCommand__ && __yarnCommand__ && __pnpmCommand__ && __bunCommand__ && (
+					<CopyNpmCommandButton
+						commands={{
+							__npmCommand__,
+							__yarnCommand__,
+							__pnpmCommand__,
+							__bunCommand__,
+						}}
+						className={cn('absolute right-4 top-4', __withMeta__ && 'top-16')}
+					/>
+				)}
 			</>
 		);
 	},

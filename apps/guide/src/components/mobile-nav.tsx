@@ -29,7 +29,7 @@ export function MobileNav() {
 			</SheetTrigger>
 			<SheetContent side="left" className="pr-0">
 				<MobileLink href="/" className="flex items-center" onOpenChange={setOpened}>
-				<Icons.logo className="mr-32 h-6 w-15" />
+					<Icons.logo className="mr-32 h-6 w-15" />
 				</MobileLink>
 			</SheetContent>
 			<ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">

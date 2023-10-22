@@ -19,7 +19,7 @@ module.exports = withBundleAnalyzer(
 				{
 					protocol: 'https',
 					hostname: 'cdn.discordapp.com',
-				}
+				},
 			],
 			contentSecurityPolicy: "default-src 'self'; frame-src 'none'; sandbox;",
 		},
