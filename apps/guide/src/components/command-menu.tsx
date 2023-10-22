@@ -57,8 +57,8 @@ export function CommandMenu({ ...props }: DialogProps) {
 								runCommand(() => router.push(navItem.href as string));
 							}}
 						>
-							<ExternalLinkIcon className="mr-2 h-4 w-4" />
-							{navItem.title}
+							<ExternalLinkIcon className="mr-2 h-4 w-4" color="#787f85" />
+							<p className="font-medium">{navItem.title}</p>
 						</CommandItem>
 					))}
 				</CommandGroup>
@@ -73,9 +73,9 @@ export function CommandMenu({ ...props }: DialogProps) {
 								}}
 							>
 								<div className="mr-2 flex h-4 w-4 items-center justify-center">
-									<BookIcon className="h-3 w-3" />
+									<BookIcon className="h-3 w-3" color="#787f85" />
 								</div>
-								{navItem.title}
+								<p className="font-medium">{navItem.title}</p>
 							</CommandItem>
 						))}
 					</CommandGroup>
@@ -83,16 +83,16 @@ export function CommandMenu({ ...props }: DialogProps) {
 				<CommandSeparator />
 				<CommandGroup heading="Theme">
 					<CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
-						<SunIcon className="mr-2 h-4 w-4" />
-						Light
+						<SunIcon className="mr-2 h-4 w-4" color="#787f85" />
+						<p className="font-medium">Light</p>
 					</CommandItem>
 					<CommandItem onSelect={() => runCommand(() => setTheme('dark'))}>
-						<MoonIcon className="mr-2 h-4 w-4" />
-						Dark
+						<MoonIcon className="mr-2 h-4 w-4" color="#787f85" />
+						<p className="font-medium">Dark</p>
 					</CommandItem>
 					<CommandItem onSelect={() => runCommand(() => setTheme('system'))}>
-						<LaptopIcon className="mr-2 h-4 w-4" />
-						System
+						<LaptopIcon className="mr-2 h-4 w-4" color="#787f85" />
+						<p className="font-medium">System</p>
 					</CommandItem>
 				</CommandGroup>
 			</CommandDialog>

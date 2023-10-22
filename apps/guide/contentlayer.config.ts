@@ -1,26 +1,17 @@
 import path from 'path';
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrettyCode from 'rehype-pretty-code';
+import rehypePrettyCode, { CharsElement, LineElement } from 'rehype-pretty-code';
+import { toString } from 'hast-util-to-string';
 import rehypeSlug from 'rehype-slug';
+import { escape } from 'html-escaper';
 import { codeImport } from 'remark-code-import';
+import { h } from 'hastscript';
 import remarkGfm from 'remark-gfm';
 import { getHighlighter, loadTheme } from 'shiki';
 import { visit } from 'unist-util-visit';
 
 import { rehypeNpmCommand } from './src/lib/rehype-npm-command';
-
-/** @type {import('contentlayer/source-files').ComputedFields} */
-const computedFields = {
-	slug: {
-		type: 'string',
-		resolve: (doc) => doc._raw.flattenedPath.replace(/\d+-/g, ''),
-	},
-	url: {
-		type: 'string',
-		resolve: (doc) => `/guide/${doc._raw.flattenedPath.replace(/\d+-/g, '')}`,
-	},
-};
 
 export const Content = defineDocumentType(() => ({
 	name: 'Content',
@@ -36,8 +27,40 @@ export const Content = defineDocumentType(() => ({
 			required: true,
 		},
 	},
-	computedFields,
+	computedFields: {
+		slug: {
+			type: 'string',
+			resolve: (doc) => doc._raw.flattenedPath.replace(/\d+-/g, ''),
+		},
+		url: {
+			type: 'string',
+			resolve: (doc) => `/guide/${doc._raw.flattenedPath.replace(/\d+-/g, '')}`,
+		},
+	},
 }));
+
+const LinkIcon = h(
+	'svg',
+	{
+		width: '24',
+		height: '24',
+		fill: 'none',
+		stroke: '#787f85',
+		strokeWidth: '2',
+		strokeLinecap: 'round',
+		strokeLinejoin: 'round',
+	},
+	h('path', {
+		d: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71',
+	}),
+	h('path', {
+		d: 'M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
+	}),
+);
+
+const createSROnlyLabel = (text: any) => {
+	return h('span', { class: 'sr-only' }, `Section titled ${escape(text)}`);
+};
 
 export default makeSource({
 	contentDirPath: './src/content',
@@ -70,22 +93,24 @@ export default makeSource({
 				});
 			},
 			[
+				// @ts-ignore
 				rehypePrettyCode,
 				{
 					getHighlighter: async () => {
 						const theme = await loadTheme(path.join(process.cwd(), '/src/lib/themes/dark.json'));
 						return await getHighlighter({ theme });
 					},
-					onVisitLine(node) {
-						if (node.children.length === 0) {
-							node.children = [{ type: 'text', value: ' ' }];
+					onVisitLine(element: LineElement) {
+						if (element.children.length === 0) {
+							element.children = [{ type: 'text', value: ' ' }];
 						}
 					},
-					onVisitHighlightedLine(node) {
-						node.properties.className.push('line--highlighted');
+					onVisitHighlightedLine(element: LineElement) {
+						element.properties.className?.push('line--highlighted');
 					},
-					onVisitHighlightedWord(node) {
-						node.properties.className = ['word--highlighted'];
+					onVisitHighlightedChars(element: CharsElement, id: string) {
+						element.properties.className?.push('words--highlighted');
+						element.properties.id = id;
 					},
 				},
 			],
@@ -111,10 +136,6 @@ export default makeSource({
 						if (node.__event__) {
 							preElement.properties['__event__'] = node.__event__;
 						}
-
-						if (node.__style__) {
-							preElement.properties['__style__'] = node.__style__;
-						}
 					}
 				});
 			},
@@ -123,9 +144,20 @@ export default makeSource({
 				rehypeAutolinkHeadings,
 				{
 					properties: {
-						className: ['subheading-anchor'],
-						ariaLabel: 'Link to section',
+						className: 
+						'relative group inline-flex justify-center items-center outline-none pr-2 ml-2 opacity-0 hover:opacity-100',
 					},
+					behavior: 'append',
+					content: (heading: any) => [
+						h(
+							'span.anchor-icon',
+							{
+								ariaHidden: 'true',
+							},
+							LinkIcon,
+						),
+						createSROnlyLabel(toString(heading)),
+					],
 				},
 			],
 		],

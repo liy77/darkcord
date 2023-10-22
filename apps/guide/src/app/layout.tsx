@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	metadataBase: new URL(process.env.NEXT_PUBLIC_LOCAL_DEV ? 'http://localhost:3000' : siteConfig.url),
 	title: {
 		default: siteConfig.name,
-		template: `%s - ${siteConfig.name}`,
+		template: `%s | ${siteConfig.name}`,
 	},
 	description: siteConfig.description,
 	viewport: {

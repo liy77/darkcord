@@ -37,20 +37,14 @@ export function ContentPager({ content }: { content: Content }) {
 
 export function getPagerForContent(content: Content) {
 	const flattenedLinks = [null, ...flatten(guideConfig.sidebarNav), null];
-	const activeIndex = flattenedLinks.findIndex(
-    (link) => content.url === link?.href
-  )
-	const prev = activeIndex !== 0 ? flattenedLinks[activeIndex - 1] : null
-  const next =
-    activeIndex !== flattenedLinks.length - 1
-      ? flattenedLinks[activeIndex + 1]
-      : null
-
+	const activeIndex = flattenedLinks.findIndex((link) => content.url === link?.href);
+	const prev = activeIndex !== 0 ? flattenedLinks[activeIndex - 1] : null;
+	const next = activeIndex !== flattenedLinks.length - 1 ? flattenedLinks[activeIndex + 1] : null;
 
 	return {
 		prev,
 		next,
-	}
+	};
 }
 
 export function flatten(links: NavItemWithChildren[]): NavItem[] {
