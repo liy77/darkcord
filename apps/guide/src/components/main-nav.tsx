@@ -14,14 +14,14 @@ export function MainNav() {
 				<span className="hidden font-bold sm:inline-block">{siteConfig.name}</span>
 			</Link>
 			<nav className="flex items-center space-x-6 text-sm font-medium">
-			<Link
-          href="#"
+				<Link
+					href="#"
 					className={cn(
-            "hidden text-foreground/60 cursor-not-allowed opacity-800 transition-colors hover:text-foreground/80 lg:block"
-          )}
-        >
-          Documentation
-        </Link>
+						'hidden text-foreground/60 cursor-not-allowed opacity-800 transition-colors hover:text-foreground/80 lg:block',
+					)}
+				>
+					Documentation
+				</Link>
 				<Link
 					href="/guide"
 					className={cn(

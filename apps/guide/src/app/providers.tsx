@@ -12,9 +12,7 @@ export function Providers({ children }: PropsWithChildren) {
 	return (
 		<ThemeProvider enableSystem defaultTheme="system" attribute="class">
 			<NavProvider>
-				<CmdKProvider>
-				{children}
-				</CmdKProvider>
+				<CmdKProvider>{children}</CmdKProvider>
 			</NavProvider>
 		</ThemeProvider>
 	);

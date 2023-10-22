@@ -78,16 +78,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
-			<body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >				<Providers>
+			<body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
+				{' '}
+				<Providers>
 					<div className="relative flex min-h-screen flex-col">
 						<SiteHeader />
 						<div className="flex-1">{children}</div>
-						<SiteFooter  />
+						<SiteFooter />
 					</div>
 				</Providers>
 				<Analytics />
