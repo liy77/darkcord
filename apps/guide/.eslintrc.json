@@ -1,3 +1,17 @@
 {
-  "extends": ["../../.eslintrc.json"]
+	"extends": ["neon/common", "neon/node", "neon/typescript", "neon/react", "neon/edge", "neon/next", "neon/prettier"],
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
+	"parserOptions": {
+		"project": ["tsconfig.eslint.json"]
+	},
+	"rules": {
+		"@typescript-eslint/consistent-type-definitions": [2, "interface"],
+		"@next/next/no-html-link-for-pages": 0,
+		"react/react-in-jsx-scope": 0,
+		"react/jsx-filename-extension": [1, { "extensions": [".tsx"] }]
+	}
 }
