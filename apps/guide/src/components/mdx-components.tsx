@@ -9,11 +9,15 @@ import { NpmCommands } from '~/types/unist';
 import { CopyButton, CopyNpmCommandButton } from './copy-button';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import Link from 'next/link';
+import { DiscordMessages } from './ui/discord-messages';
+import { DiscordMessage } from './ui/discord-message';
 
 const components = {
 	Alert,
 	AlertTitle,
 	AlertDescription,
+	DiscordMessages,
+	DiscordMessage,
 	h1: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
 		<h1 className={cn('font-heading mt-2 scroll-m-20 text-4xl font-bold', className)} {...props} />
 	),
@@ -101,31 +105,34 @@ const components = {
 		return (
 			<>
 				<pre
-					className={cn(
-						'mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900',
-						className,
-					)}
-					{...props}
-				/>
-				{__rawString__ && !__npmCommand__ && (
-					<CopyButton
-						value={__rawString__}
-						src={__src__}
-						event={__event__}
-						className={cn('absolute right-4 top-4', __withMeta__ && 'top-16')}
-					/>
-				)}
-				{__npmCommand__ && __yarnCommand__ && __pnpmCommand__ && __bunCommand__ && (
-					<CopyNpmCommandButton
-						commands={{
-							__npmCommand__,
-							__yarnCommand__,
-							__pnpmCommand__,
-							__bunCommand__,
-						}}
-						className={cn('absolute right-4 top-4', __withMeta__ && 'top-16')}
-					/>
-				)}
+          className={cn(
+            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900",
+            className
+          )}
+          {...props}
+        />
+				 {__rawString__ && !__npmCommand__ && (
+          <CopyButton
+            value={__rawString__}
+            src={__src__}
+            event={__event__}
+            className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
+          />
+        )}
+				 {__npmCommand__ &&
+          __yarnCommand__ &&
+          __pnpmCommand__ &&
+          __bunCommand__ && (
+            <CopyNpmCommandButton
+              commands={{
+                __npmCommand__,
+                __yarnCommand__,
+                __pnpmCommand__,
+                __bunCommand__,
+              }}
+              className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
+            />
+          )}
 			</>
 		);
 	},

@@ -11,6 +11,7 @@ import { guideConfig } from '~/config/guide';
 import { Fragment } from 'react';
 import { Button } from './ui/button';
 import { MenuIcon } from 'lucide-react';
+import { Icons } from './icons';
 
 export function MobileNav() {
 	const { opened, setOpened } = useNav();
@@ -28,7 +29,7 @@ export function MobileNav() {
 			</SheetTrigger>
 			<SheetContent side="left" className="pr-0">
 				<MobileLink href="/" className="flex items-center" onOpenChange={setOpened}>
-					<span className="font-bold">{siteConfig.name}</span>
+				<Icons.logo className="mr-32 h-6 w-15" />
 				</MobileLink>
 			</SheetContent>
 			<ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">

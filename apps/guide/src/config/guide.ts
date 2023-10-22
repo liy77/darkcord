@@ -10,6 +10,7 @@ export const guideConfig: GuideConfig = {
 	mainNav: [
 		{
 			title: 'Documentation',
+			href: '/#',
 			disabled: true,
 		},
 		{
@@ -27,9 +28,14 @@ export const guideConfig: GuideConfig = {
 					href: '/guide/getting-started',
 					items: [],
 				},
+			],
+		},
+		{
+			title: 'Setting Up Project',
+			items: [
 				{
 					title: 'Installation',
-					href: '/guide/getting-started/installation',
+					href: '/guide/setting-up-project',
 					items: [],
 				},
 			],

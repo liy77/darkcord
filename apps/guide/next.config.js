@@ -8,12 +8,19 @@ const withBundleAnalyzer = bundleAnalyzer({
 module.exports = withBundleAnalyzer(
 	withContentlayer({
 		reactStrictMode: true,
-		experimental: {
-			typedRoutes: true,
-		},
 		images: {
 			dangerouslyAllowSVG: true,
 			contentDispositionType: 'attachment',
+			remotePatterns: [
+				{
+					protocol: 'https',
+					hostname: 'media.discordapp.net',
+				},
+				{
+					protocol: 'https',
+					hostname: 'cdn.discordapp.com',
+				}
+			],
 			contentSecurityPolicy: "default-src 'self'; frame-src 'none'; sandbox;",
 		},
 		poweredByHeader: false,

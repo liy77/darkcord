@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { siteConfig } from '~/config/site';
 import { cn } from '~/lib/util';
+import { Icons } from './icons';
 
 export function MainNav() {
 	const pathname = usePathname();
@@ -11,14 +12,12 @@ export function MainNav() {
 	return (
 		<div className="mr-4 hidden md:flex">
 			<Link href="/guide" className="mr-6 flex items-center space-x-2">
-				<span className="hidden font-bold sm:inline-block">{siteConfig.name}</span>
+				<Icons.logo className="w-24 h-24" />
 			</Link>
 			<nav className="flex items-center space-x-6 text-sm font-medium">
 				<Link
 					href="#"
-					className={cn(
-						'hidden text-foreground/60 cursor-not-allowed opacity-800 transition-colors hover:text-foreground/80 lg:block',
-					)}
+					className="hidden text-foreground/60 cursor-not-allowed opacity-800 transition-colors hover:text-foreground/80 lg:block"
 				>
 					Documentation
 				</Link>
@@ -33,7 +32,7 @@ export function MainNav() {
 				</Link>
 				<Link
 					href={siteConfig.links.github}
-					className={cn('hidden text-foreground/60 transition-colors hover:text-foreground/80 lg:block')}
+					className='hidden text-foreground/60 transition-colors hover:text-foreground/80 lg:block'
 				>
 					GitHub
 				</Link>

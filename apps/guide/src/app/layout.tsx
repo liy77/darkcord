@@ -5,10 +5,11 @@ import { Analytics } from '@vercel/analytics/react';
 import { Inter as FontSans } from 'next/font/google';
 import { siteConfig } from '~/config/site';
 import { cn } from '~/lib/util';
-
-import '~/styles/main.css';
 import { SiteHeader } from '~/components/site-header';
 import { SiteFooter } from '~/components/site-footer';
+
+import '~/styles/main.css';
+import '~/styles/mdx.css';
 
 const fontSans = FontSans({
 	subsets: ['latin'],
@@ -16,6 +17,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL(process.env.NEXT_PUBLIC_LOCAL_DEV ? 'http://localhost:3000' : siteConfig.url),
 	title: {
 		default: siteConfig.name,
 		template: `%s - ${siteConfig.name}`,
@@ -61,7 +63,6 @@ export const metadata: Metadata = {
 		siteName: siteConfig.name,
 		type: 'website',
 		title: siteConfig.name,
-		locale: 'en_US',
 		description: siteConfig.description,
 	},
 	twitter: {
@@ -70,25 +71,26 @@ export const metadata: Metadata = {
 		description: siteConfig.description,
 	},
 	other: {
-		'msapplication-TileColor': 'black',
+		'msapplication-TileColor': '#000000',
 	},
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<head />
-			<body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
-				{' '}
-				<Providers>
-					<div className="relative flex min-h-screen flex-col">
-						<SiteHeader />
-						<div className="flex-1">{children}</div>
-						<SiteFooter />
-					</div>
-				</Providers>
-				<Analytics />
-			</body>
-		</html>
+		<>
+			<html lang="en" suppressHydrationWarning>
+				<head />
+				<body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
+					<Providers>
+						<div className="relative flex min-h-screen flex-col">
+							<SiteHeader />
+							<div className="flex-1">{children}</div>
+							<SiteFooter />
+						</div>
+					</Providers>
+					<Analytics />
+				</body>
+			</html>
+		</>
 	);
 }

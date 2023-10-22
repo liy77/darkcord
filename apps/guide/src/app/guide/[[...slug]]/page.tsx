@@ -2,12 +2,10 @@ import { notFound } from 'next/navigation';
 import { ChevronRightIcon } from 'lucide-react';
 import { allContents } from 'contentlayer/generated';
 import Balancer from 'react-wrap-balancer';
-import { absoluteUrl, cn } from '~/lib/util';
+import { absoluteUrl } from '~/lib/util';
 import { Metadata } from 'next';
 import { Mdx } from '~/components/mdx-components';
 import { ContentPager } from '~/components/content-pager';
-
-import '~/styles/mdx.css';
 
 interface ContentRouteParams {
 	slug: string[];
@@ -57,7 +55,7 @@ export default async function DocPage({ params }: { params: ContentRouteParams }
 					<div className="font-medium text-foreground">{content.title}</div>
 				</div>
 				<div className="space-y-2">
-					<h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{content.title}</h1>
+					<h1 className="scroll-m-20 text-4xl font-bold tracking-tight">{content.title}</h1>
 					{content.description && (
 						<p className="text-lg text-muted-foreground">
 							<Balancer>{content.description}</Balancer>

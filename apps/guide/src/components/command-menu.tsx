@@ -4,10 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { useCmdK } from '~/contexts/cmdk';
 import { Button } from './ui/button';
-import { cn } from '~/lib/util';
 import { CommandDialog, CommandGroup, CommandInput, CommandItem, CommandSeparator } from './ui/command';
 import { guideConfig } from '~/config/guide';
-import { CircleIcon, LaptopIcon, MoonIcon, SunIcon } from 'lucide-react';
+import { BookIcon, ExternalLinkIcon, LaptopIcon, MoonIcon, SunIcon } from 'lucide-react';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useTheme } from 'next-themes';
 
@@ -37,7 +36,7 @@ export function CommandMenu({ ...props }: DialogProps) {
 		<>
 			<Button
 				variant="outline"
-				className={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64')}
+				className="relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64"
 				onClick={() => setOpened(true)}
 				{...props}
 			>
@@ -55,9 +54,10 @@ export function CommandMenu({ ...props }: DialogProps) {
 							key={navItem.href}
 							value={navItem.title}
 							onSelect={() => {
-								runCommand(() => router.push(navItem.href as __next_route_internal_types__.RouteImpl<string>));
+								runCommand(() => router.push(navItem.href as string));
 							}}
 						>
+							<ExternalLinkIcon className="mr-2 h-4 w-4" />
 							{navItem.title}
 						</CommandItem>
 					))}
@@ -69,11 +69,11 @@ export function CommandMenu({ ...props }: DialogProps) {
 								key={navItem.href}
 								value={navItem.title}
 								onSelect={() => {
-									runCommand(() => router.push(navItem.href as __next_route_internal_types__.RouteImpl<string>));
+									runCommand(() => router.push(navItem.href as string));
 								}}
 							>
 								<div className="mr-2 flex h-4 w-4 items-center justify-center">
-									<CircleIcon className="h-3 w-3" />
+									<BookIcon className="h-3 w-3" />
 								</div>
 								{navItem.title}
 							</CommandItem>
