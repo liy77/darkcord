@@ -144,8 +144,8 @@ export default makeSource({
 				rehypeAutolinkHeadings,
 				{
 					properties: {
-						className: 
-						'relative group inline-flex justify-center items-center outline-none pr-2 ml-2 opacity-0 hover:opacity-100',
+						className:
+							'relative group inline-flex justify-center items-center outline-none pr-2 ml-2 opacity-0 hover:opacity-100',
 					},
 					behavior: 'append',
 					content: (heading: any) => [

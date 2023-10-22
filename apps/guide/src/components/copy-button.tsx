@@ -22,7 +22,7 @@ interface CopyButtonProps extends HTMLAttributes<HTMLButtonElement> {
 	event?: Event['name'];
 }
 
-export function CopyButton({ value, className, src, event, ...props }: CopyButtonProps) {
+export function CopyButton({ value, className, event, ...props }: CopyButtonProps) {
 	const [hasCopied, setHasCopied] = useState(false);
 
 	useEffect(() => {
@@ -84,7 +84,7 @@ export function CopyNpmCommandButton({ commands, className, ...props }: CopyNpmC
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
+			<DropdownMenuTrigger {...props} asChild>
 				<Button
 					size="icon"
 					variant="ghost"
