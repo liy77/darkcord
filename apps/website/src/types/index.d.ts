@@ -23,6 +23,11 @@ export interface SiteConfig {
 	url: string;
 }
 
+export type GuideConfig = {
+	mainNav: MainNavItem[];
+	sidebarNav: SidebarNavItem[];
+};
+
 export interface RootConfig {
 	mainNav: MainNavItem[];
 }

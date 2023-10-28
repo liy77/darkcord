@@ -14,7 +14,7 @@
     "pre:windows": "prepare.bat",
     "pre:linux": "./prepare.sh",
     "pre": "node scripts/prepare.js",
-    "build:docs": "docgen --input src --output ./docs/docs.api.json",
+    "build:docs": "docgen --input src --output ./docs/docs.json",
     "c": "tsc && tscpaths -p tsconfig.json -s ./src -o ./typings && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "copy_wasm": "xcopy \"src\\utils\\zlib.wasm\" \"dist\\utils\"",
     "lint": "pnpm eslint --ext .ts --fix **/src/**"

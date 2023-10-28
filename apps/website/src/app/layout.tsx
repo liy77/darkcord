@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { PropsWithChildren } from 'react';
 import { cn } from '~/lib/util';
 import { siteConfig } from '~/config/site';
 import { Providers } from './providers';
+import { Toaster } from '~/components/ui/toaster';
 
 import '~/styles/main.css';
 
@@ -13,18 +14,27 @@ const fontSans = FontSans({
 	variable: '--font-sans',
 });
 
+export const viewport: Viewport = {
+	minimumScale: 1,
+	initialScale: 1,
+	width: 'device-width',
+	themeColor: [
+		{
+			media: '(prefers-color-scheme: light)',
+			color: 'light',
+		},
+		{ media: '(prefers-color-scheme: dark)', color: 'black' },
+	],
+	colorScheme: 'light dark',
+};
+
 export const metadata: Metadata = {
-	metadataBase: new URL(process.env.NEXT_PUBLIC_LOCAL_DEV ? 'http://localhost:3000' : siteConfig.url),
+	metadataBase: new URL(process.env.NEXT_PUBLIC_LOCAL_DEV ? 'http://localhost:3001' : siteConfig.url),
 	title: {
 		default: siteConfig.name,
 		template: `%s | ${siteConfig.name}`,
 	},
 	description: siteConfig.description,
-	viewport: {
-		minimumScale: 1,
-		initialScale: 1,
-		width: 'device-width',
-	},
 	icons: {
 		other: [
 			{
@@ -47,14 +57,6 @@ export const metadata: Metadata = {
 		],
 	},
 	manifest: '/site.webmanifest',
-	themeColor: [
-		{
-			media: '(prefers-color-scheme: light)',
-			color: 'light',
-		},
-		{ media: '(prefers-color-scheme: dark)', color: 'black' },
-	],
-	colorScheme: 'light dark',
 	appleWebApp: {
 		title: siteConfig.name,
 	},
@@ -84,6 +86,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 			<body className={cn('scroll-smooth min-h-screen bg-background antialiased font-sans', fontSans.variable)}>
 				<Providers>{children}</Providers>
 				<Analytics />
+				<Toaster />
 			</body>
 		</html>
 	);

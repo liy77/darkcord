@@ -9,9 +9,7 @@ export const rootConfig: RootConfig = {
 		},
 		{
 			title: 'Guide',
-			href: '#',
-			disabled: true,
-			external: true,
+			href: '/guide',
 		},
 		{
 			title: 'GitHub',

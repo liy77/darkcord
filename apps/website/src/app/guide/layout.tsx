@@ -1,29 +1,22 @@
 import { PropsWithChildren } from 'react';
-import { fetchModelJSON } from '~/app/docAPI';
+
 import { SidebarNav } from '~/components/sidebar-nav';
 import { SiteFooter } from '~/components/site-footer';
 import { SiteHeader } from '~/components/site-header';
 import { guideConfig } from '~/config/guide';
 
-export interface VersionRouteParams {
-	version: string;
-}
-
-export default async function PackageLayout({ children, params }: PropsWithChildren<{ params: VersionRouteParams }>) {
-	const modelJSON = await fetchModelJSON(params.version);
-
+export default function GuideLayout({ children }: PropsWithChildren) {
 	return (
-		<div className="flex min-h-screen flex-col space-y-6">
+		<div className="flex min-h-screen flex-col">
 			<SiteHeader navItems={guideConfig.mainNav} sidebarNavItems={guideConfig.sidebarNav} />
 			<div className="container flex-1">
 				<div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
-					<aside className="hidden w-[200px] border-r flex-col md:flex">
-						<SidebarNav items={[]} />
+					<aside className="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r py-6 pr-2 md:sticky md:block lg:py-10">
+						<SidebarNav items={guideConfig.sidebarNav} />
 					</aside>
-					<main className="flex w-full flex-1 flex-col overflow-hidden">{children}</main>
+					{children}
 				</div>
 			</div>
-
 			<SiteFooter className="border-t" />
 		</div>
 	);

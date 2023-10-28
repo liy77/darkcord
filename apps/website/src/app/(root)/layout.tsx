@@ -13,7 +13,10 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 				<div className="flex h-20 items-center justify-between py-6">
 					<MainNav items={rootConfig.mainNav} />
 					<nav>
-						<Link href="/docs" className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'px-4')}>
+						<Link href="/docs"  className={cn(
+                buttonVariants({ variant: "secondary", size: "sm" }),
+                "px-4"
+              )}>
 							Docs
 						</Link>
 					</nav>

@@ -17,25 +17,7 @@ export function SiteFooter({ className }: { className?: string }) {
 					>
 						Liy
 					</Link>
-					. Websites built by{' '}
-					<Link
-						href="https://github.com/nicolasribeiroo"
-						target="_blank"
-						rel="noreferrer"
-						className="font-medium underline underline-offset-4"
-					>
-						Nicolas Ribeiro
-					</Link>{' '}
-					based on{' '}
-					<Link
-						href="https://ui.shadcn.com"
-						target="_blank"
-						rel="noreferrer"
-						className="font-medium underline underline-offset-4"
-					>
-						shadcn/ui
-					</Link>{' '}
-					website. The source code is available on{' '}
+					. The source code is available on{' '}
 					<Link
 						href={siteConfig.links.github as Route}
 						target="_blank"

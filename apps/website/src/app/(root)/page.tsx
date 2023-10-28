@@ -21,13 +21,8 @@ export default async function Page() {
 						Documentation
 					</Link>
 
-					<Link
-						href={siteConfig.links.github as Route}
-						target="_blank"
-						rel="noreferrer"
-						className={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
-					>
-						GitHub
+					<Link href="/guide" className={cn(buttonVariants({ size: 'lg' }))}>
+						Guide
 					</Link>
 				</div>
 			</div>
