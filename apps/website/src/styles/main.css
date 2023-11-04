@@ -66,6 +66,18 @@
 	}
 }
 
+[data-theme='dark'] {
+	display: none;
+}
+
+.dark [data-theme='dark'] {
+	display: block;
+}
+
+.dark [data-theme='light'] {
+	display: none;
+}
+
 pre {
 	font-size: 13px !important;
 	white-space: pre;

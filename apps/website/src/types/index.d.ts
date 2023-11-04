@@ -28,6 +28,10 @@ export type GuideConfig = {
 	sidebarNav: SidebarNavItem[];
 };
 
+export type DocsConfig = {
+	mainNav: MainNavItem[];
+};
+
 export interface RootConfig {
 	mainNav: MainNavItem[];
 }

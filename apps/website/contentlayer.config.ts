@@ -5,11 +5,11 @@ import rehypeSlug from 'rehype-slug';
 import { codeImport } from 'remark-code-import';
 import { h } from 'hastscript';
 import { escape } from 'html-escaper';
-import { toString } from 'hast-util-to-string';
+import { visit } from 'unist-util-visit';
+import { toString, type Node } from 'hast-util-to-string';
 import remarkGfm from 'remark-gfm';
 
 import { rehypeNpmCommand } from './src/lib/rehype-npm-command';
-import { visit } from 'unist-util-visit';
 
 export const Content = defineDocumentType(() => ({
 	name: 'Content',
@@ -55,7 +55,7 @@ const LinkIcon = h(
 	}),
 );
 
-const createSROnlyLabel = (text: any) => {
+const createSROnlyLabel = (text: string) => {
 	return h('span', { class: 'sr-only' }, `Section titled ${escape(text)}`);
 };
 
@@ -141,7 +141,7 @@ export default makeSource({
 							'relative group inline-flex justify-center items-center outline-none pr-2 ml-2 opacity-0 hover:opacity-100',
 					},
 					behavior: 'append',
-					content: (heading: any) => [
+					content: (heading: Node) => [
 						h(
 							'span.anchor-icon',
 							{

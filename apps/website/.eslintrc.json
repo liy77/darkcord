@@ -1,12 +1,21 @@
 {
-	"extends": ["neon/common", "neon/node", "neon/typescript", "neon/react", "neon/edge", "neon/next", "neon/prettier"],
+	"extends": [
+		"../../.eslintrc.json",
+		"neon/common",
+		"neon/node",
+		"neon/typescript",
+		"neon/react",
+		"neon/edge",
+		"neon/next",
+		"neon/prettier"
+	],
 	"settings": {
 		"react": {
 			"version": "detect"
 		}
 	},
 	"parserOptions": {
-		"project": ["tsconfig.eslint.json"]
+		"project": ["./tsconfig.eslint.json"]
 	},
 	"rules": {
 		"@typescript-eslint/consistent-type-definitions": [2, "interface"],

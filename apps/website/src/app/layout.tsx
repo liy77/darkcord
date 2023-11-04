@@ -5,7 +5,6 @@ import { PropsWithChildren } from 'react';
 import { cn } from '~/lib/util';
 import { siteConfig } from '~/config/site';
 import { Providers } from './providers';
-import { Toaster } from '~/components/ui/toaster';
 
 import '~/styles/main.css';
 
@@ -70,7 +69,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: 'summary_large_image',
-		creator: '@mldyxniskii',
+		creator: '@niskiirozey',
 		title: siteConfig.name,
 		description: siteConfig.description,
 	},
@@ -86,7 +85,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
 			<body className={cn('scroll-smooth min-h-screen bg-background antialiased font-sans', fontSans.variable)}>
 				<Providers>{children}</Providers>
 				<Analytics />
-				<Toaster />
 			</body>
 		</html>
 	);

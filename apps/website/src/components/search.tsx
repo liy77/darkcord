@@ -4,7 +4,7 @@ import { HTMLAttributes, SyntheticEvent } from 'react';
 import { Button } from './ui/button';
 import { toast } from './ui/use-toast';
 
-export function GuideSearch({ className, ...props }: HTMLAttributes<HTMLButtonElement>) {
+export function GuideSearch({ ...props }: HTMLAttributes<HTMLButtonElement>) {
 	function onClick(event: SyntheticEvent) {
 		event.preventDefault();
 
