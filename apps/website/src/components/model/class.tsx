@@ -1,13 +1,17 @@
 import { DocumentationClass } from '~/types/documentation';
 import { Documentation } from '../documentation/documentation';
-import { ObjectHeader } from '../documentation/object-header';
-import { Members } from '../documentation/members';
+import { Header } from '../documentation/header';
+import { PropertiesSection } from '../documentation/section/properties-section';
+import { SourceButton } from '../documentation/source-button';
 
 export function Class({ clazz }: { readonly clazz: DocumentationClass }) {
 	return (
 		<Documentation>
-			<ObjectHeader item={clazz} />
-			<Members item={clazz} />
+			<Header name={clazz.name} description={clazz.description}>
+				{/* <SourceButton meta={clazz.meta} /> */}
+			</Header>
+
+			<PropertiesSection prop={clazz.props} />
 		</Documentation>
 	);
 }

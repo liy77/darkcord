@@ -21,11 +21,11 @@ function serializeIntoSidebarItemData(docs: Documentation, version: string): Sid
 				href: `/docs/${version}/class/${item.name}`,
 			})),
 		},
-	]
+	];
 }
 
 export default async function PackageLayout({ children, params }: PropsWithChildren<{ params: VersionRouteParams }>) {
-	const doc = await mainSource.fetchDocs() as Documentation;
+	const doc = (await mainSource.fetchDocs()) as Documentation;
 
 	return (
 		<div className="flex min-h-screen flex-col space-y-6">

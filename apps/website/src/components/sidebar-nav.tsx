@@ -60,23 +60,19 @@ export function SidebarNav({ items }: { items: SidebarNavItem[] }) {
 	const pathname = usePathname();
 
 	return items.length ? (
-	
-			<Accordion type="multiple" className="w-full">
+		<Accordion type="multiple" className="w-full">
 			{items.map((item, index) => (
 				<div key={index} className="pb-4">
 					<AccordionItem value={`${index}`}>
 						<AccordionTrigger>
-						<h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">{item.title}</h4>
+							<h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">{item.title}</h4>
 						</AccordionTrigger>
 						<AccordionContent>
-						{item?.items?.length && <SidebarNavItems items={item.items} pathname={pathname} />}
+							{item?.items?.length && <SidebarNavItems items={item.items} pathname={pathname} />}
 						</AccordionContent>
 					</AccordionItem>
-					
-					
 				</div>
 			))}
-			</Accordion>
-
+		</Accordion>
 	) : null;
 }

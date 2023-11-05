@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 export const runtime = 'edge';
 
 export default function Page() {
-	const data = ['main', '1.0.0'];
+	const data = ['main'];
 
 	return (
 		<div className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
