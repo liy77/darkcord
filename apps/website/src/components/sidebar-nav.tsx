@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '~/lib/util';
 import { SidebarNavItem } from '~/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { useNav } from '~/contexts/nav';
 
 interface SidebarNavItemsProps {
 	items: SidebarNavItem[];
@@ -13,6 +14,8 @@ interface SidebarNavItemsProps {
 }
 
 export function SidebarNavItems({ items, pathname }: SidebarNavItemsProps) {
+	const { toggle } = useNav();
+
 	return items?.length ? (
 		<div className="grid grid-flow-row auto-rows-max text-sm">
 			{items.map((item, index) =>
@@ -20,6 +23,7 @@ export function SidebarNavItems({ items, pathname }: SidebarNavItemsProps) {
 					<Link
 						key={index}
 						href={item.href as Route}
+						onClick={toggle}
 						className={cn(
 							'group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline',
 							item.disabled && 'cursor-not-allowed opacity-60',
@@ -60,7 +64,7 @@ export function SidebarNav({ items }: { items: SidebarNavItem[] }) {
 	const pathname = usePathname();
 
 	return items.length ? (
-		<Accordion type="multiple" className="w-full">
+		<Accordion type="multiple">
 			{items.map((item, index) => (
 				<div key={index} className="pb-4">
 					<AccordionItem value={`${index}`}>

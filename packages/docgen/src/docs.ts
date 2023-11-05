@@ -182,19 +182,21 @@ export class Docs {
         format: Docs.FormatVersion,
         date: Date.now(),
       },
-      classes: [...this.classes.values()].map((_class) => _class.serialize()),
-      functions: [...this.functions.values()].map((_function) =>
-        _function.serialize(),
-      ),
-      interfaces: [...this.interfaces.values()].map((_interface) =>
-        _interface.serialize(),
-      ),
-      typedefs: [...this.typedefs.values()].map((_typedef) =>
-        _typedef.serialize(),
-      ),
-      externals: [...this.externals.values()].map((_external) =>
-        _external.serialize(),
-      ),
+      items: {
+        classes: [...this.classes.values()].map((_class) => _class.serialize()),
+        functions: [...this.functions.values()].map((_function) =>
+          _function.serialize(),
+        ),
+        interfaces: [...this.interfaces.values()].map((_interface) =>
+          _interface.serialize(),
+        ),
+        typedefs: [...this.typedefs.values()].map((_typedef) =>
+          _typedef.serialize(),
+        ),
+        externals: [...this.externals.values()].map((_external) =>
+          _external.serialize(),
+        ),
+      },
       custom: this.custom,
     };
   }

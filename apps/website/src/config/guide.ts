@@ -13,7 +13,7 @@ export const guideConfig: GuideConfig = {
 			items: [
 				{
 					title: 'Introduction',
-					href: '/guide/getting-started',
+					href: '/guide',
 					items: [],
 				},
 			],

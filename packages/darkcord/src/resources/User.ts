@@ -15,9 +15,14 @@ import {
 import { Base } from "./Base";
 import { DMChannel } from "./Channel";
 
+/**
+ * Represents a user on Discord
+ * @extends {Base}
+ */
 export class User extends Base {
   /**
    * The user's id
+   * @type {Snowflake}
    */
   declare id: string;
   /**

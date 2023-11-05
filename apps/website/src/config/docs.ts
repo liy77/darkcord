@@ -10,10 +10,5 @@ export const docsConfig: DocsConfig = {
 			title: 'Guide',
 			href: '/guide',
 		},
-		{
-			title: 'GitHub',
-			href: 'https://github.com/JustAWaifuHunter/darkcord',
-			external: true,
-		},
 	],
 };

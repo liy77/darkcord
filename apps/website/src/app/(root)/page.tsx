@@ -21,7 +21,7 @@ export default async function Page() {
 						Documentation
 					</Link>
 
-					<Link href="/guide" className={cn(buttonVariants({ size: 'lg' }))}>
+					<Link href={'/guide' as Route} className={cn(buttonVariants({ size: 'lg' }))}>
 						Guide
 					</Link>
 				</div>

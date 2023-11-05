@@ -8,7 +8,7 @@ import { cn } from '~/lib/util';
 
 export default function NotFound() {
 	const pathname = usePathname();
-	const href = pathname.split('/').slice(0, -2).join('/');
+	const href = pathname.split('/').slice(0, -1).join('/');
 
 	return (
 		<div className="mx-auto max-w-lg min-h-screen flex flex-col place-content-center place-items-center gap-8 px-8 py-16 lg:px-6 lg:py-0">

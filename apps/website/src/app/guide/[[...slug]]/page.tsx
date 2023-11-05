@@ -7,6 +7,7 @@ import { Mdx } from '~/components/mdx-components';
 import { ContentPager } from '~/components/content-pager';
 
 import '~/styles/mdx.css';
+import { Separator } from '~/components/ui/separator';
 
 interface ContentRouteParams {
 	slug: string[];
@@ -61,13 +62,13 @@ export default async function GuidePage({ params }: { params: ContentRouteParams
 	}
 
 	return (
-		<main className="relative py-6 lg:gap-10 lg:py-10">
+		<article className="relative lg:gap-10 py-2">
 			<div className="mx-auto w-full min-w-0">
 				<GuidePageHeader heading={content.title} text={content.description} />
 				<Mdx code={content.body.code ?? ''} />
-				<hr className="my-4 md:my-6" />
+				<Separator className="my-4 md:my-6" />
 				<ContentPager content={content} />
 			</div>
-		</main>
+		</article>
 	);
 }

@@ -65,6 +65,12 @@ export namespace Snowflake {
 }
 
 export class Base {
+  /**
+   * The client that instantiated this
+   * @name Base#_client
+   * @type {AnyClient}
+   * @readonly
+   */
   _client: AnyClient;
   /**
    * Object id

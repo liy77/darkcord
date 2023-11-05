@@ -1,15 +1,19 @@
-import { FileCodeIcon, MenuIcon } from 'lucide-react';
-import { Documentation, DocumentationClassMeta } from '~/types/documentation';
+'use client';
+
+import { FileCodeIcon } from 'lucide-react';
+import { useDocs } from '~/contexts/docs';
+import { DocumentationClassMeta } from '~/types/documentation';
 
 interface SourceButtonProps {
 	meta?: DocumentationClassMeta;
 	path?: string;
-	docs: Documentation;
 }
 
-export function SourceButton({ meta, path, docs }: SourceButtonProps) {
+export function SourceButton({ meta, path }: SourceButtonProps) {
+	const { docs } = useDocs();
+
 	const sourceURL = (path: string, file?: string, line?: string | number) => {
-		return new URL(`${docs.tag ?? ''}/${path}${file ? `/${file}` : ''}${line ? `#L${line}` : ''}`, docs.source).href;
+		return new URL(`${docs?.tag ?? ''}/${path}${file ? `/${file}` : ''}${line ? `#L${line}` : ''}`, docs?.source).href;
 	};
 
 	return (

@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Route } from 'next';
 import { cn } from '~/lib/util';
 import { useLockBody } from '~/hooks/use-lock-body';
+import { ScrollArea } from './ui/scroll-area';
 
 export function MobileNav({ children, items }: PropsWithChildren<{ readonly items: MainNavItem[] }>) {
 	useLockBody();
@@ -21,6 +22,7 @@ export function MobileNav({ children, items }: PropsWithChildren<{ readonly item
 				<Link onClick={toggle} href="/" className="flex items-center space-x-2">
 					<span className="font-bold uppercase">darkcord</span>
 				</Link>
+
 				<nav className="grid grid-flow-row auto-rows-max text-sm">
 					{items.map((item, index) => (
 						<Link

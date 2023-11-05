@@ -96,6 +96,10 @@ code {
 	font-family: var(--font-mono);
 }
 
+.docs-type:not(:last-child)::after {
+	content: ' or ';
+}
+
 @layer base {
 	* {
 		@apply border-border;

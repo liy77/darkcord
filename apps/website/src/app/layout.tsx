@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter as FontSans } from 'next/font/google';
+import { Inter as FontSans, JetBrains_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { PropsWithChildren } from 'react';
 import { cn } from '~/lib/util';
@@ -7,6 +7,11 @@ import { siteConfig } from '~/config/site';
 import { Providers } from './providers';
 
 import '~/styles/main.css';
+
+const fontMono = JetBrains_Mono({
+	subsets: ['latin'],
+	variable: '--font-mono',
+});
 
 const fontSans = FontSans({
 	subsets: ['latin'],
@@ -82,7 +87,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
-			<body className={cn('scroll-smooth min-h-screen bg-background antialiased font-sans', fontSans.variable)}>
+			<body
+				className={cn(
+					'scroll-smooth min-h-screen bg-background antialiased font-sans',
+					fontSans.variable,
+					fontMono.variable,
+				)}
+			>
 				<Providers>{children}</Providers>
 				<Analytics />
 			</body>

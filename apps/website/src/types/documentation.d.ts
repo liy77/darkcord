@@ -160,17 +160,21 @@ export type ParameterUnion =
 	| DocumentationClassEventParameter
 	| DocumentationTypeDefinitionParameter;
 
-export interface Documentation {
+export interface DocumentationItems {
 	classes: DocumentationClass[];
-	custom: DocumentationCustom[];
-	externals: DocumentationExternal[];
-	functions?: DocumentationClassMethod[];
-	global: string;
+	functions: DocumentationClassMethod[];
 	interfaces: DocumentationInterface[];
+	typedefs: DocumentationTypeDefinition[];
+	externals: DocumentationExternal[];
+}
+
+export interface Documentation {
+	items: DocumentationItems;
+	custom: DocumentationCustom[];
+	global: string;
 	links: DocumentationLink[];
 	meta: DocumentationMeta;
 	id: string;
 	source: string;
 	tag: string;
-	typedefs: DocumentationTypeDefinition[];
 }

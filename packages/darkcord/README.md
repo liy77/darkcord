@@ -20,7 +20,7 @@ Darkcord is a [Node.js](https://nodejs.org) module to easily interact with
 
 **Node.js 16.9.0 or newer is required to installation.**
 
-```sh-session
+```sh
 npm install darkcord
 yarn add darkcord
 pnpm add darkcord
@@ -89,7 +89,7 @@ client.connect();
 
 #### Install voice packages
 
-```sh-session
+```sh
 npm install shoukaku
 yarn add shoukaku
 pnpm add shoukaku
@@ -101,7 +101,7 @@ pnpm add kazagumo
 
 ##### Spotify
 
-```sh-session
+```sh
 npm install kazagumo-spotify
 yarn add kazagumo-spotify
 pnpm add kazagumo-spotify
@@ -156,4 +156,3 @@ client.connect();
 - [Website](https://darkcord.denkylabs.com)
 - [GitHub](https://github.com/JustAWaifuHunter/darkcord)
 - [npm](https://npmjs.com/package/darkcord)
-- [Discord API Discord server](https://discord.gg/discord-api)
