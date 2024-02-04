@@ -127,6 +127,11 @@ export class Member extends Base {
     return url;
   }
 
+  /**
+   * The member's display avatar url
+   * @param options options for display avatar url
+   * @returns
+   */
   displayAvatarURL(options?: DisplayUserAvatarOptions) {
     return (
       this.avatarURL(options) ?? this.user?.displayAvatarURL(options) ?? null
@@ -143,10 +148,22 @@ export class Member extends Base {
     return this.guild.addMemberRole(this.id, roleId, reason);
   }
 
+  /**
+   * Remove a role to this member
+   * @param roleId Id of role to be removed
+   * @param reason
+   * @returns
+   */
   removeRole(roleId: string, reason?: string) {
     return this.guild.removeMemberRole(this.id, roleId, reason);
   }
 
+  /**
+   * Ban this member from the guild
+   * @param options 
+   * @param reason 
+   * @returns 
+   */
   ban(options?: KeysToCamelCase<RESTPutAPIGuildBanJSONBody>, reason?: string) {
     return this.guild.createMemberBan(this.id, options, reason);
   }
@@ -158,12 +175,16 @@ export class Member extends Base {
     return this.guild.editMember(this.id, options, reason);
   }
 
+  /**
+   * Applies timeout to the member for a specified time
+   * @param timeout 
+   * @param reason 
+   * @returns 
+   */
   disableCommunicationUntil(timeout: number, reason?: string) {
     return this.edit(
       {
-        communicationDisabledUntil: String(
-          Date.now() > timeout ? Date.now() + timeout : timeout,
-        ),
+        communicationDisabledUntil: new Date(Date.now() > timeout ? Date.now() + timeout : timeout).toISOString(),
       },
       reason,
     );
