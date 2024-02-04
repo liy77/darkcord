@@ -4,4 +4,5 @@ export const queryClient = new QueryClient();
 
 export enum QueryKeys {
 	GetDocs = "GET_DOCS",
+	GetPackageVersions = "GET_PACKAGE_VERSIONS",
 }
