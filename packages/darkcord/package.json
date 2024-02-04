@@ -23,7 +23,7 @@
     "@darkcord/rest": "workspace:^",
     "@darkcord/utils": "workspace:^",
     "@darkcord/ws": "workspace:^",
-    "discord-api-types": "^0.37.33",
+    "discord-api-types": "^0.37.67",
     "ts-mixer": "^6.0.3",
     "undici": "^5.19.1",
     "ws": "^8.12.0"

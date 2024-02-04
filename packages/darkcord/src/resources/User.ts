@@ -1,4 +1,4 @@
-import { DataWithClient, DisplayUserAvatarOptions } from "@typings/index";
+import { DataWithClient, DisplayUserAvatarOptions, ImageSize } from "@typings/index";
 import { userMention } from "@utils/Constants";
 import {
   APIDMChannel,
@@ -72,6 +72,14 @@ export class User extends Base {
    * The public flags on a user's account
    */
   publicFlags: UserFlags | null;
+  /**
+   * The user's display name, if it is set. For bots, this is the application name
+   */
+  globalName: string | null;
+  /**
+   * The user's avatar decoration hash
+   */
+  avatarDecoration: string | null | undefined;
 
   constructor(data: DataWithClient<APIUser>) {
     super(data, data.client);
@@ -81,6 +89,9 @@ export class User extends Base {
 
   _update(data: APIUser) {
     if ("username" in data) this.username = data.username;
+    if ("global_name" in data) this.globalName = data.global_name;
+    if ("avatar_decoration" in data)
+      this.avatarDecoration = data.avatar_decoration;
     if ("discriminator" in data) this.discriminator = data.discriminator;
     if ("avatar" in data) this.avatar = data.avatar;
     if ("banner" in data) this.banner = data.banner;
@@ -104,6 +115,20 @@ export class User extends Base {
     else this.accentColor ??= null;
 
     return this;
+  }
+
+  avatarDecorationURL(options?: ImageSize) {
+    if (!this.avatarDecoration) {
+      return null;
+    }
+
+    let url = RouteBases.cdn + CDNRoutes.userAvatarDecoration(this.id, this.avatarDecoration)
+
+    if (options?.size) {
+      url += "?size=" + options.size.toString();
+    }
+
+    return url;
   }
 
   /**

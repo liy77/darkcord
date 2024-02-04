@@ -46,9 +46,12 @@ import { DataCache } from "../manager/DataManager";
 
 export type { MessageAttachment, MessagePostData } from "@darkcord/utils";
 
-export interface DisplayUserAvatarOptions {
-  format?: UserAvatarFormat;
+export interface ImageSize {
   size?: number;
+}
+
+export interface DisplayUserAvatarOptions extends ImageSize {
+  format?: UserAvatarFormat;
 }
 
 export type GuildDataModel<T> = T & { guild: Guild };
