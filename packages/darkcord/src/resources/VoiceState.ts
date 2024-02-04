@@ -88,10 +88,21 @@ export class VoiceState extends Base {
     this.suppress = data.suppress;
   }
 
+  /**
+   * Disconnects the member from the voice channel
+   * @param reason 
+   * @returns 
+   */
   disconnect(reason?: string) {
     return this.moveMemberTo(null, reason);
   }
 
+  /**
+   * Move the member to another voice channel
+   * @param channelId 
+   * @param reason 
+   * @returns 
+   */
   moveMemberTo(channelId: string | null, reason?: string) {
     return this.member?.edit({ channelId }, reason);
   }
