@@ -6,8 +6,15 @@
     "ecmaVersion": "latest",
     "sourceType": "script"
   },
-  "plugins": ["@typescript-eslint", "import/typescript"],
-  "ignorePatterns": ["**/dist/*", "**/typing/*", "**/apps/*", "**/*.wasm"],
+  "plugins": [
+    "@typescript-eslint",
+    "import/typescript"
+  ],
+  "ignorePatterns": [
+    "**/dist/*",
+    "**/typing/*",
+    "**/*.wasm"
+  ],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "error",
     "@typescript-eslint/ban-types": "error",
