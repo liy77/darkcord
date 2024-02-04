@@ -17,6 +17,7 @@ import {
   APIInteractionDataResolved,
   APIInteractionDataResolvedGuildMember,
   APIMessageApplicationCommandInteractionData,
+  APIMessageComponentButtonInteraction,
   APIMessageComponentInteraction,
   APIMessageSelectMenuInteractionData,
   APIModalInteractionResponseCallbackData,
@@ -568,6 +569,8 @@ export class ComponentInteraction extends ReplyableInteraction {
    */
   guild?: Guild | null;
   member: Member | null | undefined;
+  declare rawData: APIMessageComponentInteraction;
+  user: APIUser | User | null | undefined;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
     httpResponse?: InteractionResponse,
@@ -589,11 +592,15 @@ export class ComponentInteraction extends ReplyableInteraction {
       }),
       data.client,
     );
+
     this.channel =
       data.client.channels.cache.get(data.channel?.id)! ?? data.channel;
 
     this.data = null;
-    this.member = data.member ? this.guild?.members.cache.get(data.member?.user.id!) : null;
+    this.member = data.member
+      ? this.guild?.members.cache.get(data.member?.user.id!)
+      : null;
+    this.user = data.user ? data.client.users.cache.get(data.user?.id!) : null;
 
     if (
       [
