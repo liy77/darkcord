@@ -567,6 +567,7 @@ export class ComponentInteraction extends ReplyableInteraction {
    * The guild it was sent from
    */
   guild?: Guild | null;
+  member: Member | null | undefined;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
     httpResponse?: InteractionResponse,
@@ -592,6 +593,8 @@ export class ComponentInteraction extends ReplyableInteraction {
       data.client.channels.cache.get(data.channel?.id)! ?? data.channel;
 
     this.data = null;
+    this.member = data.member ? this.guild?.members.cache.get(data.member?.user.id!) : null;
+
     if (
       [
         ComponentType.ChannelSelect,
