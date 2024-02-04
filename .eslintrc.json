@@ -13,7 +13,8 @@
   "ignorePatterns": [
     "**/dist/*",
     "**/typing/*",
-    "**/*.wasm"
+    "**/*.wasm",
+    "**/apps/*"
   ],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "error",

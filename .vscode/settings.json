@@ -1,20 +1,4 @@
 {
-    "eslint.workingDirectories": [
-        {
-            "pattern": "./packages/*"
-        }
-    ],
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "astro",
-        "typescript",
-        "typescriptreact"
-    ],
-    "prettier.documentSelectors": [
-        "**/*.astro"
-    ],
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
@@ -28,11 +12,5 @@
     "files.exclude": {
         "**/node_modules": false,
         "**/tsconfig.json": false
-    },
-    "workspace.isHidden": false,
-    "cSpell.words": [
-        "darkcord",
-        "docgen",
-        "tsup"
-    ]
+    }
 }
