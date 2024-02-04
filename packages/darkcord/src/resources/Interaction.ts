@@ -954,6 +954,16 @@ export class CommandInteractionOptions {
   }
 
   /**
+   * Get a channel option value
+   * @param name Option name
+   * @returns
+   */
+  channel(name: string) {
+    const r = this.get(name);
+    return r?.type === ApplicationCommandOptionType.Channel ? r.value : null;
+  }
+
+  /**
    * Get a mentionable (user, member, role, channel) option value
    * @param name Option name
    * @returns
