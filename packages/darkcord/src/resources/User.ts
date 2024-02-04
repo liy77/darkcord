@@ -1,4 +1,8 @@
-import { DataWithClient, DisplayUserAvatarOptions, ImageSize } from "@typings/index";
+import {
+  DataWithClient,
+  DisplayUserAvatarOptions,
+  ImageSize,
+} from "@typings/index";
 import { userMention } from "@utils/Constants";
 import {
   APIDMChannel,
@@ -117,12 +121,19 @@ export class User extends Base {
     return this;
   }
 
+  /**
+   * The user's avatar decoration url
+   * @param options options for avatar decoration url
+   * @returns
+   */
   avatarDecorationURL(options?: ImageSize) {
     if (!this.avatarDecoration) {
       return null;
     }
 
-    let url = RouteBases.cdn + CDNRoutes.userAvatarDecoration(this.id, this.avatarDecoration)
+    let url =
+      RouteBases.cdn +
+      CDNRoutes.userAvatarDecoration(this.id, this.avatarDecoration);
 
     if (options?.size) {
       url += "?size=" + options.size.toString();
@@ -178,6 +189,14 @@ export class User extends Base {
    */
   displayAvatarURL(options?: DisplayUserAvatarOptions) {
     return this.avatarURL(options) ?? this.defaultAvatarURL;
+  }
+
+  /**
+   * The user's display name
+   * @returns
+   */
+  displayName() {
+    return this.globalName ?? this.username;
   }
 
   /**
