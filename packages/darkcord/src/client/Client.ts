@@ -185,7 +185,7 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
           this,
         );
       }
-      
+
       this.emit("interactionCreate", interaction);
     });
   }

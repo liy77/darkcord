@@ -110,7 +110,8 @@ export class BaseGuild extends Base {
   iconURL(format?: GuildIconFormat) {
     return (
       this.icon &&
-      RouteBases.cdn + "/" +
+      RouteBases.cdn +
+        "/" +
         CDNRoutes.guildIcon(
           this.id,
           this.icon,
