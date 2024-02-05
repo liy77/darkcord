@@ -56,7 +56,7 @@ export function Documentation({
 								rel="noreferrer"
 								className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
 							>
-								GitHub Reference
+								GitHub
 								<GitHubLogoIcon className="h-3 w-3" />
 							</Link>
 						)}
