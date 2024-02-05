@@ -15,7 +15,7 @@ export function ClassProperty({
 	return (
 		<Card className="mb-8 mx-auto max-w-4xl lg:max-w-full">
 			<CardHeader className="flex flex-row items-center">
-				<CardTitle className="inline-block mr-2">{property.name}</CardTitle>
+				<CardTitle className="inline-block mr-2">.{property.name}</CardTitle>
 				<span className="space-x-2 text-sm font-semibold uppercase">
 					{property.scope === "static" && <Badge>Static</Badge>}
 

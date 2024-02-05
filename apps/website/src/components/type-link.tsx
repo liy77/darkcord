@@ -9,20 +9,20 @@ export function TypeLink({ type }: { type: string | string[] | string[][] }) {
 		<>
 			{!link && <span>{typeName}</span>}
 
-			{typeof link === "object" && (
+			{typeof link === "object" ? (
 				<Link to={link} className="text-blue-500 hover:underline">
 					{typeName}
 				</Link>
+			) : (
+				<Link
+					to={link}
+					target="_blank"
+					rel="noopener"
+					className="text-blue-500 hover:underline"
+				>
+					{typeName}
+				</Link>
 			)}
-
-			<Link
-				to={link}
-				target="_blank"
-				rel="noopener"
-				className="text-blue-500 hover:underline"
-			>
-				{typeName}
-			</Link>
 
 			{type[1] && <span>{type[1]}</span>}
 		</>
