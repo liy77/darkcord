@@ -263,7 +263,7 @@ export class ReplyableInteraction extends Interaction {
    * @param content
    * @returns
    */
-  createFollowUP(content: MessagePostData) {
+  createFollowUp(content: MessagePostData) {
     if (!this.acknowledged) {
       throw MakeError({
         name: "InteractionNoAcknowledged",
@@ -283,7 +283,7 @@ export class ReplyableInteraction extends Interaction {
    * @param messageId The id of the followup to be deleted
    * @returns
    */
-  deleteFollowUP(messageId: string) {
+  deleteFollowUp(messageId: string) {
     return this._client.rest.deleteWebhookMessage(
       this.applicationId,
       this.token,
@@ -297,7 +297,7 @@ export class ReplyableInteraction extends Interaction {
    * @param content The new content of followup
    * @returns
    */
-  async editFollowUP(messageId: string, content: MessagePostData) {
+  async editFollowUp(messageId: string, content: MessagePostData) {
     const data = await this._client.rest.editWebhookMessage(
       this.applicationId,
       this.token,
@@ -326,7 +326,7 @@ export class ReplyableInteraction extends Interaction {
    * @param messageId The id of the followup
    * @returns
    */
-  async getFollowUP(messageId: string) {
+  async getFollowUp(messageId: string) {
     const data = await this._client.rest.getWebhookMessage(
       this.applicationId,
       this.token,
