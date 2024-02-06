@@ -99,6 +99,7 @@ export class Channel extends Base {
         default_sort_order: options.defaultSortOrder,
         default_thread_rate_limit_per_user:
           options.defaultThreadRateLimitPerUser,
+        default_forum_layout: options.defaultForumLayout,
         topic: options.topic,
         bitrate: options.bitrate,
         available_tags: options.availableTags,
@@ -107,6 +108,12 @@ export class Channel extends Base {
         rtc_region: options.rtcRegion,
         user_limit: options.userLimit,
         position: options.position,
+        permission_overwrites: options.permissionOverwrites,
+        applied_tags: options.appliedTags,
+        archived: options.archived,
+        parent_id: options.parentId,
+        rate_limit_per_user: options.rateLimitPerUser,
+        flags: options.flags,
       },
       reason,
     );
