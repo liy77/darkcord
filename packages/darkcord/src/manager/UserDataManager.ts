@@ -28,7 +28,7 @@ export class UserDataManager extends DataManager<APIUser | User> {
     );
   }
 
-  add(user: User | APIUser, replace = true) {
+  add(user: User | APIUser, replace = true): User | APIUser | null {
     if (!user || !user.id) {
       return null;
     }
