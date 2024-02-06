@@ -473,7 +473,15 @@ export class Guild extends BaseGuild {
     const role = await this._client.rest.modifyGuildRole(
       this.id,
       roleId,
-      options,
+      {
+        color: options.color,
+        hoist: options.hoist,
+        icon: options.icon,
+        mentionable: options.mentionable,
+        name: options.name,
+        permissions: options.permissions,
+        unicode_emoji: options.unicodeEmoji,
+      },
       reason,
     );
 
