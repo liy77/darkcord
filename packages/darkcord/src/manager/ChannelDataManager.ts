@@ -56,7 +56,14 @@ export class ChannelDataManager extends DataManager<Channel> {
     return channel;
   }
 
-  add(channel: Channel | APIChannel, replace = true) {
+  add(
+    channel: Channel | APIChannel,
+    replace = true,
+  ): Channel | APIChannel | null {
+    if (!channel || !channel.id) {
+      return null;
+    }
+
     return super.add(this._resolve(channel), replace, channel.id);
   }
 

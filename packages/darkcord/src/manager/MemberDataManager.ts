@@ -28,7 +28,7 @@ export class MemberDataManager extends DataManager<Member> {
     return super.add(member, replace, member.id);
   }
 
-  async fetch(id: string) {
+  async fetch(id: string): Promise<Member> {
     const member = await this.manager.client.rest.getGuildMember(
       this.guild.id,
       id,
