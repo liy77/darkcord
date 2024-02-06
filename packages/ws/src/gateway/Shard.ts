@@ -235,8 +235,9 @@ export class GatewayShard extends EventEmitter {
     this.pendingGuilds = 0;
     this.pendingGuildsMap = new Map();
     this.events = events.setGatewayShard(this as any);
-    this.intents = this.client.options.gateway.intents as GatewayIntentBits;
+    this.intents = this.client.options.gateway.intents;
     this._inflate = null;
+    this.presence = {} as GatewayPresenceUpdateData;
 
     // RateLimit Queue
     this.queue = [];
