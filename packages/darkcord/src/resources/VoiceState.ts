@@ -90,8 +90,8 @@ export class VoiceState extends Base {
 
   /**
    * Disconnects the member from the voice channel
-   * @param reason 
-   * @returns 
+   * @param reason
+   * @returns
    */
   disconnect(reason?: string) {
     return this.moveMemberTo(null, reason);
@@ -99,9 +99,9 @@ export class VoiceState extends Base {
 
   /**
    * Move the member to another voice channel
-   * @param channelId 
-   * @param reason 
-   * @returns 
+   * @param channelId
+   * @param reason
+   * @returns
    */
   moveMemberTo(channelId: string | null, reason?: string) {
     return this.member?.edit({ channelId }, reason);
@@ -113,7 +113,11 @@ export class VoiceState extends Base {
     return this._client.rest.modifyGuildVoiceState(
       this.guildId,
       this.userId === this._client.user?.id ? "@me" : this.userId,
-      options,
+      {
+        channel_id: options.channelId,
+        request_to_speak_timestamp: options.requestToSpeakTimestamp,
+        suppress: options.suppress,
+      },
     );
   }
 }
