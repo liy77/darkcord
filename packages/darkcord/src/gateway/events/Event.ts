@@ -23,6 +23,6 @@ export abstract class Event {
 
   getUser(id: string): Awaitable<User | APIUser> {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return this.client.users.cache.get(id) || this.client.users.fetch(id);
+    return this.client.users.cache.get(id)! || this.client.users.fetch(id);
   }
 }

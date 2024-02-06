@@ -71,7 +71,7 @@ export class Member extends Base {
     this.user = null;
 
     if (data.user) {
-      const rawUser = this._client.cache.users.add(data.user);
+      const rawUser = this._client.cache.users.add(data.user)!;
 
       this.user =
         rawUser instanceof User

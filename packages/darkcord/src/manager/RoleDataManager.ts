@@ -29,7 +29,11 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
     return this.cache.get(id);
   }
 
-  add(role: APIRole | Role, replace = true) {
+  add(role: APIRole | Role, replace = true): APIRole | Role | null {
+    if (!role || !role.id) {
+      return null;
+    }
+
     return super.add(this._resolve(role), replace, role.id);
   }
 
@@ -98,6 +102,6 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
       }),
     );
 
-    return (await resolvedRolesArr).find((role) => role.id === id);
+    return (await resolvedRolesArr).find((role) => role?.id === id);
   }
 }
