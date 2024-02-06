@@ -176,6 +176,8 @@ export {
   ApplicationCommandPermissionType,
   AutoModerationRuleKeywordPresetType,
   ApplicationRoleConnectionMetadataType,
+  PresenceUpdateReceiveStatus,
+  PresenceUpdateStatus,
   type APIAuditLogChangeKeyEventType,
   type TextChannelType,
   type GuildChannelType,
