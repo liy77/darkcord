@@ -8,7 +8,7 @@ export class GuildMemberRemove extends Event {
 
     if (!guild) return;
 
-    const user = this.client.cache.users.add(data.user);
+    const user = this.client.cache.users.add(data.user)!;
     guild.members.cache.delete(user.id);
 
     this.client.emit(Events.GuildMemberRemove, user, guild);

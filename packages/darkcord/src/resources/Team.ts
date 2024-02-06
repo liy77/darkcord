@@ -29,7 +29,7 @@ export class TeamMember {
   constructor(data: DataWithClient<APITeamMember>) {
     this.permissions = ["*"];
     this.teamId = data.team_id;
-    this.user = data.client.users.add(data.user, false);
+    this.user = data.client.users.add(data.user, false)!;
     this.membershipState = data.membership_state;
   }
 }

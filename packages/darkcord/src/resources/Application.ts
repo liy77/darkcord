@@ -2,6 +2,7 @@ import { DataWithClient } from "@typings/index";
 import {
   APIApplication,
   APIApplicationInstallParams,
+  APIUser,
   ApplicationFlags,
   RESTPatchAPIApplicationCommandJSONBody,
   RESTPostAPIApplicationCommandsJSONBody,
@@ -47,7 +48,7 @@ export class Application extends Base {
   /**
    * Partial user object containing info on the owner of the application
    */
-  owner?: User | null;
+  owner?: User | APIUser | null;
   /**
    * The hex encoded key for verification in interactions and the GameSDK's GetTicket
    */

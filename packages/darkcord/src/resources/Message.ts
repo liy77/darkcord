@@ -136,7 +136,7 @@ export class Message extends Base {
       : null;
     this.webhookId = data.webhook_id;
     this.nonce = data.nonce;
-    this.user = data.client.users.add(data.author);
+    this.user = data.client.users.add(data.author)!;
     this.member = null;
     this.type = data.type;
 

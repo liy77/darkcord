@@ -3,6 +3,7 @@ import { DataWithClient, MessagePostData } from "@typings/index";
 import {
   APIPartialChannel,
   APIPartialGuild,
+  APIUser,
   APIWebhook,
   RESTPatchAPIWebhookJSONBody,
   WebhookType,
@@ -28,7 +29,7 @@ export class Webhook extends Base {
   /**
    * The user this webhook was created by (not returned when getting a webhook with its token)
    */
-  user?: User | null;
+  user?: User | APIUser | null;
   /**
    * The default name of the webhook
    */

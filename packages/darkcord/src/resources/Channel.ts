@@ -695,7 +695,7 @@ export class DMChannel extends TextBasedChannel {
   constructor(data: DataWithClient<APIDMChannel>) {
     super({ ...data, client: data.client });
 
-    this.user = this._client.cache.users.add(data.recipients?.[0]!);
+    this.user = this._client.cache.users.add(data.recipients?.[0]!)!;
     this.userId = this.user.id;
   }
 

@@ -1,6 +1,7 @@
 import { DataWithClient } from "@typings/index";
 import {
   APISticker,
+  APIUser,
   StickerFormatType,
   StickerType,
 } from "discord-api-types/v10";
@@ -43,7 +44,7 @@ export class Sticker extends Base {
   /**
    * The user that uploaded the guild sticker
    */
-  user?: User | null;
+  user?: User | APIUser | null;
   /**
    * The standard sticker's sort order within its pack
    */
