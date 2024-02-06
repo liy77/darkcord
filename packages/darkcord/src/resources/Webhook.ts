@@ -1,5 +1,9 @@
 import { Rest } from "@darkcord/rest";
-import { DataWithClient, MessagePostData } from "@typings/index";
+import {
+  DataWithClient,
+  KeysToCamelCase,
+  MessagePostData,
+} from "@typings/index";
 import {
   APIPartialChannel,
   APIPartialGuild,
@@ -86,12 +90,16 @@ export class Webhook extends Base {
     return this.rest.deleteWebhookWithToken(this.id, this.token);
   }
 
-  async edit(data: RESTPatchAPIWebhookJSONBody) {
+  async edit(options: KeysToCamelCase<RESTPatchAPIWebhookJSONBody>) {
     if (!this.token) return Promise.resolve();
     const updated = await this.rest.modifyWebhookWithToken(
       this.id,
       this.token,
-      data,
+      {
+        avatar: options.avatar,
+        channel_id: options.channelId,
+        name: options.name,
+      },
     );
 
     return this._update(updated);
