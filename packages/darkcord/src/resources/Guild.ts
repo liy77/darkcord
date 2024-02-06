@@ -912,7 +912,33 @@ export class Guild extends BaseGuild {
     options: KeysToCamelCase<RESTPatchAPIGuildJSONBody>,
     reason?: string,
   ) {
-    const data = await this._client.rest.modifyGuild(this.id, options, reason);
+    const data = await this._client.rest.modifyGuild(
+      this.id,
+      {
+        afk_channel_id: options.afkChannelId,
+        afk_timeout: options.afkTimeout,
+        banner: options.banner,
+        default_message_notifications: options.defaultMessageNotifications,
+        description: options.description,
+        discovery_splash: options.discoverySplash,
+        explicit_content_filter: options.explicitContentFilter,
+        features: options.features,
+        icon: options.icon,
+        name: options.name,
+        owner_id: options.ownerId,
+        preferred_locale: options.preferredLocale,
+        premium_progress_bar_enabled: options.premiumProgressBarEnabled,
+        public_updates_channel_id: options.publicUpdatesChannelId,
+        region: options.region,
+        rules_channel_id: options.rulesChannelId,
+        safety_alerts_channel_id: options.safetyAlertsChannelId,
+        splash: options.splash,
+        system_channel_flags: options.systemChannelFlags,
+        system_channel_id: options.systemChannelId,
+        verification_level: options.verificationLevel,
+      },
+      reason,
+    );
 
     return this._update(data);
   }
