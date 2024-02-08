@@ -51,7 +51,7 @@ export class StickerDataManager extends DataManager<Sticker | APISticker> {
     id: string,
     guild: APIGuild | Guild | string,
     addInCache = true,
-  ) {
+  ): Promise<APISticker> {
     const sticker = await this.manager.client.rest.getGuildSticker(
       typeof guild === "string" ? guild : guild.id,
       id,

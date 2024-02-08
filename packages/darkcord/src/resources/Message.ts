@@ -114,7 +114,7 @@ export class Message extends Base {
   /**
    * The member of this message (only received in guild)
    */
-  member?: Member | null;
+  member: Member | null;
   constructor(data: DataWithClient<APIMessage>, guild?: Guild) {
     super(data, data.client);
 
@@ -145,7 +145,7 @@ export class Message extends Base {
     this.reactions = new DataCache();
 
     if (this.guild) {
-      this.member = this.guild.members.cache.get(this.user.id);
+      this.member = this.guild.members.cache.get(this.user?.id) ?? null;
     }
 
     this._update(data);
