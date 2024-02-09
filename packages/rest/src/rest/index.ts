@@ -227,7 +227,10 @@ export class Rest extends EventEmitter {
     type: InteractionResponseType,
   ) {
     let d: BodyInit, contentType: string | undefined;
-    if ("choices" in data) d = data;
+    if ("choices" in data) d = {
+      data,
+      type
+    };
     else {
       const extracted = extractMessageData(
         { data: data as MessagePostData, type },
