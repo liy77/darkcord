@@ -107,9 +107,10 @@ export class Interaction<HttpPartial extends boolean = false> extends Base {
 
     if ("member" in data && data.member && this.guild) {
       this.member = this.guild.members.add(new Member(data.member, this.guild));
+      this.user = this.member!.user!;
+    } else {
+      this.user = data.user ? data.client.users.add(data.user) : null;
     }
-
-    this.user = data.user ? data.client.users.add(data.user) : null;
   }
 
   static from(data: DataWithClient<APIInteraction>, res?: InteractionResponse) {
