@@ -12,6 +12,7 @@ import {
   APIApplicationCommandOptionChoice,
   APIChannel,
   APIChatInputApplicationCommandInteractionData,
+  APIGuildMember,
   APIInteraction,
   APIInteractionDataResolved,
   APIInteractionDataResolvedGuildMember,
@@ -43,7 +44,7 @@ import { Message } from "./Message";
 import { Role } from "./Role";
 import { User } from "./User";
 
-export class Interaction extends Base {
+export class Interaction<HttpPartial extends boolean = false> extends Base {
   /**
    * Id of the application this interaction is for
    */
@@ -63,7 +64,9 @@ export class Interaction extends Base {
   /**
    * Member of the invoked command
    */
-  member: Member | null = null;
+  member: HttpPartial extends true
+    ? APIGuildMember | Member | null
+    : Member | null = null;
   /**
    * User of the invoked command
    */
@@ -169,7 +172,9 @@ export class ReplyableInteraction extends Interaction {
    * The interaction is acknowledged
    */
   acknowledged: boolean;
-  declare channel: Channel | (Partial<APIChannel> & Pick<APIChannel, "type" | "id">);
+  declare channel:
+    | Channel
+    | (Partial<APIChannel> & Pick<APIChannel, "type" | "id">);
   declare channelId: string;
   constructor(
     data: DataWithClient<APIInteraction>,

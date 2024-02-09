@@ -134,7 +134,7 @@ export namespace Resolvable {
   }
 
   export async function resolvePartialHTTPInteractionValues(
-    interaction: Interaction,
+    interaction: Interaction<true>,
     client: InteractionClient,
   ) {
     if (
@@ -173,7 +173,7 @@ export namespace Resolvable {
         guild
       ) {
         interaction.member =
-          guild.members.cache.get(interaction.member.user?.id!) ??
+          guild.members.cache.get((interaction as Interaction<true>).member!.user?.id!) ??
           guild.members.add(new Member(interaction.member, guild));
       }
     }
