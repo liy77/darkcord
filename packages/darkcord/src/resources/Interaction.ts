@@ -12,12 +12,10 @@ import {
   APIApplicationCommandOptionChoice,
   APIChannel,
   APIChatInputApplicationCommandInteractionData,
-  APIGuildMember,
   APIInteraction,
   APIInteractionDataResolved,
   APIInteractionDataResolvedGuildMember,
   APIMessageApplicationCommandInteractionData,
-  APIMessageComponentButtonInteraction,
   APIMessageComponentInteraction,
   APIMessageSelectMenuInteractionData,
   APIModalInteractionResponseCallbackData,
@@ -62,7 +60,33 @@ export class Interaction extends Base {
    * Read-only property, always 1
    */
   version: number;
+  /**
+   * Member of the invoked command
+   */
+  member: Member | null = null;
+  /**
+   * User of the invoked command
+   */
+  user: User | APIUser | null = null;
+  /**
+   * The guild id it was sent from
+   */
+  guildId?: string;
+  /**
+   * The guild object it was sent from
+   */
+  guild?: Guild | null;
+  /**
+   * The channel it was sent from
+   */
+  channel?: Channel | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">);
+  /**
+   * The channel id it was sent from
+   * @deprecated use `channel.id` instead
+   */
+  channelId?: string;
 
+  declare rawData: APIInteraction;
   constructor(data: DataWithClient<APIInteraction>) {
     super(data, data.client);
 
@@ -70,6 +94,19 @@ export class Interaction extends Base {
     this.type = data.type;
     this.token = data.token;
     this.version = data.version;
+    this.guildId = data.guild_id;
+    this.guild = data.client.guilds.cache.get(data.guild_id!);
+    this.channel =
+      data.client.channels.cache.get(data.channel?.id!) ?? data.channel;
+    this.channelId = data.channel_id;
+
+    this.member = null;
+
+    if ("member" in data && data.member && this.guild) {
+      this.member = this.guild.members.add(new Member(data.member, this.guild));
+    }
+
+    this.user = data.user ? data.client.users.add(data.user) : null;
   }
 
   static from(data: DataWithClient<APIInteraction>, res?: InteractionResponse) {
@@ -132,6 +169,8 @@ export class ReplyableInteraction extends Interaction {
    * The interaction is acknowledged
    */
   acknowledged: boolean;
+  declare channel: Channel | (Partial<APIChannel> & Pick<APIChannel, "type" | "id">);
+  declare channelId: string;
   constructor(
     data: DataWithClient<APIInteraction>,
     httpResponse?: InteractionResponse,
@@ -536,11 +575,6 @@ export class ComponentInteraction extends ReplyableInteraction {
    */
   customId: string;
   /**
-   * The channel id it was sent from
-   * @deprecated use `channel.id` instead
-   */
-  channelId: string;
-  /**
    * The selected language of the invoking user
    */
   locale: string;
@@ -553,24 +587,10 @@ export class ComponentInteraction extends ReplyableInteraction {
    */
   message: Message;
   /**
-   * The channel it was sent from
-   */
-  channel: Channel | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">);
-  /**
    * The component data payload
    */
   data: SelectMenuInteractionData | null;
-  /**
-   * The guild id it was sent from
-   */
-  guildId?: string;
-  /**
-   * The guild it was sent from
-   */
-  guild?: Guild | null;
-  member: Member | null | undefined;
   declare rawData: APIMessageComponentInteraction;
-  user: APIUser | User | null | undefined;
   constructor(
     data: DataWithClient<APIMessageComponentInteraction>,
     httpResponse?: InteractionResponse,
@@ -578,11 +598,6 @@ export class ComponentInteraction extends ReplyableInteraction {
     super(data, httpResponse);
     this.componentType = data.data.component_type;
     this.customId = data.data.custom_id;
-    this.guildId = data.guild_id;
-    this.guild = this.guildId
-      ? data.client.guilds.cache.get(this.guildId)
-      : null;
-    this.channelId = data.channel_id;
     this.locale = data.locale;
     this.guildLocale = data.guild_locale ?? null;
     this.message = Resolvable.resolveMessage(
@@ -593,14 +608,7 @@ export class ComponentInteraction extends ReplyableInteraction {
       data.client,
     );
 
-    this.channel =
-      data.client.channels.cache.get(data.channel?.id)! ?? data.channel;
-
     this.data = null;
-    this.member = data.member
-      ? this.guild?.members.cache.get(data.member?.user.id!)
-      : null;
-    this.user = data.user ? data.client.users.cache.get(data.user?.id!) : null;
 
     if (
       [
@@ -695,18 +703,6 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
    */
   message: Message | null;
   /**
-   * The channel id it was sent from
-   * @deprecated use `channel.id` instead
-   */
-  channelId?: string;
-  /**
-   * The channel id it was sent from
-   */
-  channel:
-    | Channel
-    | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">)
-    | null;
-  /**
    * A developer-defined identifier for the component, max 100 characters
    */
   customId: string;
@@ -727,9 +723,6 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
           data.client,
         )
       : null;
-    this.channelId = data.channel_id;
-    this.channel =
-      data.client.channels.cache.get(this.channel?.id!)! ?? data.channel;
     this.customId = data.data.custom_id;
     this.components = data.data.components;
   }
@@ -1148,34 +1141,13 @@ export class CommandInteraction<
   DataType extends AnyDataType = AnyDataType,
 > extends ReplyableInteraction {
   /**
-   * The guild id it was sent from
-   */
-  guildId?: string;
-  /**
    * The guild's preferred locale, if invoked in a guild
    */
   guildLocale?: string;
   /**
-   * The channel id it was sent from
-   * @deprecated use `channel.id` instead
-   */
-  channelId: string;
-  /**
-   * The guild object it was sent from
-   */
-  guild?: Guild | null;
-  /**
    * The command data payload
    */
   data: DataType;
-  /**
-   * Member of the invoked command
-   */
-  member: Member | APIGuildMember | null = null;
-  /**
-   * User of the invoked command
-   */
-  user: User | APIUser | null = null;
   /**
    * The name of the invoked command
    */
@@ -1188,26 +1160,13 @@ export class CommandInteraction<
    * For components, the message they were attached to
    */
   message: Message | null;
-  /**
-   * The channel it was sent from
-   */
-  channel:
-    | Channel
-    | (Partial<APIChannel> & Pick<APIChannel, "id" | "type">)
-    | null;
-
   declare rawData: APIApplicationCommandInteraction;
   constructor(
     data: DataWithClient<APIApplicationCommandInteraction>,
     httpResponse?: InteractionResponse,
   ) {
     super(data, httpResponse);
-    this.guildId = data.guild_id;
     this.guildLocale = data.guild_locale;
-    this.channelId = data.channel_id;
-    this.channel =
-      data.client.channels.cache.get(data.channel?.id)! ?? data.channel;
-    this.guild = data.client.guilds.cache.get(data.guild_id!);
     this.commandName = data.data.name;
     this.locale = data.locale;
     this.message = data.message
@@ -1217,24 +1176,13 @@ export class CommandInteraction<
         )
       : null;
 
-    if ("member" in data && data.member && this.guild) {
-      const member = new Member(data.member as APIGuildMember, this.guild);
-      this.member = this.guild.members.add(member);
-      this.user = this.member!.user!;
-    } else if ("member" in data && data.member) {
-      this.member = data.member;
-      this.user = this._client.cache.users.add(data.member.user!);
-    } else {
-      this.user = this._client.cache.users.add(data.user!);
-    }
-
     if (data.data.type === ApplicationCommandType.ChatInput) {
       this.data = new ChatInputApplicationCommandInteractionData(
         {
           ...data.data,
           client: this._client,
         },
-        this.guild,
+        this.guild!,
       ) as DataType;
     } else if (data.data.type === ApplicationCommandType.Message) {
       this.data = new MessageApplicationCommandInteractionData(
@@ -1242,7 +1190,7 @@ export class CommandInteraction<
           ...data.data,
           client: this._client,
         },
-        this.guild,
+        this.guild!,
       ) as DataType;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (data.data.type === ApplicationCommandType.User) {
@@ -1251,7 +1199,7 @@ export class CommandInteraction<
           ...data.data,
           client: this._client,
         },
-        this.guild,
+        this.guild!,
       ) as DataType;
     }
   }
