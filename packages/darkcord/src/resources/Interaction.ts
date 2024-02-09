@@ -1128,15 +1128,25 @@ export class AutoCompleteInteractionData extends Base {
     super(data);
     this.name = data.name;
     this.type = data.type;
-    this.options = data.options ? new AutoCompleteInteractionDataOptions(
-      data.options,
-      data.resolved!,
-      data.client,
-      guild,
-    ) : null;
+    this.options = data.options
+      ? new AutoCompleteInteractionDataOptions(
+          data.options,
+          data.resolved!,
+          data.client,
+          guild,
+        )
+      : null;
   }
 }
-export class CommandInteraction extends ReplyableInteraction {
+
+type AnyDataType =
+  | ChatInputApplicationCommandInteractionData
+  | UserApplicationCommandInteractionData
+  | MessageApplicationCommandInteractionData;
+
+export class CommandInteraction<
+  DataType extends AnyDataType = AnyDataType,
+> extends ReplyableInteraction {
   /**
    * The guild id it was sent from
    */
@@ -1157,10 +1167,7 @@ export class CommandInteraction extends ReplyableInteraction {
   /**
    * The command data payload
    */
-  data:
-    | ChatInputApplicationCommandInteractionData
-    | UserApplicationCommandInteractionData
-    | MessageApplicationCommandInteractionData;
+  data: DataType;
   /**
    * Member of the invoked command
    */
@@ -1228,7 +1235,7 @@ export class CommandInteraction extends ReplyableInteraction {
           client: this._client,
         },
         this.guild,
-      );
+      ) as DataType;
     } else if (data.data.type === ApplicationCommandType.Message) {
       this.data = new MessageApplicationCommandInteractionData(
         {
@@ -1236,7 +1243,7 @@ export class CommandInteraction extends ReplyableInteraction {
           client: this._client,
         },
         this.guild,
-      );
+      ) as DataType;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (data.data.type === ApplicationCommandType.User) {
       this.data = new UserApplicationCommandInteractionData(
@@ -1245,7 +1252,7 @@ export class CommandInteraction extends ReplyableInteraction {
           client: this._client,
         },
         this.guild,
-      );
+      ) as DataType;
     }
   }
 
@@ -1274,6 +1281,18 @@ export class CommandInteraction extends ReplyableInteraction {
 
       this.acknowledged = true;
     }
+  }
+
+  isMessageCommand(): this is CommandInteraction<MessageApplicationCommandInteractionData> {
+    return this.data.type === ApplicationCommandType.Message;
+  }
+
+  isUserCommand(): this is CommandInteraction<UserApplicationCommandInteractionData> {
+    return this.data.type === ApplicationCommandType.User;
+  }
+
+  isChatInputCommand(): this is CommandInteraction<ChatInputApplicationCommandInteractionData> {
+    return this.data.type === ApplicationCommandType.ChatInput;
   }
 
   toJSON() {
@@ -1325,10 +1344,13 @@ export class AutocompleteInteraction extends Interaction {
     this._http = httpResponse;
     this.isHTTP = Boolean(httpResponse);
     this.acknowledged = false;
-    this.data = new AutoCompleteInteractionData({
-      ...data.data,
-      client: data.client
-    }, data.client.guilds.cache.get(data.guild_id!))
+    this.data = new AutoCompleteInteractionData(
+      {
+        ...data.data,
+        client: data.client,
+      },
+      data.client.guilds.cache.get(data.guild_id!),
+    );
   }
 
   async result(choices: APIApplicationCommandOptionChoice[]) {
