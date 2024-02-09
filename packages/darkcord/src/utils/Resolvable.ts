@@ -134,9 +134,9 @@ export namespace Resolvable {
   }
 
   export async function resolvePartialHTTPInteractionValues(
-    interaction: Interaction<true>,
+    interaction: Interaction<false> | Interaction<true>,
     client: InteractionClient,
-  ) {
+  ): Promise<Interaction<false>> {
     if (
       (interaction.isCommand() ||
         interaction.isComponent() ||
@@ -178,6 +178,6 @@ export namespace Resolvable {
       }
     }
 
-    return interaction;
+    return interaction as Interaction<false>;
   }
 }
