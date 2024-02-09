@@ -160,9 +160,9 @@ export class Member extends Base {
 
   /**
    * Ban this member from the guild
-   * @param options 
-   * @param reason 
-   * @returns 
+   * @param options
+   * @param reason
+   * @returns
    */
   ban(options?: KeysToCamelCase<RESTPutAPIGuildBanJSONBody>, reason?: string) {
     return this.guild.createMemberBan(this.id, options, reason);
@@ -177,14 +177,16 @@ export class Member extends Base {
 
   /**
    * Applies timeout to the member for a specified time
-   * @param timeout 
-   * @param reason 
-   * @returns 
+   * @param timeout
+   * @param reason
+   * @returns
    */
   disableCommunicationUntil(timeout: number, reason?: string) {
     return this.edit(
       {
-        communicationDisabledUntil: new Date(Date.now() > timeout ? Date.now() + timeout : timeout).toISOString(),
+        communicationDisabledUntil: new Date(
+          Date.now() > timeout ? Date.now() + timeout : timeout,
+        ).toISOString(),
       },
       reason,
     );
