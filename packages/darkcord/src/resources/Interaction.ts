@@ -980,6 +980,16 @@ export class CommandInteractionOptions {
   }
 }
 
+export class AutoCompleteInteractionDataOptions extends CommandInteractionOptions {
+  /**
+   * Gets the focused option
+   * @returns
+   */
+  focusedOption() {
+    return super.toArray()[0];
+  }
+}
+
 export class ChatInputApplicationCommandInteractionData extends Base {
   /**
    * The type of the invoked command
@@ -1015,16 +1025,47 @@ export class ChatInputApplicationCommandInteractionData extends Base {
           guild,
         )
       : null;
-    data.resolved;
   }
 }
 
 export class MessageApplicationCommandInteractionData extends Base {
+  /**
+   * The message that the interaction was executed
+   */
+  message: Message;
+  /**
+   * 	Id of the message targeted
+   */
+  targetId: string;
+  /**
+   * The type of the invoked command
+   */
+  type: ApplicationCommandType.Message;
+  /**
+   * The name of the invoked command
+   */
+  name: string;
   constructor(
     data: DataWithClient<APIMessageApplicationCommandInteractionData>,
-    guild?: Guild,
+    public guild?: Guild,
   ) {
-    super(data, guild?._client);
+    super(data, data.client);
+    this.name = data.name;
+    this.type = data.type;
+    this.targetId = data.target_id;
+
+    const rawMessage = data.resolved.messages[0];
+    const channel = data.client.channels.cache.get(rawMessage.channel_id);
+    const message = (this.message = new Message({
+      ...rawMessage,
+      client: data.client,
+    }));
+
+    if (channel && channel.isText()) {
+      this.message =
+        channel.messages.cache.get(rawMessage.id) ??
+        channel.messages.add(message);
+    }
   }
 }
 
@@ -1045,14 +1086,18 @@ export class UserApplicationCommandInteractionData extends Base {
    * Guild member target
    */
   targetMember?: APIInteractionDataResolvedGuildMember | Member;
+  /**
+   * The type of the invoked command
+   */
+  type: ApplicationCommandType.User;
   constructor(
     data: DataWithClient<APIUserApplicationCommandInteractionData>,
     guild?: Guild,
   ) {
     super(data, guild?._client);
 
+    this.type = data.type;
     this.target =
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       this._client.cache.users.get(data.target_id) ??
       data.resolved.users[data.target_id];
     this.targetId = data.target_id;
@@ -1063,6 +1108,34 @@ export class UserApplicationCommandInteractionData extends Base {
   }
 }
 
+export class AutoCompleteInteractionData extends Base {
+  /**
+   * The name of the invoked command
+   */
+  name: string;
+  /**
+   * The type of the invoked command
+   */
+  type: ApplicationCommandType;
+  /**
+   * The options of the invoked command
+   */
+  options: AutoCompleteInteractionDataOptions | null;
+  constructor(
+    data: DataWithClient<APIChatInputApplicationCommandInteractionData>,
+    guild?: Guild,
+  ) {
+    super(data);
+    this.name = data.name;
+    this.type = data.type;
+    this.options = data.options ? new AutoCompleteInteractionDataOptions(
+      data.options,
+      data.resolved!,
+      data.client,
+      guild,
+    ) : null;
+  }
+}
 export class CommandInteraction extends ReplyableInteraction {
   /**
    * The guild id it was sent from
@@ -1239,6 +1312,10 @@ export class AutocompleteInteraction extends Interaction {
    * The interaction is acknowledged
    */
   acknowledged: boolean;
+  /**
+   * The command data payload
+   */
+  data: AutoCompleteInteractionData;
   constructor(
     data: DataWithClient<APIApplicationCommandAutocompleteInteraction>,
     httpResponse?: InteractionResponse,
@@ -1248,6 +1325,10 @@ export class AutocompleteInteraction extends Interaction {
     this._http = httpResponse;
     this.isHTTP = Boolean(httpResponse);
     this.acknowledged = false;
+    this.data = new AutoCompleteInteractionData({
+      ...data.data,
+      client: data.client
+    }, data.client.guilds.cache.get(data.guild_id!))
   }
 
   async result(choices: APIApplicationCommandOptionChoice[]) {
