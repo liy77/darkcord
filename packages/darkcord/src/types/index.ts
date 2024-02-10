@@ -366,6 +366,18 @@ export interface Typing {
   userId: string;
 }
 
+export type Base64File = `data:${string};base64,${string}`;
+
+export interface ClientAvatar {
+  contentType?: "gif" | "jpg" | "png";
+  data: Buffer | Base64File;
+}
+
+export interface JSONClientUserPatch {
+  username?: string;
+  avatar?: ClientAvatar;
+}
+
 export type MessageTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
 
 export type CreateChannelOptions =

@@ -1,6 +1,6 @@
 import { CacheManager } from "@cache/CacheManager";
 import { Interaction } from "@resources/Interaction";
-import { User } from "@resources/User";
+import { ClientUser, User } from "@resources/User";
 import {
   BaseClientOptions,
   ClientEvents,
@@ -93,7 +93,7 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
   webserver: WebServer;
   declare options: InteractionClientOptions;
   cache: CacheManager;
-  user: User | null;
+  user: ClientUser | null;
   /**
    * Channels cache
    */
@@ -197,6 +197,17 @@ export class InteractionClient extends BaseClient<InteractionClientEvents> {
         ...rawApplication,
         client: this,
       });
+
+      try {
+        const rawUser = await this.rest.getUser(rawApplication.id);
+
+        this.user = new ClientUser({
+          ...rawUser,
+          client: this,
+        });
+      } catch {
+        // Ignore
+      }
     }
 
     await this.webserver.listen();
@@ -234,7 +245,7 @@ export class Client extends BaseClient<ClientEvents> {
   /**
    * Client user
    */
-  user: User | null;
+  user: ClientUser | null;
   /**
    * Plugin manager for library plugins
    */
@@ -320,6 +331,7 @@ export class Client extends BaseClient<ClientEvents> {
 
     this.options = Object.assign<Required<ClientOptions>, any>(
       options as Required<ClientOptions>,
+      // @ts-ignore
       super.options,
     );
 
@@ -355,12 +367,25 @@ export class Client extends BaseClient<ClientEvents> {
     return this.websocket.disconnect();
   }
 
-  setStatus(data: GatewayPresenceUpdateData) {
+  /**
+   * Sets the status of the client user.
+   * @param data Status payload
+   * @returns
+   */
+  setStatus(data: Partial<GatewayPresenceUpdateData>) {
     this.websocket.setStatus(data);
     return data;
   }
 
-  setShardStatus(shardId: string | number, data: GatewayPresenceUpdateData) {
+  /**
+   * Sets the status of the client user in specified shard.
+   * @param data Status payload
+   * @returns
+   */
+  setShardStatus(
+    shardId: string | number,
+    data: Partial<GatewayPresenceUpdateData>,
+  ) {
     this.websocket.setShardStatus(String(shardId), data);
     return {
       shardId,

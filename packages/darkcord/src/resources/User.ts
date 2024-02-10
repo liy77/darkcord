@@ -1,7 +1,9 @@
 import {
+  Base64File,
   DataWithClient,
   DisplayUserAvatarOptions,
   ImageSize,
+  JSONClientUserPatch,
 } from "@typings/index";
 import { userMention } from "@utils/Constants";
 import {
@@ -13,6 +15,7 @@ import {
   ImageFormat,
   LocaleString,
   RouteBases,
+  Routes,
   UserFlags,
   UserPremiumType,
 } from "discord-api-types/v10";
@@ -285,5 +288,24 @@ export class User extends Base {
       "id",
       "flags",
     ]);
+  }
+}
+
+export class ClientUser extends User {
+  async edit(data: JSONClientUserPatch) {
+    let avatar: Base64File | undefined;
+
+    if (data.avatar && Buffer.isBuffer(data.avatar.data)) {
+      avatar = `data:image/${
+        data.avatar.contentType ?? "jpg"
+      };base64,${data.avatar.data.toString("base64")}`;
+    } else if (data.avatar && typeof data.avatar.data === "string") {
+      avatar = data.avatar.data;
+    }
+
+    this._client.rest.patch(Routes.user(), {
+      username: data.username,
+      avatar,
+    });
   }
 }
