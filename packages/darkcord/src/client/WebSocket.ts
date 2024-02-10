@@ -193,7 +193,6 @@ export class WebSocket {
     }
   }
 
-
   setStatus(data: Partial<GatewayPresenceUpdateData>) {
     for (const shard of this.shards.keys()) {
       this.setShardStatus(shard, data);
