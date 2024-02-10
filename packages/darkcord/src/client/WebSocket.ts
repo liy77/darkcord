@@ -193,13 +193,14 @@ export class WebSocket {
     }
   }
 
-  setStatus(data: GatewayPresenceUpdateData) {
+
+  setStatus(data: Partial<GatewayPresenceUpdateData>) {
     for (const shard of this.shards.keys()) {
       this.setShardStatus(shard, data);
     }
   }
 
-  setShardStatus(shardId: string, data: GatewayPresenceUpdateData) {
+  setShardStatus(shardId: string, data: Partial<GatewayPresenceUpdateData>) {
     const shard = this.shards.get(shardId);
 
     if (!shard) {
@@ -209,7 +210,7 @@ export class WebSocket {
       });
     }
 
-    shard.sendPresence(data);
+    shard.sendPresence(Object.assign({}, shard.presence, data));
   }
 
   allReady() {

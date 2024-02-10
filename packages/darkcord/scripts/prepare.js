@@ -17,8 +17,13 @@ prepare.stderr.on("data", (chunk) => {
 });
 
 let replaced = 0;
+let errMessage;
 prepare.stdout.on("data", (buffer) => {
   const message = buffer.toString();
+
+  if (/\w+\.\w+\(\d+,\d+\): error [A-Z]+\d+/.test(message)) {
+    errMessage = message;
+  }
 
   if (message.includes("Compiling...")) {
     console.log("\033[34minfo\x1b[0m Compiling typescript files...");
@@ -42,10 +47,11 @@ prepare.on("exit", (code) => {
     console.log("\x1b[32msuccess\x1b[0m Compiled in " + time.toFixed(2) + "ms");
   } else {
     console.log(
-      "\x1b[31merror\x1b[0m Failed to compile...\n\nProcess exited in " +
+      `\x1b[31merror\x1b[0m Failed to compile...\n${errMessage}\n\nProcess exited in ` +
         time.toFixed(2) +
         "ms",
     );
+
     process.exit(1);
   }
 });

@@ -80,8 +80,8 @@ export class Base {
      * Using this way we hide the client structure in the logs
      */
     Object.defineProperty(this, "_client", {
-      value: client!
-    })
+      value: client!,
+    });
 
     this.rawData = data;
     this.id = data.id ?? id!;

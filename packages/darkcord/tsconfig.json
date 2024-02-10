@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./src",
-    "declarationDir": "typings",
+    "declarationDir": "./typings",
     "paths": {
       "@utils/*": ["./utils/*"],
       "@client/*": ["./client/*"],
@@ -13,6 +13,6 @@
       "@manager/*": ["./manager/*"]
     }
   },
-  "exclude": ["dist"],
+  "exclude": ["./dist/**/*", "./typings/**/*"],
   "include": ["./src/**/*"]
 }

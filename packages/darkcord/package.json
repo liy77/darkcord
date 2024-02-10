@@ -11,6 +11,7 @@
   "main": "./dist/index.js",
   "typings": "./typings/index.d.ts",
   "scripts": {
+    "test": "pnpm pre && node test.js",
     "pre:windows": "prepare.bat",
     "pre:linux": "./prepare.sh",
     "pre": "node scripts/prepare.js",

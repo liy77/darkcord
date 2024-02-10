@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "pretty": "pnpm prettier --write .",
-    "build": "node scripts/build.js"
+    "build": "pnpm pretty && node scripts/build.js"
   },
   "devDependencies": {
     "@types/node": "^18.19.14",

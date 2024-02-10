@@ -2,6 +2,7 @@
   "name": "@darkcord/interactions",
   "version": "1.0.4",
   "description": "Package to handle darkcord web server for interactions",
+  "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",

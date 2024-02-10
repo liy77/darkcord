@@ -3,5 +3,6 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "exclude": ["dist", "types"]
+  "include": ["./src/**/*"],
+  "exclude": ["./dist/**/*"]
 }

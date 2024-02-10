@@ -173,8 +173,9 @@ export namespace Resolvable {
         guild
       ) {
         interaction.member =
-          guild.members.cache.get((interaction as Interaction<true>).member!.user?.id!) ??
-          guild.members.add(new Member(interaction.member, guild));
+          guild.members.cache.get(
+            (interaction as Interaction<true>).member!.user?.id!,
+          ) ?? guild.members.add(new Member(interaction.member, guild));
       }
     }
 
