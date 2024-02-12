@@ -1,7 +1,7 @@
 lockfileVersion: "6.0"
 
 settings:
-  autoInstallPeers: true
+  autoInstallPeers: false
   excludeLinksFromLockfile: false
 
 importers:
@@ -3373,6 +3373,7 @@ packages:
         integrity: sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==,
       }
     hasBin: true
+    requiresBuild: true
 
   /normalize-path@3.0.0:
     resolution:
