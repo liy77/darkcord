@@ -12,10 +12,10 @@ import {
   APIApplicationCommandOptionChoice,
   APIChannel,
   APIChatInputApplicationCommandInteractionData,
-  APIGuildMember,
   APIInteraction,
   APIInteractionDataResolved,
   APIInteractionDataResolvedGuildMember,
+  APIInteractionGuildMember,
   APIMessageApplicationCommandInteractionData,
   APIMessageComponentInteraction,
   APIMessageSelectMenuInteractionData,
@@ -65,7 +65,7 @@ export class Interaction<HttpPartial extends boolean = false> extends Base {
    * Member of the invoked command
    */
   member: HttpPartial extends true
-    ? APIGuildMember | Member | null
+    ? APIInteractionGuildMember | null
     : Member | null = null;
   /**
    * User of the invoked command
@@ -108,6 +108,9 @@ export class Interaction<HttpPartial extends boolean = false> extends Base {
     if ("member" in data && data.member && this.guild) {
       this.member = this.guild.members.add(new Member(data.member, this.guild));
       this.user = this.member!.user!;
+    } else if ("member" in data && data.member) {
+      this.member = data.member as HttpPartial extends true ? APIInteractionGuildMember | null : Member | null;
+      this.user = data.member.user ? data.client.users.add(data.member.user) : null;
     } else {
       this.user = data.user ? data.client.users.add(data.user) : null;
     }
