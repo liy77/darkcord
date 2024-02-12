@@ -33,7 +33,7 @@ export class Member extends Base {
   /**
    * When the user joined the guild
    */
-  joinedAt: number;
+  joinedAt: number | null;
   /**
    * The user this guild member represents
    */
@@ -67,7 +67,7 @@ export class Member extends Base {
 
     this.avatar = data.avatar;
     this.communicationDisabledUntil = data.communication_disabled_until;
-    this.joinedAt = new Date(data.joined_at).getTime();
+    this.joinedAt = data.joined_at ? new Date(data.joined_at).getTime() : null;
     this.user = null;
 
     if (data.user) {
