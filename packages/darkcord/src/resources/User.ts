@@ -147,7 +147,7 @@ export class User extends Base {
 
     let url =
       RouteBases.cdn +
-      CDNRoutes.userAvatarDecoration(this.id, this.avatarDecoration);
+      `/avatar-decoration-presets/${this.avatarDecoration}.png`;
 
     if (options?.size) {
       url += "?size=" + options.size.toString();
