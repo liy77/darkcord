@@ -97,7 +97,7 @@ export class Member extends Base {
    */
   get joinedAt(): number | null {
     return this.rawData.joinedAt
-      ? new Date(this.rawData.joinedAt).getTime()
+      ? Date.parse(this.rawData.joinedAt)
       : null;
   }
 
