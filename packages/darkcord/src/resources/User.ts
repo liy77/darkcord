@@ -2,6 +2,7 @@ import {
   Base64File,
   DataWithClient,
   DisplayUserAvatarOptions,
+  DisplayUserBannerOptions,
   ImageSize,
   JSONClientUserPatch,
 } from "@typings/index";
@@ -156,6 +157,33 @@ export class User extends Base {
         (Number(this.discriminator) % 5) as DefaultUserAvatarAssets,
       )
     );
+  }
+
+  /**
+   * The user's banner url
+   * @param options options for banner url
+   * @returns
+   */
+  bannerURL(options: DisplayUserBannerOptions) {
+    if (!this.banner) {
+      return null;
+    }
+
+    let url =
+      RouteBases.cdn +
+      CDNRoutes.userBanner(
+        this.id,
+        this.banner,
+        options?.format ?? this.banner.startsWith("a_")
+          ? ImageFormat.GIF
+          : ImageFormat.PNG,
+      );
+
+    if (options?.size) {
+      url += "?size=" + options.size.toString();
+    }
+
+    return url;
   }
 
   /**
