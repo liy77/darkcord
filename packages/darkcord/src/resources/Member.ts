@@ -96,7 +96,9 @@ export class Member extends Base {
    * When the user joined the guild
    */
   get joinedAt(): number | null {
-    return this.rawData.joinedAt ? new Date(this.rawData.joinedAt).getTime() : null;
+    return this.rawData.joinedAt
+      ? new Date(this.rawData.joinedAt).getTime()
+      : null;
   }
 
   /**
