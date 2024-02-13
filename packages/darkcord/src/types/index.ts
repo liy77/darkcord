@@ -35,6 +35,7 @@ import {
   RESTPatchAPIChannelJSONBody,
   RESTPostAPIGuildChannelJSONBody,
   UserAvatarFormat,
+  UserBannerFormat,
 } from "discord-api-types/v10";
 
 import { Client, InteractionClient } from "@client/Client";
@@ -52,6 +53,10 @@ export interface ImageSize {
 
 export interface DisplayUserAvatarOptions extends ImageSize {
   format?: UserAvatarFormat;
+}
+
+export interface DisplayUserBannerOptions extends ImageSize {
+  format?: UserBannerFormat;
 }
 
 export type GuildDataModel<T> = T & { guild: Guild };

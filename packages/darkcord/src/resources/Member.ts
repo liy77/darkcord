@@ -62,6 +62,10 @@ export class Member extends Base {
    * Whether the user is muted in voice channels
    */
   mute: boolean;
+  /**
+   * This member's guild nickname
+   */
+  nickname: string | null;
   constructor(data: APIGuildMember, public guild: Guild) {
     super(data, guild._client, data.user?.id);
 
@@ -82,6 +86,7 @@ export class Member extends Base {
             });
     }
 
+    this.nickname = data.nick ?? null;
     this.deaf = data.deaf;
     this.premiumSince = data.premium_since
       ? Date.parse(data.premium_since)
@@ -97,6 +102,13 @@ export class Member extends Base {
    */
   get voiceState() {
     return this.guild.voiceStates.get(this.id);
+  }
+
+  /**
+   * The member's display name
+   */
+  displayName() {
+    return this.nickname ?? this.user?.displayName();
   }
 
   /**
