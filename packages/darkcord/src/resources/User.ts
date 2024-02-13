@@ -95,11 +95,21 @@ export class User extends Base {
     this._update(data);
   }
 
-  _update(data: APIUser) {
+  _update(
+    data: APIUser & {
+      avatar_decoration_data?: { asset: string; sku_id: string };
+    },
+  ) {
     if ("username" in data) this.username = data.username;
     if ("global_name" in data) this.globalName = data.global_name;
     if ("avatar_decoration" in data)
       this.avatarDecoration = data.avatar_decoration;
+    else if (
+      "avatar_decoration_data" in data &&
+      data.avatar_decoration_data &&
+      "asset" in data.avatar_decoration_data
+    )
+      this.avatarDecoration = data.avatar_decoration_data.asset as string;
     if ("discriminator" in data) this.discriminator = data.discriminator;
     if ("avatar" in data) this.avatar = data.avatar;
     if ("banner" in data) this.banner = data.banner;
