@@ -31,10 +31,6 @@ export class Member extends Base {
    */
   communicationDisabledUntil: string | null | undefined;
   /**
-   * When the user joined the guild
-   */
-  joinedAt: number | null;
-  /**
    * The user this guild member represents
    */
   user: User | null;
@@ -71,7 +67,6 @@ export class Member extends Base {
 
     this.avatar = data.avatar;
     this.communicationDisabledUntil = data.communication_disabled_until;
-    this.joinedAt = data.joined_at ? new Date(data.joined_at).getTime() : null;
     this.user = null;
 
     if (data.user) {
@@ -95,6 +90,13 @@ export class Member extends Base {
     this.roles = data.roles;
     this.mute = data.mute;
     this.permissions = this.guild.permissionsOf(this);
+  }
+
+  /**
+   * When the user joined the guild
+   */
+  get joinedAt(): number | null {
+    return this.rawData.joinedAt ? new Date(this.rawData.joinedAt).getTime() : null;
   }
 
   /**
