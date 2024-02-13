@@ -62,6 +62,11 @@ export class Member extends Base {
    * This member's guild nickname
    */
   nickname: string | null;
+  /**
+   * When the user joined the guild
+   */
+  joinedAt: number | null;
+  declare rawData: APIGuildMember;
   constructor(data: APIGuildMember, public guild: Guild) {
     super(data, guild._client, data.user?.id);
 
@@ -86,17 +91,11 @@ export class Member extends Base {
     this.premiumSince = data.premium_since
       ? Date.parse(data.premium_since)
       : null;
+    this.joinedAt = data.joined_at ? Date.parse(data.joined_at) : null;
     this.pending = Boolean(data.pending);
     this.roles = data.roles;
     this.mute = data.mute;
     this.permissions = this.guild.permissionsOf(this);
-  }
-
-  /**
-   * When the user joined the guild
-   */
-  get joinedAt(): number | null {
-    return this.rawData.joined_at ? Date.parse(this.rawData.joined_at) : null;
   }
 
   /**
