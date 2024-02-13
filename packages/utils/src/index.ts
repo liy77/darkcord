@@ -1,9 +1,10 @@
 // @ts-ignore
 import { KeysToCamelCase, MessageAttachment } from "darkcord";
 import { APIInteractionResponse } from "discord-api-types/v10";
-import { Buffer } from "node:buffer";
+import { Buffer, Blob } from "node:buffer";
 import { readFileSync } from "node:fs";
 import { MakeErrorOptions, MessagePostData } from "./types";
+import { fetch, FormData } from "undici";
 
 export * from "./errors";
 export * from "./types";
@@ -136,13 +137,13 @@ export async function buildAttachment(
       return attachment;
     }
 
-    const blob = await fetch(attachment.file.toString()).then((res) =>
-      res.blob(),
+    const buffer = await fetch(attachment.file.toString()).then((res) =>
+      res.arrayBuffer(),
     );
 
     return {
       name: attachment.name,
-      file: blob,
+      file: Buffer.from(buffer),
       description: attachment.description,
     };
   }

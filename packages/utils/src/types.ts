@@ -1,4 +1,5 @@
 import { RESTPostAPIChannelMessageJSONBody } from "discord-api-types/v10";
+import { Buffer, Blob } from "node:buffer";
 
 export interface MessageAttachment {
   name: string;

@@ -1,7 +1,7 @@
 {
   "name": "@darkcord/utils",
   "description": "util functions for darkcord library",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
@@ -19,6 +19,7 @@
     "directory": "packages/utils"
   },
   "dependencies": {
-    "discord-api-types": "^0.37.33"
+    "discord-api-types": "^0.37.33",
+    "undici": "^5.19.1"
   }
 }
