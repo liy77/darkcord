@@ -3,12 +3,25 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { performance } = require("node:perf_hooks");
 
-const packages = fs
+const specifiedPackages = process.argv.slice(2);
+
+let packages = fs
   .readdirSync("./packages", {
     withFileTypes: true,
   })
   .filter((dirent) => dirent.isDirectory())
   .map((pkg) => pkg.name);
+
+if (!specifiedPackages.every((pkg) => packages.includes(pkg))) {
+  console.log(
+    "\x1b[31merror\x1b[0m Package " +
+      specifiedPackage +
+      " not found in packages directory",
+  );
+  return;
+} else {
+  packages = specifiedPackages;
+}
 
 const init = performance.now();
 function runBuild(script, pkg) {
