@@ -5,6 +5,7 @@ import { BaseCacheOptions } from "@typings/index";
 import { Partials } from "@utils/Constants";
 import { APIEmoji, APIGuild } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
+import { Forge, Forged } from "@resources/forge/Forgified";
 
 export class EmojiDataManager extends DataManager<Emoji | APIEmoji> {
   constructor(
@@ -37,6 +38,20 @@ export class EmojiDataManager extends DataManager<Emoji | APIEmoji> {
 
   add(emoji: Emoji | APIEmoji, replace = true) {
     return super.add(this.#resolve(emoji), replace, emoji.id || emoji.name!);
+  }
+
+  forge(idOrName: string): Emoji;
+  forge(data: Forged<APIEmoji, never>): Emoji;
+  forge(data: Forged<APIEmoji, never> | string) {
+    if (typeof data !== "string" && !data.id && !data.name) {
+      throw new Error("Emoji id or name is required to be forged");
+    }
+
+    const forged = new Forge(this.manager.client, Emoji).forge(
+      typeof data === "string" ? { id: data } : data,
+    );
+
+    return this.add(forged, false);
   }
 
   /**

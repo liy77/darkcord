@@ -37,6 +37,7 @@ import {
   RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPIChannelJSONBody,
   RESTPatchAPIChannelResult,
+  RESTPatchAPIGuildEmojiJSONBody,
   RESTPatchAPIGuildJSONBody,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
@@ -48,6 +49,7 @@ import {
   RESTPostAPIChannelThreadsJSONBody,
   RESTPostAPIChannelWebhookJSONBody,
   RESTPostAPIGuildChannelJSONBody,
+  RESTPostAPIGuildEmojiJSONBody,
   RESTPostAPIGuildForumThreadsJSONBody,
   RESTPostAPIGuildPruneJSONBody,
   RESTPostAPIGuildPruneResult,
@@ -106,6 +108,8 @@ export declare interface Rest {
   emit<T extends keyof RestEvents>(event: T, ...args: RestEvents[T]): boolean;
   emit(event: string, ...args: any[]): boolean;
 }
+
+export type TokenType = "Bot" | "Bearer";
 
 export class Rest extends EventEmitter {
   requestHandler: RequestHandler;
@@ -340,7 +344,7 @@ export class Rest extends EventEmitter {
 
   createReaction(channelId: string, messageId: string, reaction: string) {
     return this.put(
-      Routes.channelMessageReaction(channelId, messageId, reaction),
+      Routes.channelMessageReaction(channelId, messageId, reaction) + "/@me",
     ) as Promise<APIReaction>;
   }
 
@@ -363,6 +367,33 @@ export class Rest extends EventEmitter {
 
   getEmoji(guildId: string, emojiId: string) {
     return this.get(Routes.guildEmoji(guildId, emojiId)) as Promise<APIEmoji>;
+  }
+
+  createEmoji(
+    guildId: string,
+    data: RESTPostAPIGuildEmojiJSONBody,
+    reason?: string,
+  ) {
+    return this.post(Routes.guildEmojis(guildId), data, {
+      reason,
+    }) as Promise<APIEmoji>;
+  }
+
+  deleteEmoji(guildId: string, emojiId: string, reason?: string) {
+    return this.delete(Routes.guildEmoji(guildId, emojiId), {
+      reason,
+    }) as Promise<void>;
+  }
+
+  modifyEmoji(
+    guildId: string,
+    emojiId: string,
+    data: RESTPatchAPIGuildEmojiJSONBody,
+    reason?: string,
+  ) {
+    return this.patch(Routes.guildEmoji(guildId, emojiId), data, {
+      reason,
+    }) as Promise<APIEmoji>;
   }
 
   createGuildBan(

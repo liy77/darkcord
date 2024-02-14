@@ -5,7 +5,9 @@ import { RoleDataManager } from "@manager/RoleDataManager";
 import { GuildStickerDataManager } from "@manager/StickerDataManager";
 import {
   APIGuildWithShard,
+  Base64File,
   CreateChannelOptions,
+  CreateEmojiOptions,
   DataWithClient,
   KeysToCamelCase,
 } from "@typings/index";
@@ -41,6 +43,7 @@ import {
   RESTPatchAPIApplicationCommandJSONBody,
   RESTPatchAPIAutoModerationRuleJSONBody,
   RESTPatchAPICurrentGuildMemberJSONBody,
+  RESTPatchAPIGuildEmojiJSONBody,
   RESTPatchAPIGuildJSONBody,
   RESTPatchAPIGuildMemberJSONBody,
   RESTPatchAPIGuildRoleJSONBody,
@@ -900,6 +903,83 @@ export class Guild extends BaseGuild {
   }
 
   /**
+   * Create a new emoji for the guild. Requires the `CreateGuildExpressions` permission.
+   *
+   * Returns the new emoji object on success. Fires a `guildEmojisUpdate` Gateway event.
+   * @param options The options to create emoji
+   * @param reason Reason to create emoji
+   */
+  async createEmoji(options: CreateEmojiOptions, reason?: string) {
+    let emojiImage: Base64File | undefined;
+
+    if (options.data && options.data instanceof Buffer) {
+      emojiImage = "data:image/jpg;base64," + options.data.toString("base64");
+    } else if (
+      options.data &&
+      typeof options.data === "string" &&
+      options.data.startsWith("data:")
+    ) {
+      emojiImage = options.data;
+    } else {
+      throw new TypeError("Invalid emoji data");
+    }
+
+    const data = await this._client.rest.createEmoji(
+      this.id,
+      {
+        name: options.name,
+        image: emojiImage,
+        roles: options.roles,
+      },
+      reason,
+    );
+
+    return this.emojis.add(data);
+  }
+
+  /**
+   * Modify the given emoji.
+   *
+   * For emojis created by the current user, requires either the `createGuildExpressions` or `manageGuildExpressions` permission.
+   *
+   * For other emojis, requires the `manageGuildExpressions` permission.
+   *
+   * Returns the updated emoji object on success. Fires a `guildEmojisUpdate` Gateway event.
+   * @param emojiId The id of emoji to be edited
+   * @param options The options to edit emoji
+   * @param reason Reason to edit emoji
+   * @returns
+   */
+  async editEmoji(
+    emojiId: string,
+    options: RESTPatchAPIGuildEmojiJSONBody,
+    reason?: string,
+  ) {
+    const data = await this._client.rest.modifyEmoji(
+      this.id,
+      emojiId,
+      options,
+      reason,
+    );
+
+    return this.emojis.add(data);
+  }
+
+  /**
+   * Delete the given emoji.
+   *
+   * For emojis created by the current user, requires either the `createGuildExpressions` or `manageGuildExpressions`S permission.
+   *
+   * For other emojis, requires the `manageGuildExpressions` permission.
+   * @param emojiId The id of emoji to be deleted
+   * @param reason Reason to delete emoji
+   * @returns
+   */
+  deleteEmoji(emojiId: string, reason?: string) {
+    return this._client.rest.deleteEmoji(this.id, emojiId, reason);
+  }
+
+  /**
    * The acronym that shows up in place of a guild icon
    * @returns
    */
@@ -1026,6 +1106,17 @@ export class Guild extends BaseGuild {
 
     super._update(data);
     return this;
+  }
+
+  /**
+   * Update information of this guild
+   *
+   * Util if this is forged
+   * @returns
+   */
+  async fetchInformation() {
+    const data = await this._client.rest.getGuild(this.id);
+    return this._update(data);
   }
 }
 

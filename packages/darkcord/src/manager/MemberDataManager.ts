@@ -4,6 +4,7 @@ import { Member } from "@resources/Member";
 import { BaseCacheOptions } from "@typings/index";
 import { APIGuildMember } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
+import { Forge, Forged } from "@resources/forge/Forgified";
 
 export class MemberDataManager extends DataManager<Member> {
   constructor(
@@ -26,6 +27,14 @@ export class MemberDataManager extends DataManager<Member> {
 
   add(member: Member, replace = true) {
     return super.add(member, replace, member.id);
+  }
+
+  forge(data: Forged<APIGuildMember> | string, guild: Guild) {
+    const forged = new Forge(this.manager.client, Member).forge(
+      typeof data === "string" ? { id: data } : data,
+      guild,
+    );
+    return this.add(forged, false);
   }
 
   async fetch(id: string): Promise<Member> {

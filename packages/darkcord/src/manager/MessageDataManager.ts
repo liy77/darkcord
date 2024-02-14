@@ -1,13 +1,11 @@
 import { CacheManager } from "@cache/CacheManager";
 import { GuildTextChannel, TextBasedChannel } from "@resources/Channel";
-import { Message } from "@resources/Message";
+import { Message, APIMessage } from "@resources/Message";
 import { BaseCacheOptions } from "@typings/index";
 import { Resolvable } from "@utils/Resolvable";
-import {
-  APIMessage,
-  RESTGetAPIChannelMessagesQuery,
-} from "discord-api-types/v10";
+import { RESTGetAPIChannelMessagesQuery } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
+import { Forge, Forged } from "@resources/forge/Forgified";
 
 export class MessageDataManager extends DataManager<Message> {
   constructor(
@@ -45,16 +43,26 @@ export class MessageDataManager extends DataManager<Message> {
     return this.cache.get(id);
   }
 
+  forge(id: string): Message;
+  forge(data: Forged<APIMessage>): Message;
+  forge(data: Forged<APIMessage> | string) {
+    const forged = new Forge(this.manager.client, Message).forge(
+      typeof data === "string" ? { id: data } : data,
+    );
+
+    return this.add(forged, false);
+  }
+
   fetch(id: string): Promise<Message>;
   fetch(options: RESTGetAPIChannelMessagesQuery): Promise<Message[]>;
   async fetch(
     options: string | RESTGetAPIChannelMessagesQuery,
   ): Promise<Message | Message[]> {
     if (typeof options === "string") {
-      const message = await this.manager.client.rest.getMessage(
+      const message = (await this.manager.client.rest.getMessage(
         this.channel.id,
         options,
-      );
+      )) as APIMessage;
 
       return Resolvable.resolveMessage(
         new Message({
@@ -65,10 +73,10 @@ export class MessageDataManager extends DataManager<Message> {
       );
     }
 
-    const messageArr = await this.manager.client.rest.getMessages(
+    const messageArr = (await this.manager.client.rest.getMessages(
       this.channel.id,
       options,
-    );
+    )) as APIMessage[];
 
     return Promise.all(
       messageArr.map((message_1) =>

@@ -132,6 +132,8 @@ export class User extends Base {
       this.accentColor = data.accent_color;
     else this.accentColor ??= null;
 
+    this.rawData = Object.assign({}, data, this.rawData);
+
     return this;
   }
 
@@ -174,7 +176,7 @@ export class User extends Base {
    * @param options options for banner url
    * @returns
    */
-  bannerURL(options: DisplayUserBannerOptions) {
+  bannerURL(options?: DisplayUserBannerOptions) {
     if (!this.banner) {
       return null;
     }
@@ -337,8 +339,14 @@ export class ClientUser extends User {
       avatar = `data:image/${
         data.avatar.contentType ?? "jpg"
       };base64,${data.avatar.data.toString("base64")}`;
-    } else if (data.avatar && typeof data.avatar.data === "string") {
+    } else if (
+      data.avatar &&
+      typeof data.avatar.data === "string" &&
+      data.avatar.data.startsWith("data:")
+    ) {
       avatar = data.avatar.data;
+    } else {
+      throw new TypeError("Invalid avatar data");
     }
 
     this._client.rest.patch(Routes.user(), {

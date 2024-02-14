@@ -59,16 +59,22 @@ export class Role extends Base {
   }
 
   _update(data: APIRole) {
-    this.name = data.name;
-    this.color = data.color;
-    this.hoist = Boolean(data.hoist);
-    this.icon = data.icon;
-    this.position = data.position;
-    this.mentionable = Boolean(data.mentionable);
-    this.tags = data.tags;
-    this.permissions = new Permissions(BigInt(data.permissions));
-    this.managed = Boolean(data.managed);
-    this.unicodeEmoji = data.unicode_emoji;
+    if ("name" in data) this.name = data.name;
+    if ("color" in data) this.color = data.color;
+    if ("hoist" in data) this.hoist = Boolean(data.hoist);
+    else this.hoist ??= false;
+    if ("icon" in data) this.icon = data.icon;
+    if ("position" in data) this.position = data.position;
+    if ("mentionable" in data) this.mentionable = Boolean(data.mentionable);
+    else this.mentionable ??= false;
+    if ("tags" in data) this.tags = data.tags;
+    if ("permissions" in data)
+      this.permissions = new Permissions(BigInt(data.permissions));
+    if ("managed" in data) this.managed = Boolean(data.managed);
+    else this.managed ??= false;
+    if ("unicode_emoji" in data) this.unicodeEmoji = data.unicode_emoji;
+
+    this.rawData = Object.assign({}, data, this.rawData);
 
     return this;
   }
@@ -82,6 +88,17 @@ export class Role extends Base {
     reason?: string,
   ) {
     return this.guild.editRole(this.id, options, reason);
+  }
+
+  /**
+   * Update information of this role
+   *
+   * Util if this is forged
+   * @returns
+   */
+  async fetchInformation() {
+    const data = await this._client.rest.getRoles(this.id);
+    return this._update((data.find((r) => r.id === this.id) as APIRole) ?? {});
   }
 
   get forged() {

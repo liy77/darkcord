@@ -5,6 +5,7 @@ import { BaseCacheOptions, DataWithClient } from "@typings/index";
 import { Partials } from "@utils/Constants";
 import { APIGuild, APIRole } from "discord-api-types/v10";
 import { DataCache, DataManager } from "./DataManager";
+import { Forge } from "@resources/forge/Forgified";
 
 export class ClientRoles {
   cache: DataCache<Role | APIRole>;
@@ -37,14 +38,14 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
     return super.add(this._resolve(role), replace, role.id);
   }
 
-  forge(id: string) {
-    return this.add(
-      new Role(
-        { client: this.manager.client, id } as DataWithClient<APIRole>,
-        this.guild,
-      ),
-      false,
+  forge(id: string): Role;
+  forge(data: APIRole): Role;
+  forge(data: APIRole | string) {
+    const forged = new Forge(this.manager.client, Role).forge(
+      typeof data === "string" ? { id: data } : data,
     );
+
+    return this.add(forged, false);
   }
 
   _resolve(role: APIRole | Role, addInCache = false) {

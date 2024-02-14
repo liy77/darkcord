@@ -4,6 +4,7 @@ import { BaseCacheOptions, DataWithClient } from "@typings/index";
 import { Partials } from "@utils/Constants";
 import { APIUser } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
+import { Forge } from "@resources/forge/Forgified";
 
 export class UserDataManager extends DataManager<APIUser | User> {
   constructor(
@@ -18,14 +19,14 @@ export class UserDataManager extends DataManager<APIUser | User> {
     return user && this.#resolve(user, true);
   }
 
-  forge(id: string) {
-    return this.add(
-      new User({
-        client: this.manager.client,
-        id,
-      } as unknown as DataWithClient<APIUser>),
-      false,
+  forge(id: string): User;
+  forge(data: APIUser): User;
+  forge(data: APIUser | string): User {
+    const forged = new Forge(this.manager.client, User).forge(
+      typeof data === "string" ? { id: data } : data,
     );
+
+    return this.add(forged, false)! as User;
   }
 
   add(user: User | APIUser, replace = true): User | APIUser | null {
