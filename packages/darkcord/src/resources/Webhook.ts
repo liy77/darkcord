@@ -121,6 +121,9 @@ export class Webhook extends Base {
         this._client.channels.cache.get(data.source_channel.id) ??
         data.source_channel;
     }
+
+    this.rawData = Object.assign({}, data, this.rawData);
+
     return this;
   }
 }
