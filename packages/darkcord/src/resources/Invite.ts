@@ -52,6 +52,7 @@ export class Invite {
    */
   guildScheduledEvent: ScheduledEvent | null;
   _client: AnyClient;
+  declare rawData: APIInvite;
   constructor(data: DataWithClient<Partial<APIInvite>>) {
     this._client = data.client;
     this.guild = null;
@@ -115,5 +116,9 @@ export class Invite {
         );
       }
     }
+
+    this.rawData = Object.assign({}, data, this.rawData);
+
+    return this;
   }
 }
