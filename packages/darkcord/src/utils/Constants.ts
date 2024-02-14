@@ -34,7 +34,7 @@ export enum Events {
   MessageUpdate = "messageUpdate",
   MessageDeleteBulk = "messageDeleteBulk",
   MessageReactionAdd = "messageReactionAdd",
-  messageSuperReactionAdd = "messageSuperReactionAdd",
+  MessageSuperReactionAdd = "messageSuperReactionAdd",
   MessageReactionRemove = "messageReactionRemove",
   MessageSuperReactionRemove = "messageSuperReactionRemove",
   MessageReactionRemoveAll = "messageReactionRemoveAll",
