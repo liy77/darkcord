@@ -36,7 +36,9 @@ export class CacheManager {
     switch (option) {
       case "guilds": {
         if (this._cacheLimit("guilds")) {
-          this.client.emit("warn", "Limiting guild cache can cause problems");
+          this.client.once("connect", () => {
+            this.client.emit("warn", "Limiting guild cache can cause problems");
+          });
         }
 
         return new GuildDataManager(this, this._cacheLimit("guilds"));

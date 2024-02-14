@@ -65,6 +65,8 @@ export class WebSocket {
       await this.handleShard(shard);
       this.#buckets[ratelimitKey] = Date.now();
     }
+
+    this.client.emit("connect");
   }
 
   async handleShard(gatewayShard: GatewayShard) {
