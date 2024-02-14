@@ -40,7 +40,7 @@ import { Base } from "./Base";
 import { Channel, TextBasedChannel } from "./Channel";
 import { Guild } from "./Guild";
 import { Member } from "./Member";
-import { Message } from "./Message";
+import { APIMessage, Message } from "./Message";
 import { Role } from "./Role";
 import { User } from "./User";
 
@@ -350,12 +350,12 @@ export class ReplyableInteraction extends Interaction {
    * @returns
    */
   async editFollowUp(messageId: string, content: MessagePostData) {
-    const data = await this._client.rest.editWebhookMessage(
+    const data = (await this._client.rest.editWebhookMessage(
       this.applicationId,
       this.token,
       messageId,
       content,
-    );
+    )) as APIMessage;
     const channel = this._client.channels.cache.get(
       data.channel_id,
     )! as TextBasedChannel;
@@ -379,11 +379,11 @@ export class ReplyableInteraction extends Interaction {
    * @returns
    */
   async getFollowUp(messageId: string) {
-    const data = await this._client.rest.getWebhookMessage(
+    const data = (await this._client.rest.getWebhookMessage(
       this.applicationId,
       this.token,
       messageId,
-    );
+    )) as APIMessage;
     const channel = this._client.channels.cache.get(data.channel_id)!;
     const guildId = channel.isGuildChannel() ? channel.guildId : undefined;
     const message = new Message(
@@ -405,11 +405,11 @@ export class ReplyableInteraction extends Interaction {
       });
     }
 
-    const rawMessage = await this._client.rest.getWebhookMessage(
+    const rawMessage = (await this._client.rest.getWebhookMessage(
       this.applicationId,
       this.token,
       "@original",
-    );
+    )) as APIMessage;
     const channel = this._client.channels.cache.get(rawMessage.channel_id)!;
     const guildId = channel.isGuildChannel() ? channel.guildId : undefined;
 
@@ -613,9 +613,11 @@ export class ComponentInteraction extends ReplyableInteraction {
     this.customId = data.data.custom_id;
     this.locale = data.locale;
     this.guildLocale = data.guild_locale ?? null;
+
+    const rawMessage = data.message as APIMessage;
     this.message = Resolvable.resolveMessage(
       new Message({
-        ...data.message,
+        ...rawMessage,
         client: data.client,
       }),
       data.client,
@@ -732,7 +734,7 @@ export class ModalSubmitInteraction extends ReplyableInteraction {
     this.guildLocale = data.guild_locale ?? null;
     this.message = data.message
       ? Resolvable.resolveMessage(
-          new Message({ ...data.message, client: data.client }),
+          new Message({ ...(data.message as APIMessage), client: data.client }),
           data.client,
         )
       : null;
@@ -1060,7 +1062,7 @@ export class MessageApplicationCommandInteractionData extends Base {
     this.type = data.type;
     this.targetId = data.target_id;
 
-    const rawMessage = data.resolved.messages[0];
+    const rawMessage = data.resolved.messages[0] as APIMessage;
     const channel = data.client.channels.cache.get(rawMessage.channel_id);
     const message = (this.message = new Message({
       ...rawMessage,
@@ -1184,7 +1186,7 @@ export class CommandInteraction<
     this.locale = data.locale;
     this.message = data.message
       ? Resolvable.resolveMessage(
-          new Message({ ...data.message, client: data.client }),
+          new Message({ ...(data.message as APIMessage), client: data.client }),
           data.client,
         )
       : null;

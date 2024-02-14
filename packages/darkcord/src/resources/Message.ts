@@ -4,8 +4,7 @@ import { Resolvable } from "@utils/Resolvable";
 import {
   APIAttachment,
   APIEmbed,
-  APIMessage,
-  APIReaction,
+  APIMessage as RawAPIMessage,
   APIStickerItem,
   APIUser,
   MessageFlags as MFlags,
@@ -15,7 +14,7 @@ import { DataCache } from "../manager/DataManager";
 import { Base } from "./Base";
 import { BitField } from "./BitField";
 import { TextBasedChannel } from "./Channel";
-import { Emoji, Reaction } from "./Emoji";
+import { APISuperReaction, APIReaction, Emoji, Reaction } from "./Emoji";
 import { Guild } from "./Guild";
 import { User } from "./User";
 import { Member } from "./Member";
@@ -26,6 +25,11 @@ export class MessageFlags extends BitField<MFlags, typeof MFlags> {
   }
 
   static Flags = MFlags;
+}
+
+export interface APIMessage extends RawAPIMessage {
+  reactions?: (APIReaction | APISuperReaction)[];
+  referenced_message?: APIMessage | null;
 }
 
 export class Message extends Base {
@@ -106,7 +110,7 @@ export class Message extends Base {
   /**
    * Reactions in this message
    */
-  reactions: DataCache<Reaction | APIReaction>;
+  reactions: DataCache<Reaction | APIReaction | APISuperReaction>;
   /**
    * Id of guild was message has sent
    */
@@ -115,6 +119,7 @@ export class Message extends Base {
    * The member of this message (only received in guild)
    */
   member: Member | null;
+  declare rawData: APIMessage;
   constructor(data: DataWithClient<APIMessage>, guild?: Guild) {
     super(data, data.client);
 
@@ -195,20 +200,26 @@ export class Message extends Base {
       emoji = Emoji.getEncodedURI(emoji);
     }
 
-    let reaction = await this._client.rest.createReaction(
+    let reaction = (await this._client.rest.createReaction(
       this.channelId,
       this.id,
       emoji,
-    );
+    )) as unknown as APIReaction;
 
     if (!this._client.cache._partial(Partials.Reaction)) {
-      reaction = new Reaction({ ...reaction, client: this._client });
+      // @ts-expect-error - raw reaction returns count_details
+      reaction = new Reaction({
+        ...reaction,
+        client: this._client,
+        message_id: this.id,
+        channel_id: this.channel?.id!,
+      });
     }
 
     return this.reactions._add(
       reaction,
       true,
-      reaction.emoji.id ?? reaction.emoji.name!,
+      reaction.emoji?.id ?? reaction.emoji?.name!,
     );
   }
 
@@ -231,11 +242,11 @@ export class Message extends Base {
    * @returns
    */
   async edit(content: MessagePostData) {
-    const data = await this._client.rest.editMessage(
+    const data = (await this._client.rest.editMessage(
       this.channelId,
       this.id,
       content,
-    );
+    )) as APIMessage;
 
     return this._update(data);
   }
@@ -270,7 +281,7 @@ export class Message extends Base {
     ) as TextBasedChannel;
 
     if (Array.isArray(data.reactions)) {
-      for (const reaction of data.reactions) {
+      for (const reaction of data.reactions as APIReaction[]) {
         const resolved = this._client.cache._partial(Partials.Reaction)
           ? reaction
           : new Reaction({ ...reaction, client: this._client });
@@ -282,6 +293,8 @@ export class Message extends Base {
         );
       }
     }
+
+    this.rawData = Object.assign({}, data, this.rawData);
 
     return this;
   }

@@ -1,9 +1,6 @@
 import { TextBasedChannel } from "@resources/Channel";
-import { Message } from "@resources/Message";
-import {
-  APIMessage,
-  GatewayMessageUpdateDispatchData,
-} from "discord-api-types/v10";
+import { Message, APIMessage } from "@resources/Message";
+import { GatewayMessageUpdateDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 import { structuredClone } from "@utils/index";
 import { Resolvable } from "@utils/Resolvable";

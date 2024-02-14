@@ -45,7 +45,7 @@ import { BitField } from "./BitField";
 import { Emoji } from "./Emoji";
 import { Guild } from "./Guild";
 import { ThreadMember } from "./Member";
-import { Message } from "./Message";
+import { APIMessage, Message } from "./Message";
 import { PermissionOverwrite } from "./Permission";
 import { User } from "./User";
 import { Webhook } from "./Webhook";
@@ -151,6 +151,8 @@ export class Channel extends Base {
     if ("name" in data) this.name = data.name;
     if ("flags" in data)
       this.flags = (data.flags && new ChannelFlags(data.flags)) ?? null;
+
+    this.rawData = Object.assign({}, data, this.rawData);
 
     return this;
   }
@@ -273,10 +275,10 @@ export class TextBasedChannel extends Channel {
   }
 
   async createMessage(content: MessagePostData | string) {
-    const message = await this._client.rest.createMessage(
+    const message = (await this._client.rest.createMessage(
       this.id,
       transformMessagePostData(content),
-    );
+    )) as APIMessage;
 
     return Resolvable.resolveMessage(
       new Message({
@@ -457,10 +459,10 @@ export class GuildTextChannel extends Mixin(GuildChannel, TextBasedChannel) {
 
   // Override TextBasedChannel.createMessage for guild
   async createMessage(content: MessagePostData) {
-    const message = await this._client.rest.createMessage(
+    const message = (await this._client.rest.createMessage(
       this.id,
       transformMessagePostData(content),
-    );
+    )) as APIMessage;
 
     return Resolvable.resolveMessage(
       new Message(
@@ -936,10 +938,10 @@ export class VoiceChannel extends Mixin(BaseVoiceChannel, TextBasedChannel) {
 
   // Override TextBasedChannel.createMessage for guild
   async createMessage(content: MessagePostData) {
-    const message = await this._client.rest.createMessage(
+    const message = (await this._client.rest.createMessage(
       this.id,
       transformMessagePostData(content),
-    );
+    )) as APIMessage;
 
     return Resolvable.resolveMessage(
       new Message(

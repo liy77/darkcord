@@ -205,7 +205,17 @@ export interface ClientEvents {
     user: User | APIUser,
     message: Message,
   ];
+  messageSuperReactionAdd: [
+    reaction: Reaction | APIReaction,
+    user: User | APIUser,
+    message: Message,
+  ];
   messageReactionRemove: [
+    reaction: Reaction | APIReaction,
+    user: User | APIUser,
+    message: Message,
+  ];
+  messageSuperReactionRemove: [
     reaction: Reaction | APIReaction,
     user: User | APIUser,
     message: Message,
@@ -381,6 +391,21 @@ export interface ClientAvatar {
 export interface JSONClientUserPatch {
   username?: string;
   avatar?: ClientAvatar;
+}
+
+export interface CreateEmojiOptions {
+  /**
+   * The 128x128 emoji image buffer or base64
+   */
+  data: Buffer | Base64File;
+  /**
+   * The name of the emoji
+   */
+  name: string;
+  /**
+   * Roles allowed to use this emoji
+   */
+  roles?: string[];
 }
 
 export type MessageTimestampStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";

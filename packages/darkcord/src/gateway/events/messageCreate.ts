@@ -1,5 +1,5 @@
 import { GatewayMessageCreateDispatchData } from "discord-api-types/v10";
-import { Message } from "@resources/Message";
+import { APIMessage, Message } from "@resources/Message";
 import { Event } from "./Event";
 import { Resolvable } from "@utils/Resolvable";
 import { Events } from "@utils/Constants";
@@ -15,7 +15,7 @@ export class MessageCreate extends Event {
 
     const message = new Message(
       {
-        ...data,
+        ...(data as APIMessage),
         client: this.client,
       },
       guild,

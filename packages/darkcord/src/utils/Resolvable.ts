@@ -12,9 +12,9 @@ import {
 import { Guild } from "@resources/Guild";
 import { Interaction } from "@resources/Interaction";
 import { Member } from "@resources/Member";
-import { Message } from "@resources/Message";
+import { Message, APIMessage } from "@resources/Message";
 import { AnyClient } from "@typings/index";
-import { APIChannel, APIGuild, APIMessage } from "discord-api-types/v10";
+import { APIChannel, APIGuild } from "discord-api-types/v10";
 
 export type GuildResolvable = Guild | APIGuild | string;
 export type AnyChannel =
@@ -115,7 +115,8 @@ export namespace Resolvable {
       if (typeof channelResolvable === "string") {
         const c =
           client.channels.cache.get(channelResolvable) ??
-          client.threads.get(channelResolvable);
+          client.threads.get(channelResolvable) ??
+          client.channels.forge(channelResolvable);
         resolved = c;
       } else {
         resolved = Channel.from({ ...channelResolvable, client }, guild!);

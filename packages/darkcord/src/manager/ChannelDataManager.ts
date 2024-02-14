@@ -1,5 +1,14 @@
 import { CacheManager } from "@cache/CacheManager";
-import { Channel } from "@resources/Channel";
+import {
+  CategoryChannel,
+  Channel,
+  DMChannel,
+  ForumChannel,
+  GuildTextChannel,
+  StageChannel,
+  ThreadChannel,
+  VoiceChannel,
+} from "@resources/Channel";
 import { Guild } from "@resources/Guild";
 import { BaseCacheOptions, DataWithClient } from "@typings/index";
 import {
@@ -8,7 +17,8 @@ import {
   ChannelType,
 } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
-import { GuildResolvable, Resolvable } from "@utils/Resolvable";
+import { AnyChannel, GuildResolvable, Resolvable } from "@utils/Resolvable";
+import { Forge, Forged } from "@resources/forge/Forgified";
 
 export class ChannelDataManager extends DataManager<Channel> {
   constructor(
@@ -71,12 +81,58 @@ export class ChannelDataManager extends DataManager<Channel> {
     return this.cache.get(id);
   }
 
-  forge(id: string) {
+  forge(id: string): Channel;
+  forge(data: Forged<APIChannel>): Channel;
+  forge(data: Forged<APIChannel> | string, guild?: Guild) {
+    let base: new (...args: any) => AnyChannel = Channel;
+
+    if (typeof data === "string") {
+      data = { id: data } as DataWithClient<APIChannel>;
+    }
+
+    if ("type" in data && data.type) {
+      switch (data.type as ChannelType) {
+        case ChannelType.DM: {
+          base = DMChannel;
+          break;
+        }
+        case ChannelType.GuildText: {
+          base = GuildTextChannel;
+          break;
+        }
+        case ChannelType.GuildVoice: {
+          base = VoiceChannel;
+          break;
+        }
+        case ChannelType.PublicThread:
+        case ChannelType.PrivateThread: {
+          base = ThreadChannel;
+          break;
+        }
+        case ChannelType.GuildStageVoice: {
+          base = StageChannel;
+          break;
+        }
+        case ChannelType.GuildCategory: {
+          base = CategoryChannel;
+          break;
+        }
+        case ChannelType.GuildForum: {
+          base = ForumChannel;
+          break;
+        }
+        default: {
+          base = Channel;
+          break;
+        }
+      }
+    }
+
     return this.add(
-      new Channel({
-        client: this.manager.client,
-        id,
-      } as DataWithClient<APIChannel>),
+      new Forge<typeof Channel>(
+        this.manager.client,
+        base as unknown as typeof Channel,
+      ).forge(...[data, guild]),
       false,
     );
   }
