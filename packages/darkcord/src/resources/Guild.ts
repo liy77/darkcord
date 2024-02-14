@@ -928,7 +928,7 @@ export class Guild extends BaseGuild {
       this.id,
       {
         name: options.name,
-        image: emojiImage,
+        image: emojiImage as string,
         roles: options.roles,
       },
       reason,
