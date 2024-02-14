@@ -93,7 +93,10 @@ export class RequestHandler {
     router = this.#apiRoute + router;
 
     const headers = {
-      Authorization: (auth?.startsWith("Bot") || auth?.startsWith("Bearer")) ? auth : "Bot " + auth,
+      Authorization:
+        auth?.startsWith("Bot") || auth?.startsWith("Bearer")
+          ? auth
+          : "Bot " + auth,
       "User-Agent": `DiscordBot (https://github.com/denkylabs/darkcord, v${
         require("../../package.json").version
       })`,
