@@ -913,7 +913,7 @@ export class Guild extends BaseGuild {
     let emojiImage: Base64File | undefined;
 
     if (options.data && options.data instanceof Buffer) {
-      emojiImage = "data:image/jpg;base64," + options.data.toString("base64");
+      emojiImage = `data:image/jpg;base64,${options.data.toString("base64")}` as Base64File;
     } else if (
       options.data &&
       typeof options.data === "string" &&
