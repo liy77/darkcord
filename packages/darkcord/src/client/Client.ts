@@ -1,6 +1,6 @@
 import { CacheManager } from "@cache/CacheManager";
 import { Interaction } from "@resources/Interaction";
-import { ClientUser, User } from "@resources/User";
+import { ClientUser } from "@resources/User";
 import {
   BaseClientOptions,
   ClientEvents,
