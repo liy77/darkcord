@@ -275,7 +275,7 @@ export function transformMessagePostData(
     };
   }
 
-  if (!data.files && !data.embeds && !data.content) {
+  if (!data.files && !data.embeds && !data.content && !data.components?.length) {
     throw MakeError({
       name: "InvalidMessagePostData",
       message:
