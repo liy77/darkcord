@@ -1,7 +1,7 @@
 {
   "name": "@darkcord/utils",
   "description": "util functions for darkcord library",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
@@ -20,6 +20,10 @@
   },
   "dependencies": {
     "discord-api-types": "^0.37.33",
+    "lodash.clonedeep": "^4.5.0",
     "undici": "^5.19.1"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.9"
   }
 }
