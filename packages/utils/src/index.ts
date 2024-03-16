@@ -264,13 +264,13 @@ export function isEqual<_1 extends any, _2 extends any>(
 
 export function structuredClone<T>(o: T): T {
   if (o instanceof Base) {
-    const copy = new { [this.constructor.name]: class {} }[
-      this.constructor.name
+    const copy = new { [o.constructor.name]: class {} }[
+      o.constructor.name
     ]();
 
-    for (const key in this) {
+    for (const key in o) {
       if (
-        this.hasOwnProperty(key) &&
+        o.hasOwnProperty(key) &&
         !key.startsWith("_") &&
         this[key] !== undefined
       ) {
