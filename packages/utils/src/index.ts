@@ -279,8 +279,10 @@ export function structuredClone<T>(o: T): T {
     }
 
     return copy as T;
-  } else {
+  } else if (o) {
     return clone(o);
+  } else {
+    return o;
   }
 }
 
