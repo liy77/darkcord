@@ -5,6 +5,7 @@ import {
 } from "@typings/index";
 import {
   APIGuildMember,
+  APIRole,
   APIThreadMember,
   CDNRoutes,
   ImageFormat,
@@ -20,6 +21,55 @@ import { ThreadChannel } from "./Channel";
 import { Guild } from "./Guild";
 import { Permissions } from "./Permission";
 import { User } from "./User";
+import { Role } from "./Role";
+import { Cache } from "@cache/Cache";
+
+export class MemberRoles {
+  private _roles: string[];
+  cache: Cache<APIRole | Role>;
+  constructor(public guild: Guild, roles: string[]) {
+    Object.defineProperty(this, "_roles", {
+      value: roles,
+      enumerable: false,
+    });
+
+    this.cache = guild.roles.cache.filter((role) => roles.includes(role.id));
+  }
+
+  /**
+   * Get the member role with the highest position
+   * @returns 
+   */
+  highest() {
+    return this.cache.reduce(([, prev], [, role]) => {
+      return prev && this.guild.roles.comparePositions(role.id, prev.id) > 0 ? [role.id, role] : [prev.id, prev];
+    }, [this.guild.id, this.guild.roles.everyone!])?.[1];
+  }
+
+  /**
+   * Compare the position of a member role with another guild role
+   * @param roleId The member role id
+   * @param otherRoleId The guild role id
+   * @returns 
+   */
+  comparePositions(roleId: string, otherRoleId: string) {
+    const role = this.cache.get(roleId);
+
+    if (!role) {
+      throw new TypeError("Role not found in cache");
+    }
+
+    return this.guild.roles.comparePositions(role.id, otherRoleId);
+  }
+
+  [Symbol.iterator]() {
+    return this.cache.values();
+  }
+
+  toArray() {
+    return this._roles;
+  }
+}
 
 export class Member extends Base {
   /**
@@ -49,7 +99,7 @@ export class Member extends Base {
   /**
    * Member roles
    */
-  roles: string[];
+  roles: MemberRoles;
   /**
    * Member permissions bitfield
    */
@@ -93,7 +143,7 @@ export class Member extends Base {
       : null;
     this.joinedAt = data.joined_at ? Date.parse(data.joined_at) : null;
     this.pending = Boolean(data.pending);
-    this.roles = data.roles;
+    this.roles = new MemberRoles(guild, data.roles);
     this.mute = data.mute;
     this.permissions = this.guild.permissionsOf(this);
   }

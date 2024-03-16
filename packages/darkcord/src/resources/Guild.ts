@@ -836,8 +836,7 @@ export class Guild extends BaseGuild {
 
     if (!member) member = this.members.cache.get(userId);
 
-    for (const roleId of member!.roles) {
-      const role = this.roles.cache.get(roleId);
+    for (const role of member!.roles) {
 
       if (role) {
         const perm =
