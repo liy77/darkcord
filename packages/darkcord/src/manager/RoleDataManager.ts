@@ -26,6 +26,42 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
     });
   }
 
+  /**
+   * Returns the everyone role of the guild
+   * @returns 
+   */
+  get everyone() {
+    return this.cache.get(this.guild.id);
+  }
+
+  /**
+   * Compare the position of role with another guild role
+   * @param roleId The role id
+   * @param otherRoleId The other role id
+   * @returns 
+   */
+  comparePositions(roleId: string, otherRoleId: string) {
+    const role = this.get(roleId);
+    const otherRole = this.get(otherRoleId);
+
+    if (!role || !otherRole) {
+      throw new TypeError("Missing role(s) in cache");
+    }
+
+    const p1 = role.position;
+    const p2 = otherRole.position;
+
+    if (p1 === p2) {
+      return parseInt(otherRoleId, 10) - parseInt(roleId, 10);
+    }
+
+    return role.position - otherRole.position;
+  }
+
+  premiumSubscriberRole() {
+    return this.cache.find((role) => Boolean(role?.tags?.premium_subscriber))?.[1] ?? null;
+  }
+
   get(id: string) {
     return this.cache.get(id);
   }
