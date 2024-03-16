@@ -272,9 +272,9 @@ export function structuredClone<T>(o: T): T {
       if (
         o.hasOwnProperty(key) &&
         !key.startsWith("_") &&
-        this[key] !== undefined
+        o[key] !== undefined
       ) {
-        copy[key] = this[key];
+        copy[key] = o[key];
       }
     }
 
