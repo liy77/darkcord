@@ -5,6 +5,7 @@ import { Buffer, Blob } from "node:buffer";
 import { readFileSync } from "node:fs";
 import { MakeErrorOptions, MessagePostData } from "./types";
 import { fetch, FormData } from "undici";
+import clone from "lodash.clonedeep";
 
 export * from "./errors";
 export * from "./types";
@@ -261,9 +262,8 @@ export function isEqual<_1 extends any, _2 extends any>(
   return false;
 }
 
-export function structuredClone<T>(o: T): T | null {
-  if (!o) return null;
-  return Object.assign(Object.create(o as unknown as object), o);
+export function structuredClone<T>(o: T): T {
+  return clone(o);
 }
 
 export function transformMessagePostData(
@@ -275,7 +275,12 @@ export function transformMessagePostData(
     };
   }
 
-  if (!data.files && !data.embeds && !data.content && !data.components?.length) {
+  if (
+    !data.files &&
+    !data.embeds &&
+    !data.content &&
+    !data.components?.length
+  ) {
     throw MakeError({
       name: "InvalidMessagePostData",
       message:
