@@ -1,5 +1,5 @@
 // @ts-ignore
-import { KeysToCamelCase, MessageAttachment } from "darkcord";
+import { Base, KeysToCamelCase, MessageAttachment } from "darkcord";
 import { APIInteractionResponse } from "discord-api-types/v10";
 import { Buffer, Blob } from "node:buffer";
 import { readFileSync } from "node:fs";
@@ -263,7 +263,25 @@ export function isEqual<_1 extends any, _2 extends any>(
 }
 
 export function structuredClone<T>(o: T): T {
-  return clone(o);
+  if (o instanceof Base) {
+    const copy = new { [this.constructor.name]: class {} }[
+      this.constructor.name
+    ]();
+
+    for (const key in this) {
+      if (
+        this.hasOwnProperty(key) &&
+        !key.startsWith("_") &&
+        this[key] !== undefined
+      ) {
+        copy[key] = this[key];
+      }
+    }
+
+    return copy as T;
+  } else {
+    return clone(o);
+  }
 }
 
 export function transformMessagePostData(
