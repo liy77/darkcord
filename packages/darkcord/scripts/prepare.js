@@ -5,6 +5,8 @@ const { performance } = require("node:perf_hooks");
 let scriptFile;
 if (process.platform === "win32") {
   scriptFile = "prepare.bat";
+} else if (process.platform === "darwin") {
+  scriptFile = "./prepare_darwin.sh";
 } else {
   scriptFile = "./prepare.sh";
 }
@@ -26,14 +28,14 @@ prepare.stdout.on("data", (buffer) => {
   }
 
   if (message.includes("Compiling...")) {
-    console.log("\033[34minfo\x1b[0m Compiling typescript files...");
+    console.log("\x1b[34minfo\x1b[0m Compiling typescript files...");
   }
 
   if (message.includes("tscpaths")) {
     if (replaced === 2) {
-      console.log("\033[34minfo\x1b[0m Resolving import maps in dist...");
+      console.log("\x1b[34minfo\x1b[0m Resolving import maps in dist...");
     } else if (replaced === 1) {
-      console.log("\033[34minfo\x1b[0m Resolving import maps in typings...");
+      console.log("\x1b[34minfo\x1b[0m Resolving import maps in typings...");
     }
 
     replaced++;
