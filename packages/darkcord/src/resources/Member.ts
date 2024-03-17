@@ -35,7 +35,7 @@ export class UncachedClientMemberError extends Error {
 
 export class MemberRoles {
   private _roles: string[];
-  cache: Cache<APIRole | Role>;
+  cache: Cache<Role>;
   constructor(public guild: Guild, roles: string[]) {
     Object.defineProperty(this, "_roles", {
       value: roles,
