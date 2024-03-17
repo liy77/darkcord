@@ -28,7 +28,7 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
 
   /**
    * Returns the everyone role of the guild
-   * @returns 
+   * @returns
    */
   get everyone() {
     return this.cache.get(this.guild.id);
@@ -38,7 +38,7 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
    * Compare the position of role with another guild role
    * @param roleId The role id
    * @param otherRoleId The other role id
-   * @returns 
+   * @returns
    */
   comparePositions(roleId: string, otherRoleId: string) {
     const role = this.get(roleId);
@@ -59,7 +59,10 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
   }
 
   premiumSubscriberRole() {
-    return this.cache.find((role) => Boolean(role?.tags?.premium_subscriber))?.[1] ?? null;
+    return (
+      this.cache.find((role) => Boolean(role?.tags?.premium_subscriber))?.[1] ??
+      null
+    );
   }
 
   get(id: string) {

@@ -837,7 +837,6 @@ export class Guild extends BaseGuild {
     if (!member) member = this.members.cache.get(userId);
 
     for (const role of member!.roles) {
-
       if (role) {
         const perm =
           typeof role!.permissions === "string"

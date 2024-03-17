@@ -38,19 +38,24 @@ export class MemberRoles {
 
   /**
    * Get the member role with the highest position
-   * @returns 
+   * @returns
    */
   highest() {
-    return this.cache.reduce(([, prev], [, role]) => {
-      return prev && this.guild.roles.comparePositions(role.id, prev.id) > 0 ? [role.id, role] : [prev.id, prev];
-    }, [this.guild.id, this.guild.roles.everyone!])?.[1];
+    return this.cache.reduce(
+      ([, prev], [, role]) => {
+        return prev && this.guild.roles.comparePositions(role.id, prev.id) > 0
+          ? [role.id, role]
+          : [prev.id, prev];
+      },
+      [this.guild.id, this.guild.roles.everyone!],
+    )?.[1];
   }
 
   /**
    * Compare the position of a member role with another guild role
    * @param roleId The member role id
    * @param otherRoleId The guild role id
-   * @returns 
+   * @returns
    */
   comparePositions(roleId: string, otherRoleId: string) {
     const role = this.cache.get(roleId);

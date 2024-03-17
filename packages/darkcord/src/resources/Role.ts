@@ -82,7 +82,7 @@ export class Role extends Base {
   /**
    * Compare the position of the current role with another role
    * @param roleId The role id to compare with
-   * @returns 
+   * @returns
    */
   comparePositionTo(roleId: string) {
     return this.guild.roles.comparePositions(this.id, roleId);
@@ -92,7 +92,7 @@ export class Role extends Base {
    * Modify the position of this role
    * @param newPosition The new position of the role
    * @param reason The reason for modifying the position
-   * @returns 
+   * @returns
    */
   setPosition(newPosition: number, reason?: string) {
     return this.guild.setRolePosition(this.id, newPosition, reason);
@@ -102,7 +102,7 @@ export class Role extends Base {
    * Edit this role
    * @param options The options to edit this role
    * @param reason The reason for editing this role
-   * @returns 
+   * @returns
    */
   edit(
     options: KeysToCamelCase<RESTPatchAPIGuildRoleJSONBody>,
