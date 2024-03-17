@@ -1,6 +1,6 @@
 import { TextBasedChannel } from "@resources/Channel";
 import { Reaction } from "@resources/Emoji";
-import { Events, Partials } from "@utils/Constants";
+import { Events } from "@utils/Constants";
 import { GatewayMessageReactionRemoveDispatchData } from "discord-api-types/v10";
 import { Event } from "./Event";
 
@@ -18,9 +18,7 @@ export class MessageReactionRemove extends Event {
       },
     };
 
-    const reaction = this.client.cache._partial(Partials.Reaction)
-      ? raw
-      : new Reaction({ ...raw, client: this.client });
+    const reaction = new Reaction({ ...raw, client: this.client });
 
     const channel = this.client.channels.cache.get(data.channel_id);
 
@@ -40,18 +38,10 @@ export class MessageReactionRemove extends Event {
       if (existingReactions) {
         reaction.count = existingReactions.count - 1;
 
-        let countDetails =
-          existingReactions instanceof Reaction
-            ? existingReactions.countDetails
-            : existingReactions.count_details;
-
+        let countDetails = existingReactions.countDetails;
         countDetails[data.burst ? "burst" : "normal"]--;
 
-        if (reaction instanceof Reaction) {
-          reaction.countDetails = countDetails;
-        } else {
-          reaction.count_details = countDetails;
-        }
+        reaction.countDetails = countDetails;
       }
 
       if (reaction.count <= 0) {

@@ -1,13 +1,5 @@
 import type { MessageTimestampStyle } from "@typings/index";
 
-export enum Partials {
-  Emoji,
-  User,
-  Reaction,
-  Role,
-  Sticker,
-}
-
 export { GatewayStatus, ShardEvents } from "@darkcord/ws";
 
 export enum Events {

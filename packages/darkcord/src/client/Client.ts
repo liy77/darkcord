@@ -63,12 +63,8 @@ export class BaseClient<E> extends EventEmitter {
     super();
 
     if (!options || typeof options !== "object") {
-      options = {
-        partials: [],
-      };
+      options = {};
     }
-
-    options.partials ??= [];
 
     this.isReady = false;
     this.options = options;

@@ -106,7 +106,11 @@ export class Interaction<HttpPartial extends boolean = false> extends Base {
     this.member = null;
 
     if ("member" in data && data.member && this.guild) {
-      this.member = this.guild.members.add(new Member(data.member, this.guild));
+      this.member = this.guild.members.add(
+        new Member(data.member, this.guild),
+      ) as HttpPartial extends true
+        ? APIInteractionGuildMember | null
+        : Member | null;
       this.user = this.member!.user!;
     } else if ("member" in data && data.member) {
       this.member = data.member as HttpPartial extends true

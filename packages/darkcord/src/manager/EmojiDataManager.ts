@@ -2,12 +2,11 @@ import { CacheManager } from "@cache/CacheManager";
 import { Emoji } from "@resources/Emoji";
 import { Guild } from "@resources/Guild";
 import { BaseCacheOptions } from "@typings/index";
-import { Partials } from "@utils/Constants";
 import { APIEmoji, APIGuild } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
 import { Forge, Forged } from "@resources/forge/Forgified";
 
-export class EmojiDataManager extends DataManager<Emoji | APIEmoji> {
+export class EmojiDataManager extends DataManager<Emoji> {
   constructor(
     options: number | BaseCacheOptions,
     public manager: CacheManager,
@@ -23,20 +22,16 @@ export class EmojiDataManager extends DataManager<Emoji | APIEmoji> {
   }
 
   #resolve(emoji: APIEmoji | Emoji, addInCache = false) {
-    if (
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      emoji &&
-      !this.manager._partial(Partials.Emoji) &&
-      !(emoji instanceof Emoji)
-    ) {
+    if (emoji && !(emoji instanceof Emoji)) {
       emoji = new Emoji(emoji);
-      if (addInCache) this.add(emoji);
     }
 
-    return emoji;
+    if (addInCache) this.add(emoji);
+
+    return emoji as Emoji;
   }
 
-  add(emoji: Emoji | APIEmoji, replace = true) {
+  add(emoji: Emoji | APIEmoji, replace = true): Emoji {
     return super.add(this.#resolve(emoji), replace, emoji.id || emoji.name!);
   }
 

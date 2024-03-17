@@ -2,14 +2,13 @@ import { CacheManager } from "@cache/CacheManager";
 import { Guild } from "@resources/Guild";
 import { Sticker } from "@resources/Sticker";
 import { BaseCacheOptions } from "@typings/index";
-import { Partials } from "@utils/Constants";
 import { APIGuild, APISticker } from "discord-api-types/v10";
 
 import { DataManager } from "./DataManager";
 
-export class StickerDataManager extends DataManager<Sticker | APISticker> {
+export class StickerDataManager extends DataManager<Sticker> {
   constructor(
-    options: number | BaseCacheOptions,
+    options: number | BaseCacheOptions<Sticker>,
     public manager: CacheManager,
   ) {
     super(options, (get, id) => {
@@ -27,10 +26,7 @@ export class StickerDataManager extends DataManager<Sticker | APISticker> {
   }
 
   #resolve(sticker: Sticker | APISticker, addInCache = false) {
-    if (
-      !this.manager._partial(Partials.Sticker) &&
-      !(sticker instanceof Sticker)
-    ) {
+    if (!(sticker instanceof Sticker)) {
       sticker = new Sticker({
         ...sticker,
         client: this.manager.client,
@@ -51,7 +47,7 @@ export class StickerDataManager extends DataManager<Sticker | APISticker> {
     id: string,
     guild: APIGuild | Guild | string,
     addInCache = true,
-  ): Promise<APISticker> {
+  ): Promise<Sticker> {
     const sticker = await this.manager.client.rest.getGuildSticker(
       typeof guild === "string" ? guild : guild.id,
       id,
@@ -61,13 +57,13 @@ export class StickerDataManager extends DataManager<Sticker | APISticker> {
       return this.add(sticker);
     }
 
-    return sticker;
+    return this.#resolve(sticker, false);
   }
 }
 
 export class GuildStickerDataManager extends StickerDataManager {
   constructor(
-    options: number | BaseCacheOptions,
+    options: number | BaseCacheOptions<Sticker>,
     public manager: CacheManager,
     public guild: Guild,
   ) {

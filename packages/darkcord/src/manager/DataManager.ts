@@ -21,7 +21,7 @@ export class DataCache<V extends Record<string, any>> extends Cache<V> {
     return super.get(key);
   }
 
-  _add(item: V, replace = true, id?: string) {
+  _add(item: V, replace = true, id?: string): V {
     if ("id" in item && !id) {
       id = item.id;
     }
@@ -117,7 +117,7 @@ export class DataManager<V extends Record<string, any>> {
     }
   }
 
-  add(item: V, replace = true, id?: string) {
+  add(item: V, replace = true, id?: string): V {
     return this.cache._add(item, replace, id);
   }
 }

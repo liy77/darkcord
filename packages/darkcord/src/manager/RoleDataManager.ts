@@ -1,22 +1,21 @@
 import { CacheManager } from "@cache/CacheManager";
 import { Guild } from "@resources/Guild";
 import { Role } from "@resources/Role";
-import { BaseCacheOptions, DataWithClient } from "@typings/index";
-import { Partials } from "@utils/Constants";
+import { BaseCacheOptions } from "@typings/index";
 import { APIGuild, APIRole } from "discord-api-types/v10";
 import { DataCache, DataManager } from "./DataManager";
 import { Forge } from "@resources/forge/Forgified";
 
 export class ClientRoles {
-  cache: DataCache<Role | APIRole>;
-  constructor(options?: number | BaseCacheOptions<APIRole | Role>) {
+  cache: DataCache<Role>;
+  constructor(options?: number | BaseCacheOptions<Role>) {
     this.cache = new DataCache(options);
   }
 }
 
-export class RoleDataManager extends DataManager<Role | APIRole> {
+export class RoleDataManager extends DataManager<Role> {
   constructor(
-    options: number | BaseCacheOptions,
+    options: number | BaseCacheOptions<Role>,
     public manager: CacheManager,
     public guild: Guild,
   ) {
@@ -69,9 +68,9 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
     return this.cache.get(id);
   }
 
-  add(role: APIRole | Role, replace = true): APIRole | Role | null {
+  add(role: APIRole | Role, replace = true) {
     if (!role || !role.id) {
-      return null;
+      return null as unknown as Role;
     }
 
     return super.add(this._resolve(role), replace, role.id);
@@ -84,14 +83,13 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
       typeof data === "string" ? { id: data } : data,
     );
 
-    return this.add(forged, false);
+    return this.add(forged, false) as Role;
   }
 
   _resolve(role: APIRole | Role, addInCache = false) {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       role &&
-      !this.manager._partial(Partials.Role) &&
       !(role instanceof Role)
     ) {
       role = new Role({ ...role, client: this.manager.client }, this.guild);
@@ -120,23 +118,21 @@ export class RoleDataManager extends DataManager<Role | APIRole> {
 
     const resolvedRolesArr = Promise.all(
       rolesArr.map(async (role) => {
-        if (!this.manager._partial(Partials.Role)) {
-          if (!(guild instanceof Guild)) {
-            guild = this.manager.guilds.cache.get(
-              typeof guild === "string" ? guild : guild.id,
-            )!;
-          }
-
-          return this.add(
-            new Role(
-              {
-                ...role,
-                client: this.manager.client,
-              },
-              guild,
-            ),
-          );
+        if (!(guild instanceof Guild)) {
+          guild = this.manager.guilds.cache.get(
+            typeof guild === "string" ? guild : guild.id,
+          )!;
         }
+
+        return this.add(
+          new Role(
+            {
+              ...role,
+              client: this.manager.client,
+            },
+            guild,
+          ),
+        );
 
         return this.add(role);
       }),

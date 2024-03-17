@@ -1,14 +1,13 @@
 import { CacheManager } from "@cache/CacheManager";
 import { User } from "@resources/User";
-import { BaseCacheOptions, DataWithClient } from "@typings/index";
-import { Partials } from "@utils/Constants";
+import { BaseCacheOptions } from "@typings/index";
 import { APIUser } from "discord-api-types/v10";
 import { DataManager } from "./DataManager";
 import { Forge } from "@resources/forge/Forgified";
 
-export class UserDataManager extends DataManager<APIUser | User> {
+export class UserDataManager extends DataManager<User> {
   constructor(
-    options: number | BaseCacheOptions<APIUser | User>,
+    options: number | BaseCacheOptions<User>,
     public manager: CacheManager,
   ) {
     super(options);
@@ -29,9 +28,9 @@ export class UserDataManager extends DataManager<APIUser | User> {
     return this.add(forged, false)! as User;
   }
 
-  add(user: User | APIUser, replace = true): User | APIUser | null {
+  add(user: User | APIUser, replace = true) {
     if (!user || !user.id) {
-      return null;
+      return null as unknown as User;
     }
 
     return super.add(this.#resolve(user), replace, user.id);
@@ -41,7 +40,6 @@ export class UserDataManager extends DataManager<APIUser | User> {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       user &&
-      !this.manager._partial(Partials.User) &&
       !(user instanceof User)
     ) {
       user = new User({ ...user, client: this.manager.client });

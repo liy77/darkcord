@@ -389,6 +389,13 @@ export class Guild extends BaseGuild {
   }
 
   /**
+   * Returns the client member object
+   */
+  get clientMember() {
+    return this.members.cache.get(this._client.user!.id)!;
+  }
+
+  /**
    * Returns a ban object for the given user
    * @param userId
    * @returns
@@ -488,8 +495,9 @@ export class Guild extends BaseGuild {
       reason,
     );
 
-    this._client.roles.cache._add(role);
-    return this.roles.add(role);
+    const r = this.roles.add(role);
+    this._client.roles.cache._add(r);
+    return r;
   }
 
   /**
@@ -520,8 +528,9 @@ export class Guild extends BaseGuild {
 
     const role = await this._client.rest.createGuildRole(this.id, opts, reason);
 
-    this._client.roles.cache._add(role);
-    return this.roles.add(role);
+    const r = this.roles.add(role);
+    this._client.roles.cache._add(r);
+    return r;
   }
 
   /**
@@ -1086,8 +1095,8 @@ export class Guild extends BaseGuild {
 
     if ("roles" in data && Array.isArray(data.roles)) {
       for (const role of data.roles) {
-        this.roles.add(role);
-        this._client.cache.roles.cache._add(role);
+        const r = this.roles.add(role);
+        this._client.roles.cache._add(r);
       }
     }
 

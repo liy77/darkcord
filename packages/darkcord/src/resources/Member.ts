@@ -24,6 +24,15 @@ import { User } from "./User";
 import { Role } from "./Role";
 import { Cache } from "@cache/Cache";
 
+export class UncachedClientMemberError extends Error {
+  constructor() {
+    super(
+      "The client member is not cached. This is likely due to the member not being in the guild or the guild not being cached.",
+    );
+    this.name = "UncachedClientMemberError";
+  }
+}
+
 export class MemberRoles {
   private _roles: string[];
   cache: Cache<APIRole | Role>;
@@ -40,7 +49,7 @@ export class MemberRoles {
    * Get the member role with the highest position
    * @returns
    */
-  highest() {
+  get highest() {
     return this.cache.reduce(
       ([, prev], [, role]) => {
         return prev && this.guild.roles.comparePositions(role.id, prev.id) > 0
@@ -88,7 +97,7 @@ export class Member extends Base {
   /**
    * The user this guild member represents
    */
-  user: User | null;
+  user: User;
   /**
    * Whether the user is deafened in voice channels
    */
@@ -127,18 +136,15 @@ export class Member extends Base {
 
     this.avatar = data.avatar;
     this.communicationDisabledUntil = data.communication_disabled_until;
-    this.user = null;
+
+    Object.defineProperty(this, "user", {
+      value: null,
+      writable: true,
+      enumerable: false,
+    });
 
     if (data.user) {
-      const rawUser = this._client.cache.users.add(data.user)!;
-
-      this.user =
-        rawUser instanceof User
-          ? rawUser
-          : new User({
-              ...rawUser,
-              client: guild._client,
-            });
+      this.user = this._client.cache.users.add(data.user)!;
     }
 
     this.nickname = data.nick ?? null;
@@ -158,6 +164,53 @@ export class Member extends Base {
    */
   get voiceState() {
     return this.guild.voiceStates.get(this.id);
+  }
+
+  get manageable() {
+    if (this.id === this.guild.ownerId) {
+      return false;
+    }
+
+    if (this.id === this._client.user!.id) {
+      return false;
+    }
+
+    if (this._client.user!.id === this.guild.ownerId) {
+      return true;
+    }
+
+    if (!this.guild.clientMember) {
+      throw new UncachedClientMemberError();
+    }
+
+    return (
+      this.guild.clientMember.roles.comparePositions(
+        this.guild.clientMember.roles.highest.id,
+        this.roles.highest.id,
+      ) > 0
+    );
+  }
+
+  get bannable() {
+    if (!this.guild.clientMember) {
+      throw new UncachedClientMemberError();
+    }
+
+    return (
+      this.manageable &&
+      this.guild.clientMember.permissions.has(Permissions.Flags.BanMembers)
+    );
+  }
+
+  get kickable() {
+    if (!this.guild.clientMember) {
+      throw new UncachedClientMemberError();
+    }
+
+    return (
+      this.manageable &&
+      this.guild.clientMember.permissions.has(Permissions.Flags.KickMembers)
+    );
   }
 
   /**

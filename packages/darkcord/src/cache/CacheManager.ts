@@ -7,8 +7,7 @@ import { GuildDataManager } from "@manager/GuildDataManager";
 import { ClientRoles, RoleDataManager } from "@manager/RoleDataManager";
 import { UserDataManager } from "@manager/UserDataManager";
 import { ThreadChannel } from "@resources/Channel";
-import { CamelCase, ClientOptions } from "@typings/index";
-import { Partials } from "@utils/Constants";
+import { ClientOptions } from "@typings/index";
 
 import { Cache } from "./Cache";
 
@@ -74,33 +73,6 @@ export class CacheManager {
     if (clearGuilds) {
       this.guilds.cache.clear();
     }
-  }
-
-  isPartialCache(cache: `${CamelCase<keyof typeof Partials>}s`) {
-    switch (cache) {
-      case "emojis": {
-        return this._partial(Partials.Emoji);
-      }
-      case "roles": {
-        return this._partial(Partials.Role);
-      }
-      case "reactions": {
-        return this._partial(Partials.Reaction);
-      }
-      case "stickers": {
-        return this._partial(Partials.Sticker);
-      }
-      case "users": {
-        return this._partial(Partials.User);
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-
-  _partial(p: Partials) {
-    return Boolean(this.client.options.partials?.includes(p));
   }
 
   _cacheInstance(o: any): o is Cache<any> {

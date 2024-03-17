@@ -15,18 +15,13 @@ import { Message } from "@resources/Message";
 import { Role } from "@resources/Role";
 import { User } from "@resources/User";
 import { VoiceState } from "@resources/VoiceState";
-import { Partials } from "@utils/Constants";
 import {
   APIAuditLogChange,
   APIAuditLogEntry,
   APIChannel,
-  APIEmoji,
   APIGuild,
   APIGuildMember,
-  APIReaction,
-  APIRole,
   APIStageInstance,
-  APIUser,
   GatewayGuildMembersChunkDispatchData,
   GatewayIntentBits,
   GatewayReceivePayload,
@@ -61,9 +56,7 @@ export interface DisplayUserBannerOptions extends ImageSize {
 
 export type GuildDataModel<T> = T & { guild: Guild };
 
-export interface BaseClientOptions {
-  partials?: Partials[];
-}
+export interface BaseClientOptions {}
 
 export interface InteractionClientOptions extends BaseClientOptions {
   webserver: WebServerOptions;
@@ -200,34 +193,16 @@ export interface ClientEvents {
   messageUpdate: [old: Message, updated: Message];
   messageDelete: [message: Message];
   messageDeleteBulk: [messagesDeleted: Map<string, Message>];
-  messageReactionAdd: [
-    reaction: Reaction | APIReaction,
-    user: User | APIUser,
-    message: Message,
-  ];
-  messageSuperReactionAdd: [
-    reaction: Reaction | APIReaction,
-    user: User | APIUser,
-    message: Message,
-  ];
-  messageReactionRemove: [
-    reaction: Reaction | APIReaction,
-    user: User | APIUser,
-    message: Message,
-  ];
+  messageReactionAdd: [reaction: Reaction, user: User, message: Message];
+  messageSuperReactionAdd: [reaction: Reaction, user: User, message: Message];
+  messageReactionRemove: [reaction: Reaction, user: User, message: Message];
   messageSuperReactionRemove: [
-    reaction: Reaction | APIReaction,
-    user: User | APIUser,
+    reaction: Reaction,
+    user: User,
     message: Message,
   ];
-  messageReactionRemoveAll: [
-    message: Message,
-    removed: Cache<Reaction | APIReaction>,
-  ];
-  messageReactionRemoveEmoji: [
-    message: Message,
-    removed: Reaction | APIReaction,
-  ];
+  messageReactionRemoveAll: [message: Message, removed: Cache<Reaction>];
+  messageReactionRemoveEmoji: [message: Message, removed: Reaction];
   typingStart: [typing: Typing];
 
   // Interaction
@@ -240,19 +215,16 @@ export interface ClientEvents {
   guildUpdate: [old: Guild, updated: Guild];
   guildDelete: [deleted: Guild];
   guildAuditLogEntryCreate: [log: AuditLogEntry];
-  guildBanAdd: [guild: Guild, userBanned: User | APIUser];
-  guildBanRemove: [guild: Guild, userUnbanned: User | APIUser];
+  guildBanAdd: [guild: Guild, userBanned: User];
+  guildBanRemove: [guild: Guild, userUnbanned: User];
   guildEmojisUpdate: [
-    old: DataCache<Emoji | APIEmoji>,
-    updated: DataCache<Emoji | APIEmoji>,
+    old: DataCache<Emoji>,
+    updated: DataCache<Emoji>,
     guild: Guild,
   ];
-  guildEmojiCreate: [emoji: Emoji | APIEmoji];
-  guildEmojiDelete: [emoji: Emoji | APIEmoji];
-  guildEmojiUpdate: [
-    oldEmoji: Emoji | APIEmoji,
-    updatedEmoji: Emoji | APIEmoji,
-  ];
+  guildEmojiCreate: [emoji: Emoji];
+  guildEmojiDelete: [emoji: Emoji];
+  guildEmojiUpdate: [oldEmoji: Emoji, updatedEmoji: Emoji];
   guildStickersUpdate: [
     old: DataCache<Sticker>,
     updated: DataCache<Sticker>,
@@ -262,17 +234,17 @@ export interface ClientEvents {
   guildStickerDelete: [sticker: Sticker];
   guildStickerUpdate: [oldSticker: Sticker, updatedSticker: Sticker];
   guildMemberAdd: [newMember: Member, guild: Guild];
-  guildMemberRemove: [user: User | APIUser, guild: Guild];
+  guildMemberRemove: [user: User, guild: Guild];
   guildMemberUpdate: [old: Member, updated: Member];
   guildIntegrationsUpdate: [guild: Guild];
-  guildRoleCreate: [role: Role | APIRole, guild: Guild];
-  guildRoleUpdate: [old: Role | APIRole, updated: Role | APIRole, guild: Guild];
-  guildRoleDelete: [deleted: Role | APIRole, guild: Guild];
+  guildRoleCreate: [role: Role, guild: Guild];
+  guildRoleUpdate: [old: Role, updated: Role, guild: Guild];
+  guildRoleDelete: [deleted: Role, guild: Guild];
   guildScheduledEventCreate: [event: ScheduledEvent];
   guildScheduledEventUpdate: [old: ScheduledEvent, updated: ScheduledEvent];
   guildScheduledEventDelete: [deleted: ScheduledEvent];
-  guildScheduledEventUserAdd: [event: ScheduledEvent, user: User | APIUser];
-  guildScheduledEventUserRemove: [event: ScheduledEvent, user: User | APIUser];
+  guildScheduledEventUserAdd: [event: ScheduledEvent, user: User];
+  guildScheduledEventUserRemove: [event: ScheduledEvent, user: User];
 
   // Thread
   threadCreate: [thread: ThreadChannel];
@@ -303,7 +275,7 @@ export interface ClientEvents {
   channelPinsUpdate: [channel: TextBasedChannel];
 
   // User
-  userUpdate: [old: User | APIUser, updated: User | APIUser];
+  userUpdate: [old: User, updated: User];
 
   // Voice
   voiceChannelSwitch: [

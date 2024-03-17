@@ -78,8 +78,8 @@ export namespace Resolvable {
 
     if (Array.isArray(resolved.rawData.roles)) {
       for (const role of resolved.rawData.roles) {
-        resolved.roles.add(role);
-        client.roles.cache._add(role);
+        const r = resolved.roles.add(role);
+        client.roles.cache._add(r);
       }
     }
 

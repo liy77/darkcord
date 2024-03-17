@@ -1,5 +1,4 @@
 import { DataWithClient, MessagePostData } from "@typings/index";
-import { Partials } from "@utils/Constants";
 import { Resolvable } from "@utils/Resolvable";
 import {
   APIAttachment,
@@ -110,7 +109,7 @@ export class Message extends Base {
   /**
    * Reactions in this message
    */
-  reactions: DataCache<Reaction | APIReaction | APISuperReaction>;
+  reactions: DataCache<Reaction>;
   /**
    * Id of guild was message has sent
    */
@@ -200,21 +199,18 @@ export class Message extends Base {
       emoji = Emoji.getEncodedURI(emoji);
     }
 
-    let reaction = (await this._client.rest.createReaction(
+    let rawReaction = (await this._client.rest.createReaction(
       this.channelId,
       this.id,
       emoji,
     )) as unknown as APIReaction;
 
-    if (!this._client.cache._partial(Partials.Reaction)) {
-      // @ts-expect-error - raw reaction returns count_details
-      reaction = new Reaction({
-        ...reaction,
-        client: this._client,
-        message_id: this.id,
-        channel_id: this.channel?.id!,
-      });
-    }
+    const reaction = new Reaction({
+      ...rawReaction,
+      client: this._client,
+      message_id: this.id,
+      channel_id: this.channel?.id!,
+    });
 
     return this.reactions._add(
       reaction,
@@ -282,9 +278,7 @@ export class Message extends Base {
 
     if (Array.isArray(data.reactions)) {
       for (const reaction of data.reactions as APIReaction[]) {
-        const resolved = this._client.cache._partial(Partials.Reaction)
-          ? reaction
-          : new Reaction({ ...reaction, client: this._client });
+        const resolved = new Reaction({ ...reaction, client: this._client });
 
         this.reactions._add(
           resolved,
