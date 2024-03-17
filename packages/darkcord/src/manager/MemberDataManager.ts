@@ -17,7 +17,7 @@ export class MemberDataManager extends DataManager<Member> {
 
       if (!g) return;
 
-      return new Member(g, this.guild);
+      return g instanceof Member ? g : new Member(g, this.guild);
     });
   }
 
