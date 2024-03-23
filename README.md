@@ -1,8 +1,6 @@
 <div align="center">
 	<br />
-    	<p>
-		<img src="https://media.discordapp.net/attachments/903700220259487767/1083430114563465256/tema2_preto.png" width="546" alt="darkcord" />
-	</p>
+	<img src="https://i.imgur.com/ZqpK5wo.png" title="darkcord" width="546" />
     <br />
     	<p>
 		<a href="https://github.com/JustAWaifuHunter/darkcord/actions"><img src="https://github.com/JustAWaifuHunter/darkcord/actions/workflows/tests.yml/badge.svg" alt="Tests status" /></a>
